@@ -1,198 +1,88 @@
-/* Reset básico */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
+/* Estilos generales */
 body {
     font-family: Arial, sans-serif;
-    line-height: 1.6;
-    background-color: #f4f4f4;
+    background-color: #f4f4f4; /* Color de fondo */
+    color: #333; /* Color del texto */
 }
 
-/* Navbar */
+/* Estilos del navbar */
 .navbar {
-    background-color: #333;
-    color: white;
+    background-color: #003366; /* Color de fondo del navbar */
     padding: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.logo {
+.navbar .logo a {
+    color: white; /* Color del texto del logo */
     font-size: 1.5rem;
-    font-weight: bold;
-}
-
-.nav-links a {
-    color: white;
     text-decoration: none;
-    padding: 0.5rem 1rem;
-    margin: 0 0.5rem;
 }
 
-.nav-links a:hover {
-    background-color: #555;
-    border-radius: 4px;
+.nav-right {
+    display: flex;
+    align-items: center;
 }
 
-.nav-links a.active {
-    background-color: #555;
-    border-radius: 4px;
+.nav-right a {
+    color: white; /* Color del texto de los enlaces */
+    text-decoration: none; /* Sin subrayado */
+    padding: 0.5rem 1rem; /* Espaciado */
+    border-radius: 4px; /* Bordes redondeados */
+    transition: background-color 0.3s ease; /* Transición suave */
 }
 
-/* Hero Section */
-.hero {
-    text-align: center;
-    padding: 3rem 1rem;
-    background-color: #2c3e50;
-    color: white;
+.nav-right a:hover {
+    background-color: #0056b3; /* Color de fondo al pasar el mouse */
 }
 
-.hero h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+.nav-right a.active {
+    background-color: transparent; /* Sin cambio de fondo */
+    color: white; /* Mantener el color del texto */
 }
 
-/* Games Grid */
-.games-grid {
+/* Estilos de productos */
+.products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(4, 1fr); /* 4 columnas */
     gap: 2rem;
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
+    margin-top: 2rem;
 }
 
-.game-card {
-    background: white;
+.product-card {
+    border: 1px solid #ddd;
     border-radius: 8px;
     padding: 1rem;
     text-align: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background-color: #fff;
 }
 
-.game-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
+.product-card img {
+    max-width: 100%;
+    height: auto;
     border-radius: 4px;
 }
 
-.game-card button {
-    background-color: #3498db;
-    color: white;
-    border: none;
+.btn {
+    display: inline-block;
     padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 1rem;
-}
-
-.game-card button:hover {
-    background-color: #2980b9;
-}
-
-/* Forms */
-.form-container {
-    max-width: 400px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.form-group {
-    margin-bottom: 1rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-form button {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: #3498db;
-    color: white;
+    background-color: #007bff; /* Color de fondo */
+    color: white; /* Color del texto */
     border: none;
     border-radius: 4px;
-    cursor: pointer;
-}
-
-form button:hover {
-    background-color: #2980b9;
-}
-
-/* Footer */
-.footer {
-    background-color: #333;
-    color: white;
-    padding: 2rem 1rem;
-    margin-top: 2rem;
-}
-
-.footer-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-}
-
-.footer-section h4 {
-    margin-bottom: 1rem;
-}
-
-.footer-section ul {
-    list-style: none;
-}
-
-.footer-section a {
-    color: white;
     text-decoration: none;
+    transition: background-color 0.3s ease;
 }
 
-.footer-section a:hover {
-    text-decoration: underline;
+.btn:hover {
+    background-color: #0056b3; /* Color de fondo al pasar el mouse */
 }
 
-.social-links {
-    display: flex;
-    gap: 1rem;
-}
-
-.footer-bottom {
+/* Estilos del footer */
+.footer {
+    background-color: #333; /* Color de fondo del footer */
+    color: white; /* Color del texto del footer */
+    padding: 1rem;
     text-align: center;
-    margin-top: 2rem;
-    padding-top: 1rem;
-    border-top: 1px solid #555;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .nav-links {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .hero h1 {
-        font-size: 2rem;
-    }
-
-    .games-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
 } 

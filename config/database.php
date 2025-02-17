@@ -1,26 +1,13 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-$host = 'localhost';
-$dbname = 'tienda_videojuegos';
-$username = 'root';
-$password = '';
+$host = 'localhost'; // o la dirección de tu servidor
+$db = 'tienda_videojuegos'; // nombre de tu base de datos
+$user = 'root'; // tu usuario de base de datos
+$pass = ''; // tu contraseña de base de datos
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-    
-    // Verificar la conexión con una consulta simple
-    $test = $pdo->query("SELECT 1");
-    if($test) {
-        echo "Conexión exitosa a la base de datos<br>";
-    }
-} catch(PDOException $e) {
-    echo "Error de conexión: " . $e->getMessage();
-    echo "<br>Archivo: " . $e->getFile();
-    echo "<br>Línea: " . $e->getLine();
-    die();
+} catch (PDOException $e) {
+    die("Conexión fallida: " . $e->getMessage());
 }
-?> 
+?>
