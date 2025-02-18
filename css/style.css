@@ -417,9 +417,25 @@ body {
 }
 
 .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.input-container {
+    border: 1px solid #ccc; /* Borde del cuadro de entrada */
+    border-radius: var(--border-radius);
+    padding: 0.5rem;
+}
+
+.input-container input {
+    border: none; /* Sin borde en el input */
+    outline: none; /* Sin contorno al hacer clic */
+    width: 100%; /* Ancho completo */
+    background: transparent; /* Fondo transparente */
+    color: #333; /* Color del texto */
+}
+
+.input-container input[readonly] {
+    background: #f9f9f9; /* Fondo gris claro para campos de solo lectura */
 }
 
 .form-group label {
@@ -742,4 +758,102 @@ textarea {
     .nav-right {
         gap: 1rem;
     }
+}
+
+.profile-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.sidebar {
+    width: 180px;
+    padding: 1rem;
+    background: #2980b9;
+    color: white;
+    border-radius: var(--border-radius);
+    height: auto;
+    max-height: 80vh;
+    position: relative;
+    overflow-y: auto;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar h2 {
+    margin-bottom: 1rem;
+    color: #ecf0f1;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 1rem;
+}
+
+.sidebar ul li a {
+    color: #ecf0f1;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    padding: 0.5rem;
+    display: block;
+    border-radius: var(--border-radius);
+}
+
+.sidebar ul li a:hover {
+    background-color: #3498db;
+    color: white;
+}
+
+.profile-info {
+    flex-grow: 1;
+    padding: 1rem;
+    margin-left: 20px;
+}
+
+.profile-info h1 {
+    margin-bottom: 1rem;
+    color: #2c3e50;
+}
+
+.error-message {
+    color: red;
+    margin-bottom: 1rem;
+}
+
+.danger {
+    color: red;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background-color: red;
+}
+
+.btn-danger:hover {
+    background-color: darkred;
 } 
