@@ -172,7 +172,7 @@ require_once 'includes/header.php';
         <div class="products-grid">
             <?php foreach($productos as $producto): ?>
                 <div class="product-card">
-                    <img src="<?php echo $producto['imagen'] ?? 'images/default.jpg'; ?>" 
+                    <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" 
                          alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
                     <div class="product-card-content">
                         <h3><?php echo htmlspecialchars($producto['nombre']); ?></h3>
@@ -187,5 +187,9 @@ require_once 'includes/header.php';
         </div>
     </section>
 </div>
+
+<script>
+   
+</script>
 
 <?php require_once 'includes/footer.php'; ?> 
