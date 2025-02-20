@@ -44,5 +44,5 @@
         <p>&copy; 2024 MGames. Todos los derechos reservados.</p>
     </div>
 </footer>
-</body>
-</html> 
+<link rel="stylesheet" href="css/footer.css">
+<link rel="stylesheet" href="css/panel_admin.css"> 
