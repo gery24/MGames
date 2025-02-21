@@ -98,6 +98,8 @@ require_once 'includes/header.php';
     <header class="hero">
         <h1>Bienvenido a MGames</h1>
         <p>Tu destino para los mejores videojuegos</p>
+        <br>
+        <a href="segunda_mano.php" class="btn">Ver Productos de Segunda Mano</a>
     </header>
 
     <!-- Filtros -->
@@ -178,9 +180,7 @@ require_once 'includes/header.php';
                         <h3><?php echo htmlspecialchars($producto['nombre']); ?></h3>
                         <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
                         <p class="category"><?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>
-                        <a href="producto.php?id=<?php echo $producto['id']; ?>" class="btn">
-                            Ver Detalles
-                        </a>
+                        <a href="producto.php?id=<?php echo $producto['id']; ?>" class="btn">Ver Detalles</a>
                     </div>
                 </div>
             <?php endforeach; ?>
