@@ -60,7 +60,7 @@ body {
 }
 
 .logo a {
-    color: rgb(253, 253, 253); /* Cambiado a blanco */
+    color: white; /* Cambiado a blanco */
     text-decoration: none;
     font-size: 1.5rem;
     font-weight: bold; /* Asegúrate de que esté en negrita */
@@ -680,7 +680,7 @@ textarea {
 }
 
 .dropdown-menu a {
-    color: var(--text-color) !important;
+    color: rgb(253, 253, 253); /* Cambiado a negro */
     padding: 0.8rem 1rem;
     display: block;
     text-decoration: none;
@@ -690,7 +690,7 @@ textarea {
 }
 
 .dropdown-menu a:hover {
-    background-color: var(--background-color);
+    background-color: #f0f0f0; /* Color de fondo al pasar el ratón (opcional) */
 }
 
 /* Estilos para el menú desplegable */
@@ -699,9 +699,9 @@ textarea {
 }
 
 .menu-button {
-    background-color: #2980b9; /* Color de fondo del botón de menú */
-    color: white; /* Color del texto del botón de menú */
-    border: none;
+    background-color: transparent; /* Fondo transparente */
+    color: white; /* Cambiar el color del icono a blanco */
+    border: none; /* Sin borde */
     padding: 0.8rem;
     border-radius: var(--border-radius);
     cursor: pointer;
@@ -788,7 +788,7 @@ textarea {
     width: 180px;
     padding: 1rem;
     background: #0060a0;
-    color: white;
+    color: rgb(0, 0, 0);
     border-radius: var(--border-radius);
     height: auto;
     max-height: 80vh;
@@ -948,7 +948,7 @@ body.admin {
 }
 
 .navbar a {
-    color: black; /* Cambiado a negro */
+    color: rgb(255, 255, 255); /* Cambiado a negro */
 }
 
 /* Estilos para el rol ADMIN */
@@ -962,5 +962,10 @@ body.admin .navbar a {
 }
 
 .menu-dropdown a {
-    color: white; /* Asegúrate de que los enlaces sean blancos */
+    color: rgb(0, 0, 0); /* Asegúrate de que los enlaces sean blancos */
+}
+
+/* Cambiar el color del icono del carrito a blanco */
+.cart-icon i {
+    color: white; /* Cambiar el color del icono a blanco */
 } 
