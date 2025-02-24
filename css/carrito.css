@@ -1,0 +1,116 @@
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Ajustar el tamaño mínimo */
+    gap: 1rem; /* Espacio entre tarjetas */
+}
+
+.product-card {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: row; /* Cambiar a fila */
+    height: 240px; /* Aumentar la altura para que se ajuste a imágenes más altas y al botón */
+    align-items: flex-start; /* Alinear al inicio para evitar que se corte el texto */
+    padding: 15px; /* Aumentar padding interno */
+}
+
+.product-card img {
+    width: 100px; /* Ajustar el ancho de la imagen */
+    height: auto;
+    object-fit: cover;
+    margin-right: 15px; /* Espacio entre la imagen y el contenido */
+}
+
+.product-card-content {
+    padding: 0; /* Eliminar padding para que ocupe menos espacio */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+
+.product-card h3 {
+    font-size: 1.2rem; /* Aumentar el tamaño del texto */
+    margin: 0;
+    color: var(--text-color);
+}
+
+.price {
+    font-size: 1.2rem; /* Aumentar el tamaño del precio */
+    color: var(--primary-color);
+    font-weight: bold;
+    margin: 0;
+}
+
+.quantity {
+    display: flex;
+    align-items: center;
+    margin-top: 5px; /* Reducir el margen superior */
+}
+
+.quantity label {
+    margin-right: 5px; /* Añadir espacio entre la etiqueta y el desplegable */
+}
+
+.quantity select {
+    width: 50px; /* Ajustar el ancho del select */
+    margin-left: 5px; /* Reducir el margen */
+}
+
+.btn {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 15px; /* Aumentar el padding para que el botón se vea mejor */
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    margin-top: 10px; /* Aumentar el margen superior */
+    transition: background-color 0.3s;
+    min-width: 100px; /* Asegurar que el botón tenga un ancho mínimo */
+}
+
+.btn:hover {
+    background-color: var(--secondary-color);
+}
+
+.cart-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cart-item img {
+    width: 100px;
+    height: auto;
+    margin-right: 15px;
+}
+
+.item-details {
+    flex-grow: 1;
+}
+
+.cart-summary {
+    margin-top: 20px;
+    padding: 10px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+} 
