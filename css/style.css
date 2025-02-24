@@ -968,4 +968,27 @@ body.admin .navbar a {
 /* Cambiar el color del icono del carrito a blanco */
 .cart-icon i {
     color: white; /* Cambiar el color del icono a blanco */
+}
+
+.product-header {
+    display: flex; /* Cambiar a flexbox */
+    align-items: center; /* Centrar verticalmente */
+    gap: 30px; /* Espacio entre la imagen y el contenido */
+    margin-bottom: 40px;
+    background-color: #f8f9fa; /* Fondo claro para el encabezado del producto */
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.product-image {
+    width: 300px; /* Ajustar el tamaño de la imagen */
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 } 

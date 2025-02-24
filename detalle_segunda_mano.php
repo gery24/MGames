@@ -4,122 +4,89 @@ require_once 'config/database.php';
 
 // Verificar si se ha pasado un ID de producto
 if (!isset($_GET['id'])) {
-    die("Error: ID de producto no especificado.");
+    header('Location: index.php');
+    exit;
 }
 
 $id = $_GET['id'];
 
+// Obtener información del producto de segunda mano
 try {
-    // Obtener información del producto
-    $stmt = $pdo->prepare("
-        SELECT p.*, c.nombre as categoria_nombre 
-        FROM segunda_mano p 
-        LEFT JOIN categorias c ON p.categoria_id = c.id 
-        WHERE p.id = ?
-    ");
+    $stmt = $pdo->prepare("SELECT p.*, c.nombre as categoria_nombre FROM segunda_mano p LEFT JOIN categorias c ON p.categoria_id = c.id WHERE p.id = ?");
     $stmt->execute([$id]);
     $producto = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$producto) {
-        die("Error: Producto no encontrado.");
+        header('Location: index.php');
+        exit;
     }
 
-} catch(PDOException $e) {
+    // Obtener juegos similares en la misma categoría
+    $stmt_similares = $pdo->prepare("SELECT * FROM segunda_mano WHERE categoria_id = ? AND id != ? LIMIT 4");
+    $stmt_similares->execute([$producto['categoria_id'], $id]);
+    $juegos_similares = $stmt_similares->fetchAll(PDO::FETCH_ASSOC);
+
+} catch (PDOException $e) {
     die("Error en la base de datos: " . $e->getMessage());
 }
+
+$titulo = htmlspecialchars($producto['nombre']);
+require_once 'includes/header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($producto['nombre']); ?> - MGames</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/segunda_mano.css">
-    <style>
-        .product-details {
-            display: flex;
-            margin: 20px;
-        }
-
-        .product-details img {
-            width: 400px; /* Aumentar el tamaño de la imagen */
-            height: auto;
-            margin-right: 20px;
-        }
-
-        .product-info {
-            flex-grow: 1;
-        }
-
-        .product-info h2 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-            color: black; /* Cambiar el color del texto a negro */
-            background: none; /* Quitar el fondo gris */
-        }
-
-        .product-info p {
-            font-size: 1.2rem;
-            margin: 5px 0;
-        }
-
-        .btn {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            margin-top: 10px; /* Espacio entre los botones */
-        }
-
-        .btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<body>
-    <nav class="navbar">
-        <div class="nav-left">
-            <div class="logo">
-                <a href="index.php">MGames</a>
-            </div>
-        </div>
-        <div class="nav-right">
-            <!-- Aquí va el contenido del navbar -->
-        </div>
-    </nav>
-
-    <div class="content">
-        <header class="hero">
+<div class="product-container">
+    <div class="product-header">
+        <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" alt="<?php echo htmlspecialchars($producto['nombre']); ?>" class="product-image">
+        <div class="product-info">
             <h1><?php echo htmlspecialchars($producto['nombre']); ?></h1>
-        </header>
-
-        <div class="product-details">
-            <div class="product-image">
-                <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
-            </div>
-            <div class="product-info">
-                <h2>Detalles del Producto</h2>
-                <p><strong>Descripción:</strong> <?php echo htmlspecialchars($producto['descripcion']); ?></p>
-                <p><strong>Precio:</strong> €<?php echo number_format($producto['precio'], 2); ?></p>
-                <p><strong>Categoría:</strong> <?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>
-                <p><strong>Estado:</strong> <?php echo htmlspecialchars($producto['estado']); ?></p>
-                
-                <!-- Formulario para añadir al carrito -->
-                <form method="POST" action="agregar_al_carrito.php">
-                    <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
-                    <button type="submit" class="btn">Añadir al Carrito</button>
-                </form>
-                
-                <a href="segunda_mano.php" class="btn">Volver a Segunda Mano</a>
-            </div>
+            <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
+            
+            <!-- Formulario para añadir al carrito -->
+            <form method="POST" action="agregar_al_carrito.php">
+                <input type="hidden" name="producto_id" value="<?php echo $producto['id']; ?>">
+                <input type="hidden" name="nombre" value="<?php echo htmlspecialchars($producto['nombre']); ?>">
+                <input type="hidden" name="precio" value="<?php echo $producto['precio']; ?>">
+                <button type="submit" class="btn">Añadir al carrito</button>
+            </form>
+            
+            <p class="platform">Plataforma: <?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>
         </div>
     </div>
 
-    <?php require_once 'includes/footer.php'; ?>
-</body>
-</html> 
+    <div class="product-section">
+        <h2 class="section-title">Acerca del juego</h2>
+        <p><?php echo htmlspecialchars($producto['acerca_de']); ?></p>
+    </div>
+
+    <div class="product-section">
+        <h2 class="section-title">Requisitos del sistema</h2>
+        <div class="requirements-grid">
+            <div>
+                <h3>Mínimos</h3>
+                <p><?php echo htmlspecialchars($producto['reqmin']); ?></p>
+            </div>
+            <div>
+                <h3>Recomendados</h3>
+                <p><?php echo htmlspecialchars($producto['reqmax']); ?></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="similar-games-section">
+    <h2 class="similar-games-title">Juegos similares</h2>
+    <div class="similar-games-grid">
+        <?php foreach ($juegos_similares as $juego): ?>
+            <div class="game-card">
+                <img src="<?php echo htmlspecialchars($juego['imagen']); ?>" alt="<?php echo htmlspecialchars($juego['nombre']); ?>" class="game-image">
+                <div class="game-info">
+                    <h3 class="game-title"><?php echo htmlspecialchars($juego['nombre']); ?></h3>
+                    <p class="game-price">€<?php echo number_format($juego['precio'], 2); ?></p>
+                    <a href="detalle_segunda_mano.php?id=<?php echo $juego['id']; ?>" class="view-details">Ver detalles</a>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</section>
+
+<?php require_once 'includes/footer.php'; ?> 
