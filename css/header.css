@@ -1,0 +1,37 @@
+.header {
+    background-color: #2980b9; /* Color de fondo del encabezado */
+    color: white; /* Color del texto del encabezado */
+}
+
+.header .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+}
+
+.header .logo a {
+    color: rgb(214, 0, 0); /* Cambiado a blanco */
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: bold; /* Asegúrate de que esté en negrita */
+}
+
+.header .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.menu-dropdown {
+    display: none; /* Ocultar el menú por defecto */
+}
+
+.menu-button:hover + .menu-dropdown,
+.menu-dropdown:hover {
+    display: block; /* Mostrar el menú al pasar el ratón */
+}
+
+.cart-icon i {
+    color: white; /* Cambiar el color del icono a blanco */
+} 

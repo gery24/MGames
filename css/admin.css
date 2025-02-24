@@ -1,0 +1,10 @@
+/* Estilos específicos para el panel de administración */
+body.admin {
+    background-color: #ffcccc; /* Fondo rojo claro */
+    color: #ff0000; /* Color del texto */
+}
+
+.admin .sidebar {
+    background-color: #c0392b; /* Color de fondo del menú */
+    color: white; /* Color del texto del menú */
+} 
