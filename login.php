@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($usuario && password_verify($contraseña, $usuario['contraseña'])) {
             $_SESSION['usuario'] = [
-                'id' => $usuario['id_usuario'],
+                'id' => $usuario['id'],
                 'nombre' => $usuario['nombre'],
                 'apellido' => $usuario['apellido'],
                 'email' => $usuario['email'],
@@ -42,15 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="logo">MGames</div>
-        <div class="nav-links">
-            <a href="index.php">Inicio</a>
-            <a href="login.php" class="active">Iniciar Sesión</a>
-            <a href="register.php">Registrarse</a>
-        </div>
-    </nav>
+    <?php require_once 'includes/header.php'; ?>
 
     <!-- Login Form -->
     <div class="form-container">
@@ -75,33 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </form>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>Sobre MGames</h4>
-                <p>Tu tienda de confianza para videojuegos nuevos y de segunda mano.</p>
-            </div>
-            <div class="footer-section">
-                <h4>Enlaces Útiles</h4>
-                <ul>
-                    <li><a href="soporte.php">Soporte</a></li>
-                    <li><a href="vender.php">Vender Juegos</a></li>
-                    <li><a href="faq.php">FAQ</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Síguenos</h4>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 MGames. Todos los derechos reservados.</p>
-        </div>
-    </footer>
+    <?php require_once 'includes/footer.php'; ?>
 </body>
 </html> 

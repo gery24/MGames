@@ -1,4 +1,16 @@
-/* Reset básico */
+/* Reset y variables */
+:root {
+    --primary-color: #2563eb;
+    --secondary-color: #1e2caf;
+    --background-color: #f3f4f6;
+    --card-background: #ffffff;
+    --text-color: #1f2937;
+    --navbar-color: #1e3a8a;
+    --footer-color: #fdfdfd;
+    --border-radius: 8px;
+    --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,49 +18,328 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
     line-height: 1.6;
-    background-color: #f4f4f4;
 }
 
-/* Navbar */
+/* Estilos del navbar */
 .navbar {
-    background-color: #333;
-    color: white;
-    padding: 1rem;
+    background-color: var(--navbar-color);
+    padding: 1rem 5%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.logo {
-    font-size: 1.5rem;
-    font-weight: bold;
+.menu-container {
+    color: rgb(101, 142, 196); /* Cambiado a negro */
 }
 
-.nav-links a {
+.menu-dropdown {
+    display: none; /* Ocultar el menú por defecto */
+    background-color: #add8e6; /* Color azul claro para el fondo */
+    color: white; /* Color blanco para el texto */
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    color: rgb(255, 247, 247); /* Cambiado a blanco */
+}
+
+.logo a {
+    color: white; /* Cambiado a blanco */
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: bold; /* Asegúrate de que esté en negrita */
+}
+
+.search-bar {
+    flex: 1;
+    max-width: 500px;
+}
+
+.search-form {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.search-form input {
+    flex: 1;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+}
+
+.search-form button {
+    padding: 0.8rem 1.5rem;
+    white-space: nowrap;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.nav-right > a:not(.user-avatar):not(.cart-icon) {
+    padding: 0.5rem 1rem;
     color: white;
     text-decoration: none;
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s ease;
+}
+
+.nav-right > a:not(.user-avatar):not(.cart-icon):hover {
+    background-color: var(--secondary-color);
+}
+
+.nav-right a.active {
+    background-color: transparent; /* Sin cambio de fondo */
+    color: white; /* Mantener el color del texto */
+}
+
+.nav-right a.btn {
+    background-color: var(--primary-color);
     padding: 0.5rem 1rem;
-    margin: 0 0.5rem;
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
 }
 
-.nav-links a:hover {
-    background-color: #555;
-    border-radius: 4px;
+.nav-right a.btn:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
 }
 
-.nav-links a.active {
-    background-color: #555;
-    border-radius: 4px;
+/* Estilos de productos */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 2rem 0;
+}
+
+.product-card {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.product-card img {
+    width: 100%;
+    height: auto;
+    max-height: 270px;
+    object-fit: cover;
+}
+
+.product-card-content {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-grow: 1;
+    justify-content: space-between;
+}
+
+.product-card h3 {
+    font-size: 1.1rem;
+    margin: 0;
+    color: var(--text-color);
+}
+
+.price {
+    font-size: 1.25rem;
+    color: var(--primary-color);
+    font-weight: bold;
+    margin: 0;
+}
+
+.category {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: auto;
+}
+
+.product-card .btn {
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+/* Botones */
+.btn {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+/* Estilos del footer */
+.footer {
+    background-color: #0c1ca8; /* Color de fondo del pie de página */
+    color: white; /* Color del texto del pie de página */
+    padding: 3rem 1rem 1rem;
+    margin-top: 4rem;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+}
+
+.footer-section h4 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    color: white;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-section a {
+    color: #fff;
+    text-decoration: none;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.footer-section a:hover {
+    opacity: 1;
+}
+
+.footer-section i {
+    margin-right: 0.5rem;
+    width: 20px;
+    text-align: center;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.social-links a {
+    font-size: 1.5rem;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.social-links a:hover {
+    opacity: 1;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        text-align: center;
+    }
+
+    .social-links {
+        justify-content: center;
+    }
+
+    .footer-section ul li i {
+        margin-right: 0.5rem;
+    }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .navbar {
+        padding: 1rem 2%;
+    }
+
+    .search-bar {
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .nav-left {
+        width: 100%;
+    }
+
+    .nav-right {
+        margin-top: 1rem;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .search-bar {
+        width: 100%;
+        margin: 1rem 0;
+    }
+
+    .user-menu {
+        margin-left: 0;
+    }
 }
 
 /* Hero Section */
 .hero {
-    text-align: center;
-    padding: 3rem 1rem;
-    background-color: #2c3e50;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../images/hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
     color: white;
+    text-align: center;
+    padding: 4rem 2rem;
+    margin-bottom: 2rem;
 }
 
 .hero h1 {
@@ -56,143 +347,625 @@ body {
     margin-bottom: 1rem;
 }
 
-/* Games Grid */
-.games-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+/* Estilos para los filtros */
+.filters {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.filter-container {
+    display: flex;
     gap: 2rem;
-    padding: 2rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.filter {
+    flex: 1;
+    min-width: 250px;
+    margin-bottom: 1rem;
+}
+
+.filter h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.filter-form select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    background-color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.filter-form select:hover {
+    border-color: var(--primary-color);
+}
+
+.filter-form select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+/* Responsive para filtros */
+@media (max-width: 768px) {
+    .filter-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .filter {
+        width: 100%;
+    }
+}
+
+/* Grid de productos mejorado */
+.featured-products {
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 1rem;
 }
 
-.game-card {
-    background: white;
-    border-radius: 8px;
-    padding: 1rem;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.game-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 4px;
-}
-
-.game-card button {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 1rem;
-}
-
-.game-card button:hover {
-    background-color: #2980b9;
-}
-
-/* Forms */
+/* Estilos para formularios */
 .form-container {
-    max-width: 400px;
+    max-width: 500px;
     margin: 2rem auto;
     padding: 2rem;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.login-form,
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .form-group {
     margin-bottom: 1rem;
 }
 
+.input-container {
+    border: 1px solid #ccc; /* Borde del cuadro de entrada */
+    border-radius: var(--border-radius);
+    padding: 0.5rem;
+}
+
+.input-container input {
+    border: none; /* Sin borde en el input */
+    outline: none; /* Sin contorno al hacer clic */
+    width: 100%; /* Ancho completo */
+    background: transparent; /* Fondo transparente */
+    color: #333; /* Color del texto */
+}
+
+.input-container input[readonly] {
+    background: #f9f9f9; /* Fondo gris claro para campos de solo lectura */
+}
+
 .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-color);
 }
 
 .form-group input {
-    width: 100%;
-    padding: 0.5rem;
+    padding: 0.8rem;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
 }
 
-form button {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+.form-group input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
 }
 
-form button:hover {
-    background-color: #2980b9;
-}
-
-/* Footer */
-.footer {
-    background-color: #333;
-    color: white;
-    padding: 2rem 1rem;
-    margin-top: 2rem;
-}
-
-.footer-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-}
-
-.footer-section h4 {
+.error-message {
+    background-color: #fee2e2;
+    border: 1px solid #ef4444;
+    color: #dc2626;
+    padding: 1rem;
+    border-radius: var(--border-radius);
     margin-bottom: 1rem;
 }
 
-.footer-section ul {
-    list-style: none;
+.success-message {
+    background-color: #dcfce7;
+    border: 1px solid #22c55e;
+    color: #16a34a;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
 }
 
-.footer-section a {
+.form-container h2 {
+    text-align: center;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
+.form-container button {
+    background-color: var(--primary-color);
     color: white;
-    text-decoration: none;
+    padding: 0.8rem;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.footer-section a:hover {
+.form-container button:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.form-container p {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.form-container a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.form-container a:hover {
     text-decoration: underline;
 }
 
-.social-links {
+/* Responsive para formularios */
+@media (max-width: 600px) {
+    .form-container {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+}
+
+/* Estilos para el carrito */
+.cart-icon {
+    position: relative;
+    padding: 0.5rem;
+    text-decoration: none;
+}
+
+.cart-icon i {
+    font-size: 1.2rem;
+    color: white;
+}
+
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8rem;
+}
+
+/* Estilos para segunda mano */
+.segunda-mano-hero {
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('../images/segunda-mano-bg.jpg');
+}
+
+.estado {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+    display: inline-block;
+    margin-top: 0.5rem;
+}
+
+/* Estilos para soporte */
+.support-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.faq-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.faq-item {
+    background: var(--card-background);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+/* Estilos para contacto */
+.contact-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.contact-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.contact-details {
+    background: var(--card-background);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.info-item i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+/* Estilos para formularios de contacto y soporte */
+textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    resize: vertical;
+}
+
+/* Estilos para el avatar y menú de usuario */
+.user-menu {
+    position: relative;
+    margin-left: 1rem;
+}
+
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white !important;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+}
+
+.user-avatar:hover {
+    background-color: var(--secondary-color);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 120%;
+    right: 0;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    min-width: 150px;
+    padding: 0.5rem 0;
+    display: none;
+    z-index: 1000;
+}
+
+.user-menu:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu a {
+    color: rgb(253, 253, 253); /* Cambiado a negro */
+    padding: 0.8rem 1rem;
+    display: block;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f0f0f0; /* Color de fondo al pasar el ratón (opcional) */
+}
+
+/* Estilos para el menú desplegable */
+.menu-container {
+    position: relative;
+}
+
+.menu-button {
+    background-color: transparent; /* Fondo transparente */
+    color: white; /* Cambiar el color del icono a blanco */
+    border: none; /* Sin borde */
+    padding: 0.8rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.menu-button:hover {
+    background-color: var(--secondary-color);
+}
+
+.menu-dropdown {
+    position: absolute;
+    top: 120%;
+    left: 0;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    min-width: 200px;
+    padding: 0.5rem 0;
+    display: none;
+    z-index: 1000;
+}
+
+.menu-dropdown.show {
+    display: block;
+}
+
+.menu-item {
+    color: var(--text-color);
+    padding: 0.8rem 1.5rem;
+    display: block;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+}
+
+.menu-item:hover {
+    background-color: var(--background-color);
+}
+
+/* Ajustes para el nav-right */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* Ajustes responsive */
+@media (max-width: 768px) {
+    .menu-dropdown {
+        position: fixed;
+        top: auto;
+        left: 0;
+        right: 0;
+        width: 100%;
+        margin-top: 0.5rem;
+        border-radius: 0;
+    }
+
+    .menu-item {
+        text-align: center;
+    }
+
+    .nav-right {
+        gap: 1rem;
+    }
+}
+
+.profile-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.sidebar {
+    width: 180px;
+    padding: 1rem;
+    background: #0060a0;
+    color: rgb(0, 0, 0);
+    border-radius: var(--border-radius);
+    height: auto;
+    max-height: 80vh;
+    position: relative;
+    overflow-y: auto;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar h2 {
+    margin-bottom: 1rem;
+    color: #ecf0f1;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 1rem;
+}
+
+.sidebar ul li a {
+    color: #ecf0f1;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    padding: 0.5rem;
+    display: block;
+    border-radius: var(--border-radius);
+}
+
+.sidebar ul li a:hover {
+    background-color: #005d9b;
+    color: white;
+}
+
+.profile-info {
+    flex-grow: 1;
+    padding: 1rem;
+    margin-left: 20px;
+}
+
+.profile-info h1 {
+    margin-bottom: 1rem;
+    color: #2c3e50;
+}
+
+.error-message {
+    color: red;
+    margin-bottom: 1rem;
+}
+
+.danger {
+    color: red;
+}
+
+.profile-actions {
     display: flex;
     gap: 1rem;
 }
 
-.footer-bottom {
-    text-align: center;
-    margin-top: 2rem;
-    padding-top: 1rem;
-    border-top: 1px solid #555;
+.btn {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    transition: all 0.3s ease;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .nav-links {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
+.btn:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
 
-    .hero h1 {
-        font-size: 2rem;
-    }
+.btn-danger {
+    background-color: red;
+}
 
-    .games-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
+.btn-danger:hover {
+    background-color: darkred;
+}
+
+/* Estilos para el rol ADMIN */
+body.admin {
+    background-color: #ffcccc; /* Fondo rojo claro */
+    color: #333; /* Color del texto */
+}
+
+.admin .sidebar {
+    background-color: #c0392b; /* Color de fondo del menú */
+    color: white; /* Color del texto del menú */
+}
+
+.admin .sidebar a {
+    color: white; /* Color de los enlaces del menú */
+}
+
+.admin .header {
+    background-color: #c0392b; /* Color de fondo del encabezado para ADMIN */
+    color: white; /* Color del texto del encabezado */
+}
+
+.admin .footer {
+    background-color: #c0392b; /* Color de fondo del pie de página para ADMIN */
+    color: white; /* Color del texto del pie de página */
+}
+
+.admin button {
+    background-color: #c0392b; /* Color de fondo del botón para ADMIN */
+}
+
+.admin button:hover {
+    background-color: #e74c3c; /* Color de fondo al pasar el ratón */
+}
+
+.header {
+    background-color: #2980b9; /* Color de fondo del encabezado */
+    color: white; /* Color del texto del encabezado */
+}
+
+.header .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+}
+
+.header .logo a {
+    color: white; /* Cambiado a blanco */
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: bold; /* Asegúrate de que esté en negrita */
+}
+
+.header .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.menu-dropdown {
+    display: none; /* Ocultar el menú por defecto */
+}
+
+.menu-button:hover + .menu-dropdown,
+.menu-dropdown:hover {
+    display: block; /* Mostrar el menú al pasar el ratón */
+}
+
+#add-game-form {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.navbar a {
+    color: rgb(255, 255, 255); /* Cambiado a negro */
+}
+
+/* Estilos para el rol ADMIN */
+body.admin .header {
+    background-color: #c0392b; /* Color de fondo del encabezado para ADMIN */
+    color: white; /* Color del texto del encabezado */
+}
+
+body.admin .navbar a {
+    color: white; /* Asegúrate de que el texto del menú sea blanco */
+}
+
+.menu-dropdown a {
+    color: rgb(0, 0, 0); /* Asegúrate de que los enlaces sean blancos */
+}
+
+/* Cambiar el color del icono del carrito a blanco */
+.cart-icon i {
+    color: white; /* Cambiar el color del icono a blanco */
 } 

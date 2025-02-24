@@ -1,0 +1,9 @@
+.footer {
+    background-color: #0c1ca8; /* Color de fondo del pie de página */
+    color: white; /* Color del texto del pie de página */
+    padding: 3rem 1rem 1rem;
+    margin-top: 4rem; /* Asegúrate de que haya suficiente espacio arriba */
+    clear: both; /* Asegúrate de que el footer no se superponga con otros elementos */
+    position: relative; /* Asegúrate de que el footer esté posicionado correctamente */
+    z-index: 1; /* Asegúrate de que el footer esté por encima de otros elementos */
+} 
