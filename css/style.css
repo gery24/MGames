@@ -43,8 +43,8 @@ body {
 
 .menu-dropdown {
     display: none; /* Ocultar el menú por defecto */
-    background-color: #add8e6; /* Color azul claro para el fondo */
-    color: white; /* Color blanco para el texto */
+    background-color: #ffffff; /* Color azul claro para el fondo */
+    color: rgb(0, 0, 0); /* Color blanco para el texto */
 }
 
 .nav-left {
@@ -662,35 +662,10 @@ textarea {
     background-color: var(--secondary-color);
 }
 
-.dropdown-menu {
-    position: absolute;
-    top: 120%;
-    right: 0;
-    background-color: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    min-width: 150px;
-    padding: 0.5rem 0;
-    display: none;
-    z-index: 1000;
-}
+
 
 .user-menu:hover .dropdown-menu {
     display: block;
-}
-
-.dropdown-menu a {
-    color: rgb(253, 253, 253); /* Cambiado a negro */
-    padding: 0.8rem 1rem;
-    display: block;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-    font-size: 0.9rem;
-    white-space: nowrap;
-}
-
-.dropdown-menu a:hover {
-    background-color: #f0f0f0; /* Color de fondo al pasar el ratón (opcional) */
 }
 
 /* Estilos para el menú desplegable */
@@ -716,21 +691,8 @@ textarea {
     background-color: var(--secondary-color);
 }
 
-.menu-dropdown {
-    position: absolute;
-    top: 120%;
-    left: 0;
-    background-color: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    min-width: 200px;
-    padding: 0.5rem 0;
-    display: none;
-    z-index: 1000;
-}
-
-.menu-dropdown.show {
-    display: block;
+.user-menu .dropdown-menu.show {
+    display: block; /* Mostrar el menú cuando se activa la clase 'show' */
 }
 
 .menu-item {
@@ -959,10 +921,6 @@ body.admin .header {
 
 body.admin .navbar a {
     color: white; /* Asegúrate de que el texto del menú sea blanco */
-}
-
-.menu-dropdown a {
-    color: rgb(0, 0, 0); /* Asegúrate de que los enlaces sean blancos */
 }
 
 /* Cambiar el color del icono del carrito a blanco */

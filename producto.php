@@ -29,6 +29,11 @@ try {
 
 $titulo = htmlspecialchars($producto['nombre']);
 require_once 'includes/header.php';
+
+// Mostrar mensaje si el producto ya está en el carrito
+if (isset($_GET['already_in_cart'])) {
+    echo '<p style="color: red;">Este producto ya está en tu carrito.</p>';
+}
 ?>
 
 <!DOCTYPE html>

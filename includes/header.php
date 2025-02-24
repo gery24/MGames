@@ -7,28 +7,6 @@
     <title><?php echo $titulo ?? 'MGames - Tu tienda de videojuegos'; ?></title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .menu-dropdown {
-            display: none; /* Ocultar el menú por defecto */
-            position: absolute; /* Posicionar el menú de forma absoluta */
-            background-color: white; /* Color de fondo del menú */
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra para el menú */
-            z-index: 1000; /* Asegurarse de que esté por encima de otros elementos */
-        }
-        .menu-dropdown.show {
-            display: block; /* Mostrar el menú cuando se activa la clase 'show' */
-        }
-        .user-menu .dropdown-menu {
-            display: none; /* Ocultar el menú por defecto */
-            position: absolute; /* Posicionar el menú de forma absoluta */
-            background-color: white; /* Color de fondo del menú */
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra para el menú */
-            z-index: 1000; /* Asegurarse de que esté por encima de otros elementos */
-        }
-        .user-menu .dropdown-menu.show {
-            display: block; /* Mostrar el menú cuando se activa la clase 'show' */
-        }
-    </style>
 </head>
 <body>
     <nav class="navbar">

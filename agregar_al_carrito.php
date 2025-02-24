@@ -1,27 +1,20 @@
 <?php
 session_start();
 
-// Verificar si se ha enviado el ID del producto
-if (isset($_POST['producto_id'])) {
-    $producto_id = $_POST['producto_id'];
-    $nombre = $_POST['nombre'];
-    $precio = $_POST['precio'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id = $_POST['id'];
 
-    // Inicializar el carrito si no existe
-    if (!isset($_SESSION['carrito'])) {
-        $_SESSION['carrito'] = [];
+    // Obtener el producto de la base de datos
+    $stmt = $pdo->prepare("SELECT * FROM productos WHERE id = ?");
+    $stmt->execute([$id]);
+    $producto = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($producto) {
+        // Agregar el producto al carrito
+        $_SESSION['carrito'][] = $producto;
+        header('Location: carrito.php'); // Redirigir al carrito
+        exit;
     }
-
-    // Añadir el producto al carrito
-    $_SESSION['carrito'][$producto_id] = [
-        'nombre' => $nombre,
-        'precio' => $precio,
-        'cantidad' => 1 // Puedes ajustar la cantidad según sea necesario
-    ];
-
-    // Redirigir de vuelta a la página del producto
-    header("Location: producto.php?id=$producto_id");
-    exit;
 } else {
     // Redirigir a la página principal si no se envió el ID
     header("Location: index.php");
