@@ -192,4 +192,4 @@ require_once 'includes/header.php';
    
 </script>
 
-<?php require_once 'includes/footer.php'; ?> 
+<?php require_once 'includes/footer.php'; ?>
