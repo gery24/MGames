@@ -1,5 +1,5 @@
 .header {
-    background-color: #2980b9; /* Color de fondo del encabezado */
+    background-color: #0621bd; /* Color de fondo del encabezado */
     color: white; /* Color del texto del encabezado */
 }
 
@@ -11,7 +11,7 @@
 }
 
 .header .logo a {
-    color: rgb(214, 0, 0); /* Cambiado a blanco */
+    color: rgb(255, 255, 255); /* Cambiado a blanco */
     text-decoration: none;
     font-size: 1.5rem;
     font-weight: bold; /* Asegúrate de que esté en negrita */

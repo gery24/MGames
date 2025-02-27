@@ -139,7 +139,6 @@ try {
         </div>
     </div>
 
-    <?php require_once 'includes/footer.php'; ?>
 
     <script>
         $(document).ready(function() {
@@ -214,4 +213,5 @@ try {
         });
     </script>
 </body>
+<?php require_once 'includes/footer.php'; ?>
 </html> 
