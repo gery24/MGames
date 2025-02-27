@@ -35,7 +35,7 @@
         }
     </style>
 </head>
-<body>
+<body class="<?php echo (isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN') ? 'admin' : ''; ?>">
     <nav class="navbar">
         <div class="nav-left">
             <div class="logo">
