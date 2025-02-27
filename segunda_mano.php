@@ -27,17 +27,7 @@ require_once 'includes/header.php';
     <link rel="stylesheet" href="css/segunda_mano.css"> <!-- Estilos específicos -->
 </head>
 <body>
-            <?php if(isset($_SESSION['usuario'])): ?>
-                <div class="user-menu">
-                    <a class="user-avatar" id="user-logo">
-                        <?php echo strtoupper(substr($_SESSION['usuario']['nombre'], 0, 1)); ?>
-                    </a>
-                    <div class="dropdown-menu">
-                        <a href="perfil.php" class="menu-item">Ajustes</a>
-                        <a href="logout.php">Cerrar Sesión</a>
-                    </div>
-                </div>
-            <?php endif; ?>
+            
         </div>
     </nav>
 

@@ -17,11 +17,21 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%; /* Asegura que el body ocupe toda la altura */
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
+    display: flex;
+    flex-direction: column; /* Asegura que el contenido se apile verticalmente */
+}
+
+.content {
+    flex: 1; /* Permite que el contenido ocupe el espacio restante */
 }
 
 /* Estilos del navbar */
@@ -38,13 +48,52 @@ body {
 }
 
 .menu-container {
-    color: rgb(101, 142, 196); /* Cambiado a negro */
+    color: white;
 }
 
 .menu-dropdown {
-    display: none; /* Ocultar el menú por defecto */
-    background-color: #ffffff; /* Color azul claro para el fondo */
-    color: rgb(0, 0, 0); /* Color blanco para el texto */
+    display: none;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 15px;
+    border-radius: 8px;
+    min-width: 220px;
+    top: 100%;
+    left: 0;
+    border: 2px solid red;
+}
+
+.menu-dropdown .menu-item {
+    color: red;
+    text-decoration: none;
+    display: block;
+    padding: 12px 20px;
+    transition: background-color 0.3s;
+    font-size: 1.1em;
+    white-space: nowrap;
+}
+
+.menu-dropdown .menu-item:hover {
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+.menu-button {
+    background: none;
+    border: none;
+    color: white !important;
+    cursor: pointer;
+    font-size: 1.5em;
+    padding: 0.8rem;
+}
+
+.menu-button i {
+    color: white !important;
+}
+
+.menu-button:hover {
+    opacity: 0.8;
 }
 
 .nav-left {
@@ -56,14 +105,14 @@ body {
 .logo {
     display: flex;
     align-items: center;
-    color: rgb(255, 247, 247); /* Cambiado a blanco */
+    color: white;
 }
 
 .logo a {
-    color: white; /* Cambiado a blanco */
+    color: white !important;
     text-decoration: none;
     font-size: 1.5rem;
-    font-weight: bold; /* Asegúrate de que esté en negrita */
+    font-weight: bold;
 }
 
 .search-bar {
@@ -96,16 +145,16 @@ body {
     gap: 1.5rem;
 }
 
-.nav-right > a:not(.user-avatar):not(.cart-icon) {
-    padding: 0.5rem 1rem;
-    color: white;
+.nav-right > a {
+    color: white; /* Asegúrate de que el texto sea blanco */
     text-decoration: none;
+    padding: 0.5rem 1rem;
     border-radius: var(--border-radius);
     transition: background-color 0.3s ease;
 }
 
-.nav-right > a:not(.user-avatar):not(.cart-icon):hover {
-    background-color: var(--secondary-color);
+.nav-right > a:hover {
+    background-color: var(--secondary-color); /* Cambia el color al pasar el ratón */
 }
 
 .nav-right a.active {
@@ -214,6 +263,9 @@ body {
     color: white; /* Color del texto del pie de página */
     padding: 3rem 1rem 1rem;
     margin-top: 4rem;
+    position: relative; /* Asegura que el footer esté en su lugar */
+    bottom: 0; /* Asegura que el footer esté al final */
+    width: 100%; /* Asegura que el footer ocupe todo el ancho */
 }
 
 .footer-content {
@@ -646,20 +698,20 @@ textarea {
 .user-avatar {
     width: 35px;
     height: 35px;
-    background-color: var(--primary-color);
+    background-color: red;
+    color: white !important;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white !important;
-    font-weight: bold;
-    font-size: 1.1rem;
-    transition: background-color 0.3s ease;
     text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1.1rem;
 }
 
 .user-avatar:hover {
-    background-color: var(--secondary-color);
+    opacity: 0.9;
 }
 
 
@@ -668,27 +720,34 @@ textarea {
     display: block;
 }
 
+.dropdown-menu a {
+    color: black; /* Color del texto en negro */
+    padding: 0.8rem 1.5rem; /* Espaciado interno */
+    display: block; /* Mostrar como bloque */
+    text-decoration: none; /* Sin subrayado */
+    transition: background-color 0.3s ease; /* Transición suave */
+}
+
+.dropdown-menu a:hover {
+    background-color: #f0f0f0; /* Color de fondo al pasar el ratón */
+}
+
 /* Estilos para el menú desplegable */
 .menu-container {
     position: relative;
 }
 
 .menu-button {
-    background-color: transparent; /* Fondo transparente */
-    color: white; /* Cambiar el color del icono a blanco */
-    border: none; /* Sin borde */
-    padding: 0.8rem;
-    border-radius: var(--border-radius);
+    background: none;
+    border: none;
+    color: white;
     cursor: pointer;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s ease;
+    font-size: 1.5em;
+    padding: 0.8rem;
 }
 
-.menu-button:hover {
-    background-color: var(--secondary-color);
+.menu-button i {
+    color: white;
 }
 
 .user-menu .dropdown-menu.show {
@@ -696,16 +755,15 @@ textarea {
 }
 
 .menu-item {
-    color: var(--text-color);
-    padding: 0.8rem 1.5rem;
-    display: block;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-    white-space: nowrap;
+    color: black; /* Color del texto en negro */
+    padding: 0.8rem 1.5rem; /* Espaciado interno */
+    display: block; /* Mostrar como bloque */
+    text-decoration: none; /* Sin subrayado */
+    transition: background-color 0.3s ease; /* Transición suave */
 }
 
 .menu-item:hover {
-    background-color: var(--background-color);
+    background-color: #f0f0f0; /* Color de fondo al pasar el ratón */
 }
 
 /* Ajustes para el nav-right */
@@ -910,13 +968,13 @@ body.admin {
 }
 
 .navbar a {
-    color: rgb(255, 255, 255); /* Cambiado a negro */
+    color: rgb(0, 0, 0); /* Cambiado a negro */
 }
 
 /* Estilos para el rol ADMIN */
 body.admin .header {
     background-color: #c0392b; /* Color de fondo del encabezado para ADMIN */
-    color: white; /* Color del texto del encabezado */
+    color: rgb(0, 0, 0); /* Color del texto del encabezado */
 }
 
 body.admin .navbar a {
@@ -949,4 +1007,45 @@ body.admin .navbar a {
     display: flex;
     flex-direction: column;
     justify-content: center;
-} 
+}
+
+.user-menu .dropdown-menu {
+    background-color: white; /* Color de fondo del menú desplegable */
+}
+
+.user-menu .dropdown-menu a {
+    color: rgb(0, 0, 0) !important; /* Cambiar el color del texto a negro */
+}
+
+.user-menu .dropdown-menu a:hover {
+    background-color: #f0f0f0; /* Color de fondo al pasar el ratón */
+}
+
+.login-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 1rem; /* Espaciado a la izquierda */
+}
+
+.login-icon img {
+    width: 35px; /* Ajusta el tamaño según sea necesario */
+    height: 35px; /* Ajusta el tamaño según sea necesario */
+    transition: transform 0.3s ease;
+    border: none; /* Asegúrate de que no haya borde */
+    outline: none; /* Elimina el contorno al hacer clic */
+}
+
+.login-icon:hover img {
+    transform: scale(1.1); /* Efecto de hover */
+}
+
+/* Estilos para el rol ADMIN */
+body.admin .navbar {
+    background-color: #c0392b; /* Color de fondo del encabezado para ADMIN */
+    color: white; /* Color del texto del encabezado */
+}
+
+body.admin .navbar a {
+    color: rgb(255, 0, 0); /* Asegúrate de que el texto del menú sea blanco */
+}

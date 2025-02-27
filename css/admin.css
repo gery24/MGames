@@ -1,0 +1,22 @@
+/* Estilos específicos para el panel de administración */
+body.admin {
+    background-color: #ffcccc; /* Fondo rojo claro */
+    color: #ffffff; /* Color del texto */
+}
+
+.admin .sidebar {
+    background-color: #c0392b; /* Color de fondo del menú */
+    color: white; /* Color del texto del menú */
+}
+
+.user-menu .dropdown-menu {
+    background-color: white; /* Color de fondo del menú desplegable */
+}
+
+.user-menu .dropdown-menu a {
+    color: rgb(0, 0, 0) !important; /* Cambiar el color del texto a negro */
+}
+
+.user-menu .dropdown-menu a:hover {
+    background-color: #f0f0f0; /* Color de fondo al pasar el ratón */
+} 
