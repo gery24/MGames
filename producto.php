@@ -231,14 +231,18 @@ if (isset($_GET['already_in_cart'])) {
             <div class="product-info">
                 <h1><?php echo htmlspecialchars($producto['nombre']); ?></h1>
                 <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
-                
+                <p class="platform">Categoria: <?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>                
                 <!-- Formulario modificado para añadir al carrito -->
                 <form method="POST" action="agregar_al_carrito.php">
                     <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
                     <button type="submit" class="btn buy-button">Añadir al carrito</button>
                 </form>
+                    <br>
+                <form method="POST" action="agregar_lista_deseos.php">
+                    <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
+                    <button type="submit" class="btn buy-button">Añadir a lista de deseos</button>
+                </form> 
                 
-                <p class="platform">Plataforma: <?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>
             </div>
         </div>
 

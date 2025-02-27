@@ -100,6 +100,7 @@ require_once 'includes/header.php';
         <p>Tu destino para los mejores videojuegos</p>
         <br>
         <a href="segunda_mano.php" class="btn">Ver Productos de Segunda Mano</a>
+        <a href="lista_deseos.php" class="btn">Lista de Deseos</a>
     </header>
 
     <!-- Filtros -->
