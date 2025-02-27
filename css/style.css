@@ -65,6 +65,10 @@ body {
     border: 2px solid red;
 }
 
+body:not(.admin) .menu-dropdown {
+    border: 2px solid var(--navbar-color);
+}
+
 .menu-dropdown .menu-item {
     color: red;
     text-decoration: none;
@@ -75,8 +79,16 @@ body {
     white-space: nowrap;
 }
 
+body:not(.admin) .menu-dropdown .menu-item {
+    color: var(--navbar-color);
+}
+
 .menu-dropdown .menu-item:hover {
     background-color: rgba(255, 0, 0, 0.1);
+}
+
+body:not(.admin) .menu-dropdown .menu-item:hover {
+    background-color: rgba(30, 58, 138, 0.1);
 }
 
 .menu-button {
@@ -714,8 +726,6 @@ textarea {
     opacity: 0.9;
 }
 
-
-
 .user-menu:hover .dropdown-menu {
     display: block;
 }
@@ -1048,4 +1058,43 @@ body.admin .navbar {
 
 body.admin .navbar a {
     color: rgb(255, 0, 0); /* Asegúrate de que el texto del menú sea blanco */
+}
+
+.user-menu .dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 15px;
+    border-radius: 8px;
+    min-width: 160px;
+    right: 0;
+    top: 100%;
+    border: 2px solid red;
+}
+
+.user-menu .dropdown-menu a {
+    color: red;
+    text-decoration: none;
+    display: block;
+    padding: 12px 20px;
+    white-space: nowrap;
+    transition: background-color 0.3s;
+}
+
+.user-menu .dropdown-menu a:hover {
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+body:not(.admin) .user-menu .dropdown-menu {
+    border: 2px solid var(--navbar-color);
+}
+
+body:not(.admin) .user-menu .dropdown-menu a {
+    color: var(--navbar-color);
+}
+
+body:not(.admin) .user-menu .dropdown-menu a:hover {
+    background-color: rgba(30, 58, 138, 0.1);
 }
