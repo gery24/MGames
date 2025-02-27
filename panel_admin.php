@@ -82,30 +82,24 @@ require_once 'includes/header.php';
 
 <link rel="stylesheet" href="css/panel_admin.css">
 
-<div class="admin-container">
+<div class="admin-panel">
     <h1>Panel de Administración</h1>
 
     <?php if ($error): ?>
-        <div class="error-message"><?php echo $error; ?></div>
+        <div class="message error"><?php echo $error; ?></div>
     <?php endif; ?>
     <?php if ($success): ?>
-        <div class="success-message"><?php echo $success; ?></div>
+        <div class="message success"><?php echo $success; ?></div>
     <?php endif; ?>
 
-    <!-- Formulario para añadir juego -->
-    <section class="admin-section">
-        <h2>Añadir Nuevo Juego</h2>
-        <form method="POST" enctype="multipart/form-data" class="admin-form">
-            <input type="hidden" name="action" value="add_game">
-            
+    <h2>Añadir Nuevo Juego</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="action" value="add_game">
+        
+        <div class="form-grid">
             <div class="form-group">
                 <label for="nombre">Nombre:</label>
                 <input type="text" id="nombre" name="nombre" required>
-            </div>
-
-            <div class="form-group">
-                <label for="descripcion">Descripción:</label>
-                <textarea id="descripcion" name="descripcion" required></textarea>
             </div>
 
             <div class="form-group">
@@ -116,58 +110,57 @@ require_once 'includes/header.php';
             <div class="form-group">
                 <label for="categoria">Categoría:</label>
                 <select id="categoria" name="categoria" required>
-                    <?php foreach($categorias as $cat): ?>
-                        <option value="<?php echo $cat['id']; ?>">
-                            <?php echo htmlspecialchars($cat['nombre']); ?>
-                        </option>
+                    <?php foreach ($categorias as $categoria): ?>
+                        <option value="<?php echo $categoria['id']; ?>"><?php echo $categoria['nombre']; ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="estado">Estado:</label>
-                <select id="estado" name="estado">
+                <select id="estado" name="estado" required>
                     <option value="Nuevo">Nuevo</option>
-                    <option value="Como nuevo">Como nuevo</option>
-                    <option value="Buen estado">Buen estado</option>
-                    <option value="Aceptable">Aceptable</option>
+                    <option value="Usado">Usado</option>
+                    <option value="Seminuevo">Seminuevo</option>
                 </select>
             </div>
 
-            <div class="form-group">
-                <label for="imagen">Imagen:</label>
-                <input type="file" id="imagen" name="imagen">
+            <div class="form-group full-width">
+                <label for="descripcion">Descripción:</label>
+                <textarea id="descripcion" name="descripcion" required></textarea>
             </div>
 
-            <button type="submit" class="btn">Añadir Juego</button>
-        </form>
-    </section>
+            <div class="form-group full-width">
+                <label for="imagen">Imagen:</label>
+                <input type="file" id="imagen" name="imagen" accept="image/*">
+            </div>
+
+            <button type="submit" class="submit-button">Añadir Juego</button>
+        </div>
+    </form>
 </div>
 
 <!-- Lista de juegos fuera del contenedor -->
-<section class="admin-section">
+<div class="admin-panel">
     <h2>Juegos Existentes</h2>
-    <div class="games-list">
+    <div class="products-grid">
         <?php foreach($productos as $producto): ?>
-            <div class="game-item">
+            <div class="product-card">
                 <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" 
                      alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
-                <div class="game-info">
+                <div class="product-card-content">
                     <h3><?php echo htmlspecialchars($producto['nombre']); ?></h3>
                     <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
                     <p class="category"><?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>
-                    <form method="POST" class="delete-form">
+                    <form method="POST">
                         <input type="hidden" name="action" value="delete_game">
                         <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
-                        <button type="submit" class="btn" 
-                                onclick="return confirm('¿Estás seguro de querer eliminar este juego?')">
-                            Eliminar
-                        </button>
+                        <button type="submit" class="btn delete" onclick="return confirm('¿Estás seguro de querer eliminar este juego?')">Eliminar</button>
                     </form>
                 </div>
             </div>
         <?php endforeach; ?>
     </div>
-</section>
+</div>
 
 <?php require_once 'includes/footer.php'; ?> 

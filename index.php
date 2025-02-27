@@ -174,7 +174,7 @@ require_once 'includes/header.php';
         <h2>Productos</h2>
         <div class="products-grid">
             <?php foreach($productos as $producto): ?>
-                <div class="product-card">
+                <div class="product-card <?php echo (isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN') ? 'admin-style' : ''; ?>">
                     <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" 
                          alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
                     <div class="product-card-content">
