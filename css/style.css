@@ -105,14 +105,14 @@ body {
 .logo {
     display: flex;
     align-items: center;
-    color: rgb(255, 247, 247); /* Cambiado a blanco */
+    color: white;
 }
 
 .logo a {
-    color: white; /* Cambiado a blanco */
+    color: white !important;
     text-decoration: none;
     font-size: 1.5rem;
-    font-weight: bold; /* Asegúrate de que esté en negrita */
+    font-weight: bold;
 }
 
 .search-bar {
@@ -698,20 +698,20 @@ textarea {
 .user-avatar {
     width: 35px;
     height: 35px;
-    background-color: var(--primary-color);
+    background-color: red;
+    color: white !important;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white !important;
-    font-weight: bold;
-    font-size: 1.1rem;
-    transition: background-color 0.3s ease;
     text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1.1rem;
 }
 
 .user-avatar:hover {
-    background-color: var(--secondary-color);
+    opacity: 0.9;
 }
 
 .dropdown-menu {

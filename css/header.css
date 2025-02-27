@@ -11,10 +11,10 @@
 }
 
 .header .logo a {
-    color: rgb(255, 255, 255); /* Cambiado a blanco */
+    color: white !important;
     text-decoration: none;
     font-size: 1.5rem;
-    font-weight: bold; /* Asegúrate de que esté en negrita */
+    font-weight: bold;
 }
 
 .header .nav-right {

@@ -62,6 +62,29 @@
         .user-menu .dropdown-menu.show {
             display: block; /* Mostrar el menú cuando se activa la clase 'show' */
         }
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            background-color: red;
+            color: white !important;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        .user-avatar:hover {
+            opacity: 0.9;
+        }
+        .logo a {
+            color: white !important;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body class="<?php echo (isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN') ? 'admin' : ''; ?>">
