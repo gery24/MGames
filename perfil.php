@@ -38,6 +38,25 @@ try {
     <title>Perfil - MGames</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .menu-button {
+            color: white !important;
+        }
+        .menu-button i {
+            color: white !important;
+        }
+        .menu-dropdown {
+            background-color: white;
+            min-width: 150px;
+            border-radius: 4px;
+            padding: 10px;
+        }
+        .menu-dropdown .menu-item {
+            color: red;
+            padding: 8px 16px;
+        }
+    </style>
 </head>
 <body class="<?php echo ($usuario['rol'] === 'ADMIN') ? 'admin' : ''; ?>">
     <header class="header">

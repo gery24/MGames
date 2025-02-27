@@ -13,15 +13,44 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        .menu-button {
+            background: none;
+            border: none;
+            color: white !important;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+        .menu-button i {
+            color: white !important;
+        }
+        .menu-button:hover {
+            opacity: 0.8;
+        }
         .menu-dropdown {
-            display: none; /* Ocultar el menú por defecto */
-            position: absolute; /* Posicionar el menú de forma absoluta */
-            background-color: white; /* Color de fondo del menú */
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra para el menú */
-            z-index: 1000; /* Asegurarse de que esté por encima de otros elementos */
+            display: none;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 15px;
+            border-radius: 8px;
+            min-width: 220px;
+            border: 2px solid red;
         }
         .menu-dropdown.show {
-            display: block; /* Mostrar el menú cuando se activa la clase 'show' */
+            display: block;
+        }
+        .menu-dropdown .menu-item {
+            color: red;
+            text-decoration: none;
+            display: block;
+            padding: 12px 20px;
+            transition: background-color 0.3s;
+            font-size: 1.1em;
+            white-space: nowrap;
+        }
+        .menu-dropdown .menu-item:hover {
+            background-color: rgba(255, 0, 0, 0.1);
         }
         .user-menu .dropdown-menu {
             display: none; /* Ocultar el menú por defecto */

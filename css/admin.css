@@ -1,7 +1,7 @@
 /* Estilos específicos para el panel de administración */
 body.admin {
     background-color: #ffcccc; /* Fondo rojo claro */
-    color: #ff0000; /* Color del texto */
+    color: #ffffff; /* Color del texto */
 }
 
 .admin .sidebar {

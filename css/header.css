@@ -23,6 +23,18 @@
     gap: 1.5rem;
 }
 
+.menu-button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1.5em;
+}
+
+.menu-button i {
+    color: white;
+}
+
 .menu-dropdown {
     display: none; /* Ocultar el menú por defecto */
 }
@@ -34,4 +46,4 @@
 
 .cart-icon i {
     color: white; /* Cambiar el color del icono a blanco */
-} 
+}
