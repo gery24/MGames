@@ -17,11 +17,21 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%; /* Asegura que el body ocupe toda la altura */
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
+    display: flex;
+    flex-direction: column; /* Asegura que el contenido se apile verticalmente */
+}
+
+.content {
+    flex: 1; /* Permite que el contenido ocupe el espacio restante */
 }
 
 /* Estilos del navbar */
@@ -96,16 +106,16 @@ body {
     gap: 1.5rem;
 }
 
-.nav-right > a:not(.user-avatar):not(.cart-icon) {
-    padding: 0.5rem 1rem;
-    color: white;
+.nav-right > a {
+    color: white; /* Asegúrate de que el texto sea blanco */
     text-decoration: none;
+    padding: 0.5rem 1rem;
     border-radius: var(--border-radius);
     transition: background-color 0.3s ease;
 }
 
-.nav-right > a:not(.user-avatar):not(.cart-icon):hover {
-    background-color: var(--secondary-color);
+.nav-right > a:hover {
+    background-color: var(--secondary-color); /* Cambia el color al pasar el ratón */
 }
 
 .nav-right a.active {
@@ -214,6 +224,9 @@ body {
     color: white; /* Color del texto del pie de página */
     padding: 3rem 1rem 1rem;
     margin-top: 4rem;
+    position: relative; /* Asegura que el footer esté en su lugar */
+    bottom: 0; /* Asegura que el footer esté al final */
+    width: 100%; /* Asegura que el footer ocupe todo el ancho */
 }
 
 .footer-content {
@@ -680,7 +693,7 @@ textarea {
 }
 
 .dropdown-menu a {
-    color: rgb(253, 253, 253); /* Cambiado a negro */
+    color: rgb(0, 0, 0) !important; /* Cambiar el color del texto a negro */
     padding: 0.8rem 1rem;
     display: block;
     text-decoration: none;
@@ -690,7 +703,7 @@ textarea {
 }
 
 .dropdown-menu a:hover {
-    background-color: #f0f0f0; /* Color de fondo al pasar el ratón (opcional) */
+    background-color: #f0f0f0; /* Color de fondo al pasar el ratón */
 }
 
 /* Estilos para el menú desplegable */
@@ -991,4 +1004,16 @@ body.admin .navbar a {
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.user-menu .dropdown-menu {
+    background-color: white; /* Color de fondo del menú desplegable */
+}
+
+.user-menu .dropdown-menu a {
+    color: rgb(0, 0, 0) !important; /* Cambiar el color del texto a negro */
+}
+
+.user-menu .dropdown-menu a:hover {
+    background-color: #f0f0f0; /* Color de fondo al pasar el ratón */
 } 

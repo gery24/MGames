@@ -84,61 +84,63 @@ try {
         </nav>
     </header>
 
-    <div class="profile-container">
-        <div class="sidebar">
-            <h2>Ajustes de la Cuenta</h2>
-            <ul>
-                <?php if ($usuario['rol'] === 'ADMIN'): ?>
-                    <li><a href="#" class="menu-option" data-content="ajustes">Ajustes de Cuenta</a></li>
-                    <li><a href="#" class="menu-option" data-content="pedidos">Pedidos</a></li>
-                    <li><a href="panel_admin.php">Añadir Juegos</a></li>
-                <?php else: ?>
-                    <li><a href="#" class="menu-option" data-content="ajustes">Ajustes de Cuenta</a></li>
-                    <li><a href="#" class="menu-option" data-content="wishlist">Lista de Deseos</a></li>
-                    <li><a href="#" class="menu-option" data-content="segunda_mano">Segunda Mano</a></li>
-                    <li><a href="#" class="menu-option" data-content="billetera">Billetera</a></li>
-                    <li><a href="#" class="danger menu-option" id="logout">Cerrar Sesión</a></li>
-                    <li><a href="#" class="danger menu-option" id="delete-account">Eliminar Cuenta</a></li>
+    <div class="content">
+        <div class="profile-container">
+            <div class="sidebar">
+                <h2>Ajustes de la Cuenta</h2>
+                <ul>
+                    <?php if ($usuario['rol'] === 'ADMIN'): ?>
+                        <li><a href="#" class="menu-option" data-content="ajustes">Ajustes de Cuenta</a></li>
+                        <li><a href="#" class="menu-option" data-content="pedidos">Pedidos</a></li>
+                        <li><a href="panel_admin.php">Añadir Juegos</a></li>
+                    <?php else: ?>
+                        <li><a href="#" class="menu-option" data-content="ajustes">Ajustes de Cuenta</a></li>
+                        <li><a href="#" class="menu-option" data-content="wishlist">Lista de Deseos</a></li>
+                        <li><a href="#" class="menu-option" data-content="segunda_mano">Segunda Mano</a></li>
+                        <li><a href="#" class="menu-option" data-content="billetera">Billetera</a></li>
+                        <li><a href="#" class="danger menu-option" id="logout">Cerrar Sesión</a></li>
+                        <li><a href="#" class="danger menu-option" id="delete-account">Eliminar Cuenta</a></li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+
+            <div class="profile-info" id="dynamic-content">
+                <h1 id="section-title">Ajustes de Cuenta</h1>
+                <?php if ($error): ?>
+                    <div class="error-message"><?php echo htmlspecialchars($error); ?></div>
                 <?php endif; ?>
-            </ul>
-        </div>
 
-        <div class="profile-info" id="dynamic-content">
-            <h1 id="section-title">Ajustes de Cuenta</h1>
-            <?php if ($error): ?>
-                <div class="error-message"><?php echo htmlspecialchars($error); ?></div>
-            <?php endif; ?>
-
-            <form action="update_profile.php" method="POST">
-                <div class="form-group">
-                    <label for="nombre">Nombre:</label>
-                    <div class="input-container">
-                        <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($usuario['nombre']); ?>" required>
+                <form action="update_profile.php" method="POST">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <div class="input-container">
+                            <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($usuario['nombre']); ?>" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="apellido">Apellido:</label>
-                    <div class="input-container">
-                        <input type="text" id="apellido" name="apellido" value="<?php echo htmlspecialchars($usuario['apellido']); ?>" required>
+                    <div class="form-group">
+                        <label for="apellido">Apellido:</label>
+                        <div class="input-container">
+                            <input type="text" id="apellido" name="apellido" value="<?php echo htmlspecialchars($usuario['apellido']); ?>" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <div class="input-container">
-                        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" required>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <div class="input-container">
+                            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="rol">Rol:</label>
-                    <div class="input-container">
-                        <input type="text" id="rol" name="rol" value="<?php echo htmlspecialchars($usuario['rol']); ?>" readonly>
+                    <div class="form-group">
+                        <label for="rol">Rol:</label>
+                        <div class="input-container">
+                            <input type="text" id="rol" name="rol" value="<?php echo htmlspecialchars($usuario['rol']); ?>" readonly>
+                        </div>
                     </div>
-                </div>
-                <button type="submit">Actualizar Información</button>
-            </form>
+                    <button type="submit">Actualizar Información</button>
+                    
+                </form>
+            </div>
         </div>
     </div>
-
 
     <script>
         $(document).ready(function() {
@@ -211,7 +213,9 @@ try {
                 }
             });
         });
+        
     </script>
+
+    <?php require_once 'includes/footer.php'; ?>
 </body>
-<?php require_once 'includes/footer.php'; ?>
-</html> 
+</html>
