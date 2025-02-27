@@ -1016,4 +1016,23 @@ body.admin .navbar a {
 
 .user-menu .dropdown-menu a:hover {
     background-color: #f0f0f0; /* Color de fondo al pasar el ratón */
-} 
+}
+
+.login-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 1rem; /* Espaciado a la izquierda */
+}
+
+.login-icon img {
+    width: 35px; /* Ajusta el tamaño según sea necesario */
+    height: 35px; /* Ajusta el tamaño según sea necesario */
+    transition: transform 0.3s ease;
+    border: none; /* Asegúrate de que no haya borde */
+    outline: none; /* Elimina el contorno al hacer clic */
+}
+
+.login-icon:hover img {
+    transform: scale(1.1); /* Efecto de hover */
+}

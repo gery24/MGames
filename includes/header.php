@@ -52,10 +52,6 @@
                     <a href="segunda_mano.php" class="menu-item">Segunda Mano</a>
                     <a href="soporte.php" class="menu-item">Soporte</a>
                     <a href="contacto.php" class="menu-item">Contacto</a>
-                    <?php if(!isset($_SESSION['usuario'])): ?>
-                        <a href="login.php" class="menu-item">Iniciar Sesión</a>
-                        <a href="register.php" class="menu-item">Registrarse</a>
-                    <?php endif; ?>
                 </div>
             </div>
             <a href="carrito.php" class="cart-icon">
@@ -64,7 +60,11 @@
                     <span class="cart-count"><?php echo count($_SESSION['carrito']); ?></span>
                 <?php endif; ?>
             </a>
-            <?php if(isset($_SESSION['usuario'])): ?>
+            <?php if(!isset($_SESSION['usuario'])): ?>
+                <a href="login.php" class="login-icon">
+                    <img src="fotosWeb/Iniciate.png" alt="Iniciar Sesión" style="width: 35px; height: 35px;">
+                </a>
+            <?php else: ?>
                 <div class="user-menu">
                     <a class="user-avatar" id="user-logo">
                         <?php echo strtoupper(substr($_SESSION['usuario']['nombre'], 0, 1)); ?>
