@@ -37,9 +37,11 @@
             min-width: 220px;
             border: 2px solid red;
         }
-        .menu-dropdown.show {
-            display: block;
+        
+        body:not(.admin) .menu-dropdown {
+            border: 2px solid var(--navbar-color);
         }
+
         .menu-dropdown .menu-item {
             color: red;
             text-decoration: none;
@@ -49,18 +51,55 @@
             font-size: 1.1em;
             white-space: nowrap;
         }
+
+        body:not(.admin) .menu-dropdown .menu-item {
+            color: var(--navbar-color);
+        }
+
         .menu-dropdown .menu-item:hover {
             background-color: rgba(255, 0, 0, 0.1);
         }
-        .user-menu .dropdown-menu {
-            display: none; /* Ocultar el menú por defecto */
-            position: absolute; /* Posicionar el menú de forma absoluta */
-            background-color: white; /* Color de fondo del menú */
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra para el menú */
-            z-index: 1000; /* Asegurarse de que esté por encima de otros elementos */
+
+        body:not(.admin) .menu-dropdown .menu-item:hover {
+            background-color: rgba(30, 58, 138, 0.1);
         }
-        .user-menu .dropdown-menu.show {
-            display: block; /* Mostrar el menú cuando se activa la clase 'show' */
+        .user-menu .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 15px;
+            border-radius: 8px;
+            min-width: 160px;
+            right: 0;
+            top: 100%;
+            border: 2px solid red;
+        }
+
+        .user-menu .dropdown-menu a {
+            color: red;
+            text-decoration: none;
+            display: block;
+            padding: 12px 20px;
+            white-space: nowrap;
+            transition: background-color 0.3s;
+        }
+
+        .user-menu .dropdown-menu a:hover {
+            background-color: rgba(255, 0, 0, 0.1);
+        }
+
+        body:not(.admin) .user-menu .dropdown-menu {
+            border: 2px solid var(--navbar-color);
+        }
+
+        body:not(.admin) .user-menu .dropdown-menu a {
+            color: var(--navbar-color);
+        }
+
+        body:not(.admin) .user-menu .dropdown-menu a:hover {
+            background-color: rgba(30, 58, 138, 0.1);
         }
         .user-avatar {
             width: 35px;
