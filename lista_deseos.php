@@ -115,6 +115,11 @@ require_once 'includes/header.php';
                 margin: 0 5%;
             }
         }
+
+        a {
+            color: black; /* Cambia el color del enlace a negro */
+            text-decoration: none; /* Quita el subrayado */
+        }
     </style>
 </head>
 <body>
@@ -133,7 +138,7 @@ require_once 'includes/header.php';
                             <div class="product-card">
                                 <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
                                 <div class="product-card-content">
-                                    <h3><?php echo htmlspecialchars($producto['nombre']); ?></h3>
+                                    <h3><a href="producto.php?id=<?php echo $producto['id']; ?>"><?php echo htmlspecialchars($producto['nombre']); ?></a></h3>
                                     <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
                                     <form method="POST" action="eliminar_deseos.php">
                                         <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
