@@ -232,12 +232,10 @@ if (isset($_GET['already_in_cart'])) {
                 <h1><?php echo htmlspecialchars($producto['nombre']); ?></h1>
                 <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
                 
-                <!-- Formulario para añadir al carrito -->
+                <!-- Formulario modificado para añadir al carrito -->
                 <form method="POST" action="agregar_al_carrito.php">
-                    <input type="hidden" name="producto_id" value="<?php echo $producto['id']; ?>">
-                    <input type="hidden" name="nombre" value="<?php echo htmlspecialchars($producto['nombre']); ?>">
-                    <input type="hidden" name="precio" value="<?php echo $producto['precio']; ?>">
-                    <button type="submit" class="btn">Añadir al carrito</button>
+                    <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
+                    <button type="submit" class="btn buy-button">Añadir al carrito</button>
                 </form>
                 
                 <p class="platform">Plataforma: <?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>
