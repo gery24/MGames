@@ -44,9 +44,7 @@ if (!empty($precio)) {
 }
 
 if (!empty($busqueda)) {
-    $sql .= " AND (LOWER(s.nombre) LIKE LOWER(:busqueda) 
-              OR LOWER(s.descripcion) LIKE LOWER(:busqueda)
-              OR LOWER(c.nombre) LIKE LOWER(:busqueda))";
+    $sql .= " AND LOWER(s.nombre) LIKE LOWER(:busqueda)";
 }
 
 $sql .= " ORDER BY s.id DESC";
@@ -127,7 +125,7 @@ require_once 'includes/header.php';
                         <div class="search-input-group">
                             <input type="text" 
                                    name="busqueda" 
-                                   placeholder="Buscar juegos..." 
+                                   placeholder="Buscar por nombre del juego..." 
                                    value="<?php echo htmlspecialchars($busqueda); ?>"
                                    class="filter-input">
                             <button type="submit" class="search-button">Buscar</button>
