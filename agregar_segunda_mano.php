@@ -3,10 +3,9 @@ session_start();
 require_once 'config/database.php';
 
 // Verificar si el usuario tiene el rol "CLIENTE"
-if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'CLIENTE') {
-    die("Acceso denegado. Solo los usuarios con una cuenta pueden agregar juegos de segunda mano.");
+if (!isset($_SESSION['usuario']) || !in_array($_SESSION['usuario']['rol'], ['CLIENTE', 'ADMIN'])) {
+    die("Acceso denegado. Solo los usuarios con una cuenta creada pueden agregar juegos de segunda mano.");
 }
-
 // Obtener categorías de la base de datos
 $stmt = $pdo->query("SELECT * FROM categorias");
 $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
