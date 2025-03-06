@@ -4,7 +4,7 @@ require_once 'config/database.php';
 
 // Verificar si el usuario tiene el rol "CLIENTE"
 if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'CLIENTE') {
-    die("Acceso denegado. Solo los usuarios con rol 'CLIENTE' pueden añadir juegos de segunda mano.");
+    die("Acceso denegado. Solo los usuarios con una cuenta pueden agregar juegos de segunda mano.");
 }
 
 // Obtener categorías de la base de datos
