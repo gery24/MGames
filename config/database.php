@@ -1,8 +1,8 @@
 <?php
-$host = 'localhost';
-$db   = 'tienda_videojuegos';  // Nombre de la base de datos que se ve en phpMyAdmin
-$user = 'root';                // Usuario por defecto en instalaciones locales
-$pass = '';                    // Contraseña por defecto en instalaciones locales
+$host = 'localhost'; // o la dirección de tu servidor
+$db = 'tienda_videojuegos'; // nombre de tu base de datos
+$user = 'root'; // tu usuario de base de datos
+$pass = ''; // tu contraseña de base de datos
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
@@ -14,7 +14,7 @@ $options = [
 
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
-} catch (\PDOException $e) {
-    throw new \PDOException($e->getMessage(), (int)$e->getCode());
+} catch (PDOException $e) {
+    die("Error de conexión: " . $e->getMessage());
 }
 ?>
