@@ -85,13 +85,9 @@ require_once 'includes/header.php';
     </nav>
 
     <div class="content">
-        <header class="hero">
-            <h1>Bienvenido a MGames de Segunda Mano</h1>
-            <p>Encuentra grandes títulos a precios increíbles</p>
-        </header>
 
         <section class="featured-products">
-            <h2>Productos Disponibles</h2>
+            <h1>Productos Disponibles</h1>
             
             <!-- Filtros -->
             <div class="filters-container">
