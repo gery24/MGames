@@ -41,14 +41,15 @@ require_once 'includes/header.php';
             display: flex;
             flex-direction: column;
             padding: 20px;
-            margin: 0 15%;
-            /* Reducir el margen superior para acercar el contenido al hero */
+            /* Reducir los márgenes laterales para permitir tarjetas más anchas */
+            margin: 0 5%;
             margin-top: 0;
         }
 
         .wishlist-content {
             display: flex;
             gap: 20px;
+            width: 100%; /* Asegurar que ocupe todo el ancho disponible */
         }
 
         .products-list {
@@ -56,6 +57,7 @@ require_once 'includes/header.php';
             flex-direction: column;
             gap: 15px;
             flex-grow: 1;
+            width: 100%; /* Asegurar que ocupe todo el ancho disponible */
         }
 
         .product-card {
@@ -64,17 +66,19 @@ require_once 'includes/header.php';
             justify-content: space-between;
             align-items: center;
             background: var(--card-background);
-            padding: 15px;
+            padding: 15px 25px; /* Aumentar el padding horizontal */
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
             height: 200px;
+            width: 100%; /* Asegurar que ocupe todo el ancho disponible */
+            max-width: 100%; /* Evitar que se desborde */
         }
 
         .product-card img {
-            width: 100px;
-            height: 100px;
+            width: 150px; /* Aumentar el tamaño de la imagen */
+            height: 150px; /* Aumentar el tamaño de la imagen */
             object-fit: cover;
-            margin-left: 15px;
+            margin-left: 25px; /* Aumentar el margen */
             border-radius: var(--border-radius);
         }
 
@@ -84,10 +88,11 @@ require_once 'includes/header.php';
             flex-direction: column;
             justify-content: space-between;
             min-width: 0;
+            padding-right: 20px; /* Añadir espacio a la derecha */
         }
 
         .product-card-content h3 {
-            font-size: 1.2rem;
+            font-size: 1.4rem; /* Aumentar tamaño de fuente */
             margin: 0;
             color: var(--text-color);
             overflow: hidden;
@@ -96,22 +101,22 @@ require_once 'includes/header.php';
         }
 
         .price {
-            font-size: 1.2rem;
+            font-size: 1.4rem; /* Aumentar tamaño de fuente */
             color: var(--primary-color);
             font-weight: bold;
-            margin: 5px 0;
+            margin: 10px 0; /* Aumentar margen */
         }
 
         .btn {
             background-color: var(--primary-color);
             color: white;
-            padding: 8px 15px;
+            padding: 10px 20px; /* Aumentar padding */
             border: none;
             border-radius: var(--border-radius);
             cursor: pointer;
             transition: background-color 0.3s;
-            min-width: 100px;
-            font-size: 0.9rem;
+            min-width: 120px; /* Aumentar ancho mínimo */
+            font-size: 1rem; /* Aumentar tamaño de fuente */
         }
 
         .btn:hover {
@@ -131,7 +136,8 @@ require_once 'includes/header.php';
 
         @media (max-width: 768px) {
             .wishlist-container {
-                margin: 0 5%;
+                margin: 0 2%; /* Reducir aún más los márgenes en móviles */
+                padding: 10px;
             }
             
             .hero {
@@ -140,6 +146,33 @@ require_once 'includes/header.php';
             
             .hero h1 {
                 font-size: 1.2rem;
+            }
+            
+            .product-card {
+                padding: 10px 15px; /* Reducir padding en móviles */
+                height: auto; /* Permitir altura automática */
+                min-height: 150px; /* Establecer altura mínima */
+            }
+            
+            .product-card img {
+                width: 100px; /* Reducir tamaño de imagen en móviles */
+                height: 100px;
+                margin-left: 15px;
+            }
+            
+            .product-card-content h3 {
+                font-size: 1.2rem;
+            }
+            
+            .price {
+                font-size: 1.2rem;
+                margin: 5px 0;
+            }
+            
+            .btn {
+                padding: 8px 15px;
+                min-width: 100px;
+                font-size: 0.9rem;
             }
         }
 
