@@ -13,6 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $precio = $_POST['precio'];
     $categoria = $_POST['categoria'];
     $estado = $_POST['estado'];
+    $condicion = $_POST['condicion'];
+    $comentario = $_POST['comentario'];
     $usuario_id = $_SESSION['usuario']['id']; // Obtener el ID del usuario
 
     // Manejo de la imagen (subida de archivos)
@@ -23,8 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Mover la imagen a la carpeta
     if (move_uploaded_file($_FILES['imagen']['tmp_name'], $target_file)) {
         // Guardar en la base de datos
-        $stmt = $pdo->prepare("INSERT INTO segunda_mano (nombre, descripcion, precio, categoria_id, estado, imagen, usuario_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$nombre, $descripcion, $precio, $categoria, $estado, $target_file, $usuario_id]);
+        $stmt = $pdo->prepare("INSERT INTO segunda_mano (nombre, descripcion, precio, categoria_id, condicion, comentario, estado, imagen, usuario_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$nombre, $descripcion, $precio, $categoria, $condicion, $comentario, $estado, $target_file, $usuario_id]);
 
         header("Location: segunda_mano.php?success=1");
         exit();

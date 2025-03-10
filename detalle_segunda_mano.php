@@ -22,7 +22,7 @@ try {
     }
 
     // Obtener juegos similares en la misma categoría
-    $stmt_similares = $pdo->prepare("SELECT * FROM segunda_mano WHERE categoria_id = ? AND id != ? LIMIT 4");
+    $stmt_similares = $pdo->prepare("SELECT * FROM segunda_mano WHERE categoria_id = ? AND id != ? ORDER BY RAND()");
     $stmt_similares->execute([$producto['categoria_id'], $id]);
     $juegos_similares = $stmt_similares->fetchAll(PDO::FETCH_ASSOC);
 
@@ -53,25 +53,31 @@ require_once 'includes/header.php';
         </div>
     </div>
 
-    <div class="product-section">
-        <h2 class="section-title">Acerca del juego</h2>
-        <p><?php echo htmlspecialchars($producto['acerca_de']); ?></p>
+    <div class='product-section'>
+        <h2 class='section-title'>Acerca del juego</h2>
+        <?php if (isset($producto['acerca_de'])): ?>
+            <p><?php echo htmlspecialchars($producto['acerca_de']); ?></p>
+        <?php endif; ?>
     </div>
 
-    <div class="product-section">
-        <h2 class="section-title">Requisitos del sistema</h2>
-        <div class="requirements-grid">
-            <div>
-                <h3>Mínimos</h3>
-                <p><?php echo htmlspecialchars($producto['reqmin']); ?></p>
-            </div>
-            <div>
-                <h3>Recomendados</h3>
-                <p><?php echo htmlspecialchars($producto['reqmax']); ?></p>
-            </div>
-        </div>
+    <div class='product-section'>
+        <h2 class='section-title'>Descripción</h2>
+        <p><?php echo htmlspecialchars($producto['descripcion']); ?></p>
     </div>
-</div>
+
+    <?php if (!empty($producto['descripcion_adicional'])): ?>
+        <div class='product-section'>
+            <h2 class='section-title'>Descripción adicional</h2>
+            <p><?php echo htmlspecialchars($producto['descripcion_adicional']); ?></p>
+        </div>
+    <?php endif; ?>
+
+    <?php if (!empty($producto['comentario'])): ?>
+        <div class='product-section'>
+            <h2 class='section-title'>Comentarios adicionales</h2>
+            <p><?php echo htmlspecialchars($producto['comentario']); ?></p>
+        </div>
+    <?php endif; ?>
 
 <section class="similar-games-section">
     <h2 class="similar-games-title">Juegos similares</h2>
