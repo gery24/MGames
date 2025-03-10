@@ -5,6 +5,8 @@
 }
 
 .product-card {
+    min-width: 990px; /* Ajusta según necesidad */
+    width: 100%; /* Ocupará todo el espacio disponible */
     display: flex;
     flex-direction: row-reverse; /* Cambiado para poner la imagen a la derecha */
     justify-content: space-between;
@@ -13,12 +15,12 @@
     padding: 15px;
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
-    height: 200px;
+    height: 400px;
 }
 
 .product-card img {
-    width: 100px;
-    height: 100px;
+    width: 200px;
+    height: 300px;
     object-fit: cover;
     margin-left: 15px; /* Cambiado de margin-right a margin-left */
     border-radius: var(--border-radius);
