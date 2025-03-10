@@ -5,6 +5,8 @@
 }
 
 .product-card {
+    min-width: 990px; /* Ajusta según necesidad */
+    width: 100%; /* Ocupará todo el espacio disponible */
     display: flex;
     flex-direction: row-reverse; /* Cambiado para poner la imagen a la derecha */
     justify-content: space-between;
@@ -13,12 +15,12 @@
     padding: 15px;
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
-    height: 200px;
+    height: 400px;
 }
 
 .product-card img {
-    width: 100px;
-    height: 100px;
+    width: 200px;
+    height: 300px;
     object-fit: cover;
     margin-left: 15px; /* Cambiado de margin-right a margin-left */
     border-radius: var(--border-radius);
@@ -139,6 +141,108 @@
     flex-direction: column;
     gap: 15px;
     margin: 0 15%;
+}
+
+/* Similar Games Section */
+.similar-games {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 10px 0;
+}
+
+.game-card {
+    flex: 0 0 200px;
+    text-align: center;
+}
+
+.game-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.game-card h3 {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+/* Modern Form Styling */
+#add-game-form {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#add-game-form input,
+#add-game-form select,
+#add-game-form textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+#add-game-form input:focus,
+#add-game-form select:focus,
+#add-game-form textarea:focus {
+    border-color: #3182ce;
+    outline: none;
+}
+
+/* Radio Button Styling */
+.radio-group {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.radio-group label:hover {
+    border-color: #3182ce;
+}
+
+.radio-group input[type='radio'] {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 50%;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.radio-group input[type='radio']:checked {
+    border-color: #3182ce;
+}
+
+.radio-group input[type='radio']:checked::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: #3182ce;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 @media (max-width: 768px) {
