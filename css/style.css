@@ -467,13 +467,41 @@ body:not(.admin) .menu-dropdown .menu-item:hover {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../images/hero-bg.jpg');
-    background-size: cover;
-    background-position: center;
-    color: white;
-    text-align: center;
-    padding: 4rem 2rem;
-    margin-bottom: 2rem;
+    position: relative;
+    height: 100vh; /* Asegúrate de que el hero ocupe toda la altura de la ventana */
+    overflow: hidden; /* Ocultar cualquier desbordamiento */
+}
+
+.video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Asegúrate de que el video esté detrás del contenido */
+}
+
+#hero-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Asegúrate de que el video cubra toda el área */
+}
+
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Overlay oscuro para mejorar la legibilidad */
+    z-index: 2; /* Asegúrate de que el overlay esté encima del video */
+}
+
+.hero-content {
+    position: relative;
+    z-index: 3; /* Asegúrate de que el contenido esté encima del overlay */
+    color: white; /* Cambia el color del texto si es necesario */
+    text-align: center; /* Centrar el texto */
 }
 
 .hero h1 {
@@ -483,22 +511,23 @@ body:not(.admin) .menu-dropdown .menu-item:hover {
 
 /* Estilos para los filtros */
 .filters-container {
-    background-color: #f8f9fa;
+    background-color: #f8f9fa; /* Color de fondo */
     padding: 20px;
     border-radius: 10px;
     margin: 2rem auto;
     max-width: 1200px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
 }
 
 .filters-form {
     display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
+    gap: 20px; /* Espacio entre los grupos de filtros */
+    flex-wrap: wrap; /* Permitir que los filtros se ajusten en pantallas más pequeñas */
 }
 
 .filter-group {
-    flex: 1;
-    min-width: 250px;
+    flex: 1; /* Permitir que los grupos de filtros crezcan */
+    min-width: 200px; /* Ancho mínimo para los grupos de filtros */
 }
 
 .filter-group h3 {
@@ -543,10 +572,6 @@ body:not(.admin) .menu-dropdown .menu-item:hover {
     cursor: pointer;
     transition: background-color 0.3s;
     font-size: 0.9em;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .search-button:hover {
