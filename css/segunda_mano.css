@@ -146,10 +146,7 @@ body {
 /* Estilos específicos para la página de segunda mano */
 .featured-products {
     padding: 20px;
-    color: blue;
-    text-align: center;
-    font-size: 1.8rem; /* Aumentado el tamaño de la letra */
-    font-weight: bold; /* Opcional: hace el texto más llamativo */
+    
 }
 
 .product-card {
