@@ -43,7 +43,7 @@ require_once 'includes/header.php';
             
             <!-- Formulario para añadir al carrito -->
             <form method="POST" action="agregar_al_carrito.php">
-                <input type="hidden" name="producto_id" value="<?php echo $producto['id']; ?>">
+                <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
                 <input type="hidden" name="nombre" value="<?php echo htmlspecialchars($producto['nombre']); ?>">
                 <input type="hidden" name="precio" value="<?php echo $producto['precio']; ?>">
                 <button type="submit" class="btn">Añadir al carrito</button>
@@ -77,9 +77,9 @@ require_once 'includes/header.php';
     <h2 class="similar-games-title">Juegos similares</h2>
     <div class="similar-games-grid">
         <?php foreach ($juegos_similares as $juego): ?>
-            <div class="game-card">
+            <div class="product-card">
                 <img src="<?php echo htmlspecialchars($juego['imagen']); ?>" alt="<?php echo htmlspecialchars($juego['nombre']); ?>" class="game-image">
-                <div class="game-info">
+                <div class="product-card-content">
                     <h3 class="game-title"><?php echo htmlspecialchars($juego['nombre']); ?></h3>
                     <p class="game-price">€<?php echo number_format($juego['precio'], 2); ?></p>
                     <a href="detalle_segunda_mano.php?id=<?php echo $juego['id']; ?>" class="view-details">Ver detalles</a>

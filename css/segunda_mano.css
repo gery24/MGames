@@ -163,4 +163,57 @@ body {
 
 .product-card-content {
     padding: 10px;
+}
+
+.similar-games-grid {
+    display: flex; /* Cambiar a flexbox para disposición horizontal */
+    flex-wrap: wrap; /* Permitir que los elementos se envuelvan si no hay suficiente espacio */
+    gap: 1.5rem; /* Espacio entre los juegos similares */
+}
+
+.game-card {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    transition: transform 0.2s;
+    width: calc(25% - 1.5rem); /* Ajustar el ancho según sea necesario */
+}
+
+.game-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover; /* Ajustar la imagen para que cubra el área */
+}
+
+.game-info {
+    padding: 10px;
+}
+
+.game-title {
+    font-size: 1.1rem;
+    margin: 0;
+    color: var(--text-color);
+}
+
+.game-price {
+    font-size: 1.25rem;
+    color: var(--primary-color);
+    font-weight: bold;
+    margin: 0;
+}
+
+.view-details {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-top: 0.5rem;
+    transition: background-color 0.2s;
+}
+
+.view-details:hover {
+    background-color: var(--secondary-color);
 } 
