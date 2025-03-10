@@ -21,14 +21,20 @@ require_once 'includes/header.php';
         .hero {
             background-color: var(--primary-color);
             color: white;
-            padding: 20px;
+            padding: 10px 20px; /* Reducido el padding vertical */
             text-align: center;
             border-radius: var(--border-radius);
             margin-bottom: 20px;
+            /* Eliminar altura fija o mínima para que se ajuste al contenido */
+            height: auto;
+            max-height: 60px; /* Limitar la altura máxima */
+            overflow: hidden; /* Evitar desbordamiento */
         }
 
         .hero h1 {
             margin: 0;
+            font-size: 1.5rem;
+            line-height: 1.2;
         }
 
         .wishlist-container {
@@ -36,6 +42,8 @@ require_once 'includes/header.php';
             flex-direction: column;
             padding: 20px;
             margin: 0 15%;
+            /* Reducir el margen superior para acercar el contenido al hero */
+            margin-top: 0;
         }
 
         .wishlist-content {
@@ -110,9 +118,28 @@ require_once 'includes/header.php';
             background-color: var(--secondary-color);
         }
 
+        .hero .btn {
+            padding: 0; /* Eliminar padding para reducir altura */
+            background-color: transparent;
+            min-width: auto;
+            font-size: 1.5rem;
+        }
+
+        .hero .btn:hover {
+            background-color: transparent;
+        }
+
         @media (max-width: 768px) {
             .wishlist-container {
                 margin: 0 5%;
+            }
+            
+            .hero {
+                max-height: 50px; /* Altura máxima más pequeña en móviles */
+            }
+            
+            .hero h1 {
+                font-size: 1.2rem;
             }
         }
 
@@ -125,7 +152,7 @@ require_once 'includes/header.php';
 <body>
     <div class="content">
         <header class="hero">
-            <h1>Lista de Deseos</h1>
+            <h1 class="btn">Lista de Deseos</h1>
         </header>
 
         <div class="wishlist-container">
