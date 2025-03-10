@@ -58,17 +58,17 @@ if (isset($_GET['already_in_cart'])) {
         }
 
         .product-header {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            display: flex; /* Cambiar a flexbox */
+            align-items: center; /* Centrar verticalmente */
+            gap: 30px; /* Espacio entre la imagen y el contenido */
             margin-bottom: 40px;
-            background-color: #f8f9fa;
+            background-color: #f8f9fa; /* Fondo claro para el encabezado del producto */
             padding: 20px;
             border-radius: 10px;
         }
 
         .product-image {
-            width: 100%;
+            width: 300px; /* Ajustar el tamaño de la imagen */
             height: auto;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -139,10 +139,25 @@ if (isset($_GET['already_in_cart'])) {
             color: #333;
         }
 
+        /* Modificación para mostrar los juegos horizontalmente */
         .similar-games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            display: flex; /* Cambiar a flexbox para layout horizontal */
+            flex-wrap: nowrap; /* Evitar que se envuelvan a la siguiente línea */
             gap: 1.5rem;
+            overflow-x: auto; /* Permitir desplazamiento horizontal si hay muchos juegos */
+            padding-bottom: 1rem; /* Espacio para la barra de desplazamiento */
+            scrollbar-width: thin; /* Para Firefox */
+            -ms-overflow-style: none; /* Para IE y Edge */
+        }
+
+        /* Ocultar la barra de desplazamiento en Chrome, Safari y Opera */
+        .similar-games-grid::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .similar-games-grid::-webkit-scrollbar-thumb {
+            background-color: #c1c1c1;
+            border-radius: 6px;
         }
 
         .game-card {
@@ -152,6 +167,8 @@ if (isset($_GET['already_in_cart'])) {
             background: #fff;
             transition: transform 0.2s;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex: 0 0 250px; /* Ancho fijo para cada tarjeta */
+            max-width: 250px; /* Asegurar que no crezcan demasiado */
         }
 
         .game-card:hover {
@@ -211,15 +228,28 @@ if (isset($_GET['already_in_cart'])) {
 
         @media (max-width: 768px) {
             .product-header {
-                grid-template-columns: 1fr;
+                flex-direction: column; /* Apilar en móviles */
+                align-items: flex-start;
+            }
+
+            .product-image {
+                width: 100%; /* Imagen a ancho completo en móviles */
+                max-width: 300px;
+                margin: 0 auto;
             }
 
             .requirements-grid {
                 grid-template-columns: 1fr;
             }
 
+            /* Mantener el scroll horizontal en móviles */
             .similar-games-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                padding-bottom: 0.5rem;
+            }
+
+            .game-card {
+                flex: 0 0 200px; /* Tarjetas más pequeñas en móviles */
+                max-width: 200px;
             }
         }
     </style>
