@@ -38,6 +38,25 @@ try {
     <title>Perfil - MGames</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .menu-button {
+            color: white !important;
+        }
+        .menu-button i {
+            color: white !important;
+        }
+        .menu-dropdown {
+            background-color: white;
+            min-width: 150px;
+            border-radius: 4px;
+            padding: 10px;
+        }
+        .menu-dropdown .menu-item {
+            color: red;
+            padding: 8px 16px;
+        }
+    </style>
 </head>
 <body class="<?php echo ($usuario['rol'] === 'ADMIN') ? 'admin' : ''; ?>">
     <header class="header">
@@ -57,10 +76,6 @@ try {
                         <a href="segunda_mano.php" class="menu-item">Segunda Mano</a>
                         <a href="soporte.php" class="menu-item">Soporte</a>
                         <a href="contacto.php" class="menu-item">Contacto</a>
-                        <?php if(!isset($_SESSION['usuario'])): ?>
-                            <a href="login.php" class="menu-item">Iniciar Sesión</a>
-                            <a href="register.php" class="menu-item">Registrarse</a>
-                        <?php endif; ?>
                     </div>
                 </div>
                 <a href="carrito.php" class="cart-icon">
@@ -79,67 +94,72 @@ try {
                             <a href="logout.php">Cerrar Sesión</a>
                         </div>
                     </div>
+                <?php else: ?>
+                    <a href="login.php" class="login-icon">
+                        <img src="fotosWeb/Iniciate.png" alt="Iniciar Sesión" style="width: 35px; height: 35px;">
+                    </a>
                 <?php endif; ?>
             </div>
         </nav>
     </header>
 
-    <div class="profile-container">
-        <div class="sidebar">
-            <h2>Ajustes de la Cuenta</h2>
-            <ul>
-                <?php if ($usuario['rol'] === 'ADMIN'): ?>
-                    <li><a href="#" class="menu-option" data-content="ajustes">Ajustes de Cuenta</a></li>
-                    <li><a href="#" class="menu-option" data-content="pedidos">Pedidos</a></li>
-                    <li><a href="panel_admin.php">Añadir Juegos</a></li>
-                <?php else: ?>
-                    <li><a href="#" class="menu-option" data-content="ajustes">Ajustes de Cuenta</a></li>
-                    <li><a href="#" class="menu-option" data-content="wishlist">Lista de Deseos</a></li>
-                    <li><a href="#" class="menu-option" data-content="segunda_mano">Segunda Mano</a></li>
-                    <li><a href="#" class="menu-option" data-content="billetera">Billetera</a></li>
-                    <li><a href="#" class="danger menu-option" id="logout">Cerrar Sesión</a></li>
-                    <li><a href="#" class="danger menu-option" id="delete-account">Eliminar Cuenta</a></li>
+    <div class="content">
+        <div class="profile-container">
+            <div class="sidebar">
+                <h2>Ajustes de la Cuenta</h2>
+                <ul>
+                    <?php if ($usuario['rol'] === 'ADMIN'): ?>
+                        <li><a href="#" class="menu-option" data-content="ajustes">Ajustes de Cuenta</a></li>
+                        <li><a href="#" class="menu-option" data-content="pedidos">Pedidos</a></li>
+                        <li><a href="panel_admin.php">Añadir Juegos</a></li>
+                    <?php else: ?>
+                        <li><a href="#" class="menu-option" data-content="ajustes">Ajustes de Cuenta</a></li>
+                        <li><a href="#" class="menu-option" data-content="wishlist">Lista de Deseos</a></li>
+                        <li><a href="#" class="menu-option" data-content="segunda_mano">Segunda Mano</a></li>
+                        <li><a href="#" class="menu-option" data-content="billetera">Billetera</a></li>
+                        <li><a href="#" class="danger menu-option" id="logout">Cerrar Sesión</a></li>
+                        <li><a href="#" class="danger menu-option" id="delete-account">Eliminar Cuenta</a></li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+
+            <div class="profile-info" id="dynamic-content">
+                <h1 id="section-title">Ajustes de Cuenta</h1>
+                <?php if ($error): ?>
+                    <div class="error-message"><?php echo htmlspecialchars($error); ?></div>
                 <?php endif; ?>
-            </ul>
-        </div>
 
-        <div class="profile-info" id="dynamic-content">
-            <h1 id="section-title">Ajustes de Cuenta</h1>
-            <?php if ($error): ?>
-                <div class="error-message"><?php echo htmlspecialchars($error); ?></div>
-            <?php endif; ?>
-
-            <form action="update_profile.php" method="POST">
-                <div class="form-group">
-                    <label for="nombre">Nombre:</label>
-                    <div class="input-container">
-                        <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($usuario['nombre']); ?>" required>
+                <form action="update_profile.php" method="POST">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <div class="input-container">
+                            <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($usuario['nombre']); ?>" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="apellido">Apellido:</label>
-                    <div class="input-container">
-                        <input type="text" id="apellido" name="apellido" value="<?php echo htmlspecialchars($usuario['apellido']); ?>" required>
+                    <div class="form-group">
+                        <label for="apellido">Apellido:</label>
+                        <div class="input-container">
+                            <input type="text" id="apellido" name="apellido" value="<?php echo htmlspecialchars($usuario['apellido']); ?>" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <div class="input-container">
-                        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" required>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <div class="input-container">
+                            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="rol">Rol:</label>
-                    <div class="input-container">
-                        <input type="text" id="rol" name="rol" value="<?php echo htmlspecialchars($usuario['rol']); ?>" readonly>
+                    <div class="form-group">
+                        <label for="rol">Rol:</label>
+                        <div class="input-container">
+                            <input type="text" id="rol" name="rol" value="<?php echo htmlspecialchars($usuario['rol']); ?>" readonly>
+                        </div>
                     </div>
-                </div>
-                <button type="submit">Actualizar Información</button>
-            </form>
+                    <button type="submit">Actualizar Información</button>
+                    
+                </form>
+            </div>
         </div>
     </div>
-
-    <?php require_once 'includes/footer.php'; ?>
 
     <script>
         $(document).ready(function() {
@@ -212,6 +232,9 @@ try {
                 }
             });
         });
+        
     </script>
+
+    <?php require_once 'includes/footer.php'; ?>
 </body>
-</html> 
+</html>

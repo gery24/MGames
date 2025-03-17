@@ -17,17 +17,31 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%; /* Asegura que el body ocupe toda la altura */
+    margin: 0; /* Asegúrate de que no haya margen por defecto */
+    padding: 0; /* Asegúrate de que no haya padding por defecto */
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
+    display: flex;
+    flex-direction: column; /* Asegura que el contenido se apile verticalmente */
+}
+
+.content {
+    flex: 1; /* Permite que el contenido ocupe el espacio restante */
+    padding: 0; /* Eliminar padding para que esté más cerca del navbar */
+    margin-top: 0; /* Asegúrate de que no haya margen superior */
 }
 
 /* Estilos del navbar */
 .navbar {
-    background-color: var(--navbar-color);
-    padding: 1rem 5%;
+    padding: 20px; /* Ajusta el padding para que sea más grande */
+    background-color: var(--navbar-color); /* Asegúrate de que el color de fondo sea el correcto */
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -35,16 +49,70 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 0; /* Asegúrate de que no haya margen */
 }
 
 .menu-container {
-    color: rgb(101, 142, 196); /* Cambiado a negro */
+    color: white;
 }
 
 .menu-dropdown {
-    display: none; /* Ocultar el menú por defecto */
-    background-color: #add8e6; /* Color azul claro para el fondo */
-    color: white; /* Color blanco para el texto */
+    display: none;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 15px;
+    border-radius: 8px;
+    min-width: 220px;
+    top: 100%;
+    left: 0;
+    border: 2px solid red;
+}
+
+body:not(.admin) .menu-dropdown {
+    border: 2px solid var(--navbar-color);
+}
+
+.menu-dropdown .menu-item {
+    color: red;
+    text-decoration: none;
+    display: block;
+    padding: 12px 20px;
+    transition: background-color 0.3s;
+    font-size: 1.1em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+body:not(.admin) .menu-dropdown .menu-item {
+    color: var(--navbar-color);
+}
+
+.menu-dropdown .menu-item:hover {
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+body:not(.admin) .menu-dropdown .menu-item:hover {
+    background-color: rgba(30, 58, 138, 0.1);
+}
+
+.menu-button {
+    background: none;
+    border: none;
+    color: white !important;
+    cursor: pointer;
+    font-size: 1.5em;
+    padding: 0.8rem;
+}
+
+.menu-button i {
+    color: white !important;
+}
+
+.menu-button:hover {
+    opacity: 0.8;
 }
 
 .nav-left {
@@ -56,14 +124,14 @@ body {
 .logo {
     display: flex;
     align-items: center;
-    color: rgb(255, 247, 247); /* Cambiado a blanco */
+    color: white;
 }
 
 .logo a {
-    color: white; /* Cambiado a blanco */
+    color: white !important;
     text-decoration: none;
     font-size: 1.5rem;
-    font-weight: bold; /* Asegúrate de que esté en negrita */
+    font-weight: bold;
 }
 
 .search-bar {
@@ -86,7 +154,7 @@ body {
 }
 
 .search-form button {
-    padding: 0.8rem 1.5rem;
+    padding: 10px 20px; /* Aumenta el padding del botón */
     white-space: nowrap;
 }
 
@@ -96,16 +164,16 @@ body {
     gap: 1.5rem;
 }
 
-.nav-right > a:not(.user-avatar):not(.cart-icon) {
-    padding: 0.5rem 1rem;
-    color: white;
+.nav-right > a {
+    color: white; /* Asegúrate de que el texto sea blanco */
     text-decoration: none;
+    padding: 0.5rem 1rem;
     border-radius: var(--border-radius);
     transition: background-color 0.3s ease;
 }
 
-.nav-right > a:not(.user-avatar):not(.cart-icon):hover {
-    background-color: var(--secondary-color);
+.nav-right > a:hover {
+    background-color: var(--secondary-color); /* Cambia el color al pasar el ratón */
 }
 
 .nav-right a.active {
@@ -115,7 +183,7 @@ body {
 
 .nav-right a.btn {
     background-color: var(--primary-color);
-    padding: 0.5rem 1rem;
+    padding: 10px 20px; /* Aumenta el padding del botón */
     border-radius: var(--border-radius);
     transition: all 0.3s ease;
 }
@@ -128,66 +196,134 @@ body {
 /* Estilos de productos */
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 2rem;
-    padding: 2rem 0;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    padding: 15px;
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
 .product-card {
-    background: var(--card-background);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
+    background: white;
+    border-radius: 8px;
     overflow: hidden;
-    transition: transform 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    width: 100%;
+    max-width: 230px;
+    margin: 0 auto;
 }
 
 .product-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .product-card img {
     width: 100%;
-    height: auto;
-    max-height: 270px;
+    height: 170px;
     object-fit: cover;
 }
 
 .product-card-content {
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    flex-grow: 1;
-    justify-content: space-between;
+    padding: 12px;
 }
 
 .product-card h3 {
-    font-size: 1.1rem;
     margin: 0;
-    color: var(--text-color);
+    font-size: 1em;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.price {
-    font-size: 1.25rem;
-    color: var(--primary-color);
+.product-card .price {
+    color: #4747ff;
     font-weight: bold;
-    margin: 0;
+    font-size: 1.1em;
+    margin: 8px 0;
 }
 
-.category {
+.product-card.admin-style .price {
+    color: #ff0000;
+}
+
+.product-card .category {
     color: #666;
-    font-size: 0.9rem;
-    margin-bottom: auto;
+    font-size: 0.9em;
+    margin-bottom: 12px;
+    background-color: #f3f4f6;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    max-width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .product-card .btn {
-    width: 100%;
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #4747ff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95em;
     text-align: center;
-    margin-top: 1rem;
+    width: 100%;
+}
+
+.product-card .btn:hover {
+    background-color: #3535ff;
+}
+
+.product-card.admin-style .btn {
+    background-color: #ff0000;
+}
+
+.product-card.admin-style .btn:hover {
+    background-color: #cc0000;
+}
+
+@media (max-width: 1000px) {
+    .products-grid {
+        max-width: 800px;
+    }
+    
+    .product-card {
+        max-width: 190px;
+    }
+}
+
+@media (max-width: 768px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .product-card {
+        max-width: none;
+    }
+    
+    .product-card img {
+        height: 160px;
+    }
+}
+
+@media (max-width: 480px) {
+    .products-grid {
+        grid-template-columns: repeat(1, 1fr);
+        gap: 12px;
+    }
+    
+    .product-card img {
+        height: 180px;
+    }
 }
 
 /* Botones */
@@ -214,6 +350,9 @@ body {
     color: white; /* Color del texto del pie de página */
     padding: 3rem 1rem 1rem;
     margin-top: 4rem;
+    position: relative; /* Asegura que el footer esté en su lugar */
+    bottom: 0; /* Asegura que el footer esté al final */
+    width: 100%; /* Asegura que el footer ocupe todo el ancho */
 }
 
 .footer-content {
@@ -329,17 +468,52 @@ body {
     .user-menu {
         margin-left: 0;
     }
+
+    .content {
+        padding: 0; /* Eliminar padding para móviles */
+        margin-top: 0; /* Asegúrate de que no haya margen superior */
+    }
 }
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../images/hero-bg.jpg');
-    background-size: cover;
-    background-position: center;
-    color: white;
-    text-align: center;
-    padding: 4rem 2rem;
-    margin-bottom: 2rem;
+    position: relative;
+    height: 100vh; /* Asegúrate de que el hero ocupe toda la altura de la ventana */
+    overflow: hidden; /* Ocultar cualquier desbordamiento */
+    margin-bottom: 20px; /* Mantén un margen inferior adecuado */
+    padding: 20px; /* Aumenta el padding para que se vea más grande */
+}
+
+.video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Asegúrate de que el video esté detrás del contenido */
+}
+
+#hero-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Asegúrate de que el video cubra toda el área */
+}
+
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Overlay oscuro para mejorar la legibilidad */
+    z-index: 2; /* Asegúrate de que el overlay esté encima del video */
+}
+
+.hero-content {
+    position: relative;
+    z-index: 3; /* Asegúrate de que el contenido esté encima del overlay */
+    color: white; /* Cambia el color del texto si es necesario */
+    text-align: center; /* Centrar el texto */
 }
 
 .hero h1 {
@@ -348,61 +522,116 @@ body {
 }
 
 /* Estilos para los filtros */
-.filters {
-    max-width: 1200px;
+.filters-container {
+    background-color: #f8f9fa; /* Color de fondo */
+    padding: 20px;
+    border-radius: 10px;
     margin: 2rem auto;
-    padding: 0 1rem;
+    max-width: 1200px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
 }
 
-.filter-container {
+.filters-form {
     display: flex;
-    gap: 2rem;
-    align-items: flex-start;
-    flex-wrap: wrap;
+    gap: 20px; /* Espacio entre los grupos de filtros */
+    flex-wrap: wrap; /* Permitir que los filtros se ajusten en pantallas más pequeñas */
 }
 
-.filter {
-    flex: 1;
-    min-width: 250px;
-    margin-bottom: 1rem;
+.filter-group {
+    flex: 1; /* Permitir que los grupos de filtros crezcan */
+    min-width: 200px; /* Ancho mínimo para los grupos de filtros */
 }
 
-.filter h2 {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    color: var(--text-color);
+.filter-group h3 {
+    font-size: 1em;
+    color: #333;
+    margin-bottom: 8px;
+    font-weight: 600;
 }
 
-.filter-form select {
+.filter-select, .filter-input {
     width: 100%;
-    padding: 0.8rem;
+    padding: 10px;
     border: 1px solid #ddd;
-    border-radius: var(--border-radius);
+    border-radius: 5px;
     background-color: white;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: border-color 0.3s ease;
+    font-size: 0.9em;
+    color: #333;
+    transition: all 0.3s ease;
 }
 
-.filter-form select:hover {
+.filter-select:hover, .filter-input:hover {
     border-color: var(--primary-color);
 }
 
-.filter-form select:focus {
+.filter-select:focus, .filter-input:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
 }
 
-/* Responsive para filtros */
+.search-input-group {
+    display: flex;
+    gap: 10px;
+}
+
+.search-button {
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 0.9em;
+}
+
+.search-button:hover {
+    background-color: var(--secondary-color);
+}
+
+.clear-filters {
+    display: inline-block;
+    margin-top: 15px;
+    color: #666;
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+}
+
+.clear-filters:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-    .filter-container {
-        flex-direction: column;
-        gap: 1rem;
+    .filters-container {
+        padding: 15px;
+        margin: 1rem auto;
     }
 
-    .filter {
+    .filters-form {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .filter-group {
         width: 100%;
+    }
+
+    .search-input-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .search-button {
+        width: 100%;
+        height: 40px;
+    }
+
+    .filter-select, .filter-input {
+        font-size: 16px; /* Mejor para móviles */
     }
 }
 
@@ -646,33 +875,20 @@ textarea {
 .user-avatar {
     width: 35px;
     height: 35px;
-    background-color: var(--primary-color);
+    background-color: red;
+    color: white !important;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white !important;
-    font-weight: bold;
-    font-size: 1.1rem;
-    transition: background-color 0.3s ease;
     text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1.1rem;
 }
 
 .user-avatar:hover {
-    background-color: var(--secondary-color);
-}
-
-.dropdown-menu {
-    position: absolute;
-    top: 120%;
-    right: 0;
-    background-color: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    min-width: 150px;
-    padding: 0.5rem 0;
-    display: none;
-    z-index: 1000;
+    opacity: 0.9;
 }
 
 .user-menu:hover .dropdown-menu {
@@ -680,17 +896,15 @@ textarea {
 }
 
 .dropdown-menu a {
-    color: rgb(253, 253, 253); /* Cambiado a negro */
-    padding: 0.8rem 1rem;
-    display: block;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-    font-size: 0.9rem;
-    white-space: nowrap;
+    color: black; /* Color del texto en negro */
+    padding: 0.8rem 1.5rem; /* Espaciado interno */
+    display: block; /* Mostrar como bloque */
+    text-decoration: none; /* Sin subrayado */
+    transition: background-color 0.3s; /* Transición suave */
 }
 
 .dropdown-menu a:hover {
-    background-color: #f0f0f0; /* Color de fondo al pasar el ratón (opcional) */
+    background-color: #f0f0f0; /* Color de fondo al pasar el ratón */
 }
 
 /* Estilos para el menú desplegable */
@@ -699,51 +913,32 @@ textarea {
 }
 
 .menu-button {
-    background-color: transparent; /* Fondo transparente */
-    color: white; /* Cambiar el color del icono a blanco */
-    border: none; /* Sin borde */
-    padding: 0.8rem;
-    border-radius: var(--border-radius);
+    background: none;
+    border: none;
+    color: white;
     cursor: pointer;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s ease;
+    font-size: 1.5em;
+    padding: 0.8rem;
 }
 
-.menu-button:hover {
-    background-color: var(--secondary-color);
+.menu-button i {
+    color: white;
 }
 
-.menu-dropdown {
-    position: absolute;
-    top: 120%;
-    left: 0;
-    background-color: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    min-width: 200px;
-    padding: 0.5rem 0;
-    display: none;
-    z-index: 1000;
-}
-
-.menu-dropdown.show {
-    display: block;
+.user-menu .dropdown-menu.show {
+    display: block; /* Mostrar el menú cuando se activa la clase 'show' */
 }
 
 .menu-item {
-    color: var(--text-color);
-    padding: 0.8rem 1.5rem;
-    display: block;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-    white-space: nowrap;
+    color: black; /* Color del texto en negro */
+    padding: 0.8rem 1.5rem; /* Espaciado interno */
+    display: block; /* Mostrar como bloque */
+    text-decoration: none; /* Sin subrayado */
+    transition: background-color 0.3s ease; /* Transición suave */
 }
 
 .menu-item:hover {
-    background-color: var(--background-color);
+    background-color: #f0f0f0; /* Color de fondo al pasar el ratón */
 }
 
 /* Ajustes para el nav-right */
@@ -764,7 +959,7 @@ textarea {
         margin-top: 0.5rem;
         border-radius: 0;
     }
-
+    
     .menu-item {
         text-align: center;
     }
@@ -857,6 +1052,8 @@ textarea {
     border-radius: var(--border-radius);
     text-decoration: none;
     transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
 }
 
 .btn:hover {
@@ -948,24 +1145,261 @@ body.admin {
 }
 
 .navbar a {
-    color: rgb(255, 255, 255); /* Cambiado a negro */
+    color: rgb(0, 0, 0); /* Cambiado a negro */
 }
 
 /* Estilos para el rol ADMIN */
 body.admin .header {
     background-color: #c0392b; /* Color de fondo del encabezado para ADMIN */
-    color: white; /* Color del texto del encabezado */
+    color: rgb(0, 0, 0); /* Color del texto del encabezado */
 }
 
 body.admin .navbar a {
     color: white; /* Asegúrate de que el texto del menú sea blanco */
 }
 
-.menu-dropdown a {
-    color: rgb(0, 0, 0); /* Asegúrate de que los enlaces sean blancos */
-}
-
 /* Cambiar el color del icono del carrito a blanco */
 .cart-icon i {
     color: white; /* Cambiar el color del icono a blanco */
-} 
+}
+
+.product-header {
+    display: flex; /* Cambiar a flexbox */
+    align-items: center; /* Centrar verticalmente */
+    gap: 30px; /* Espacio entre la imagen y el contenido */
+    margin-bottom: 40px;
+    background-color: #f8f9fa; /* Fondo claro para el encabezado del producto */
+    padding: 20px;
+    border-radius: 10px;
+    margin: 0; /* Asegúrate de que no haya margen */
+    padding: 0; /* Asegúrate de que no haya padding */
+}
+
+.product-image {
+    width: 300px; /* Ajustar el tamaño de la imagen */
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.user-menu .dropdown-menu {
+    background-color: white; /* Color de fondo del menú desplegable */
+}
+
+.user-menu .dropdown-menu a {
+    color: rgb(0, 0, 0) !important; /* Cambiar el color del texto a negro */
+}
+
+.user-menu .dropdown-menu a:hover {
+    background-color: #f0f0f0; /* Color de fondo al pasar el ratón */
+}
+
+.login-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 1rem; /* Espaciado a la izquierda */
+}
+
+.login-icon img {
+    width: 35px; /* Ajusta el tamaño según sea necesario */
+    height: 35px; /* Ajusta el tamaño según sea necesario */
+    transition: transform 0.3s ease;
+    border: none; /* Asegúrate de que no haya borde */
+    outline: none; /* Elimina el contorno al hacer clic */
+}
+
+.login-icon:hover img {
+    transform: scale(1.1); /* Efecto de hover */
+}
+
+/* Estilos para el rol ADMIN */
+body.admin .navbar {
+    background-color: #c0392b; /* Color de fondo del encabezado para ADMIN */
+    color: white; /* Color del texto del encabezado */
+}
+
+body.admin .navbar a {
+    color: rgb(255, 0, 0); /* Asegúrate de que el texto del menú sea blanco */
+}
+
+.user-menu .dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 15px;
+    border-radius: 8px;
+    min-width: 160px;
+    right: 0;
+    top: 100%;
+    border: 2px solid red;
+}
+
+.user-menu .dropdown-menu a {
+    color: red;
+    text-decoration: none;
+    display: block;
+    padding: 12px 20px;
+    white-space: nowrap;
+    transition: background-color 0.3s;
+}
+
+.user-menu .dropdown-menu a:hover {
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+body:not(.admin) .user-menu .dropdown-menu {
+    border: 2px solid var(--navbar-color);
+}
+
+body:not(.admin) .user-menu .dropdown-menu a {
+    color: var(--navbar-color);
+}
+
+body:not(.admin) .user-menu .dropdown-menu a:hover {
+    background-color: rgba(30, 58, 138, 0.1);
+}
+
+/* Estilo para las imágenes de juegos en el panel de administración */
+.game-card {
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+}
+
+.game-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.game-card h3 {
+    color: #333;
+    font-size: 1.2em;
+    margin: 0 0 10px 0;
+}
+
+.game-card .price {
+    color: #4747ff;
+    font-weight: bold;
+    font-size: 1.2em;
+    margin: 5px 0;
+}
+
+.game-card .category {
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+}
+
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 25px;
+    padding: 20px;
+}
+
+.game-card .ver-detalles {
+    background-color: #4747ff;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    text-decoration: none;
+    margin-top: auto;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.game-card .ver-detalles:hover {
+    background-color: #3535ff;
+}
+
+.game-card .eliminar {
+    background-color: #dc2626;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.game-card .eliminar:hover {
+    background-color: #b91c1c;
+}
+
+/* Estilos para el formulario de búsqueda y mensajes de no resultados */
+.search-container {
+    margin: 20px 0;
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.search-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.search-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.search-button {
+    padding: 10px 20px;
+    background-color: #4747ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-button:hover {
+    background-color: #3535ff;
+}
+
+.clear-search {
+    padding: 10px 20px;
+    color: #666;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: color 0.3s;
+}
+
+.clear-search:hover {
+    color: #333;
+}
+
+.no-results {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    grid-column: 1 / -1;
+}

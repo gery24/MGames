@@ -91,10 +91,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
                 <button type="submit">Registrarse</button>
                 <p>¿Ya tienes cuenta? <a href="login.php">Inicia sesión aquí</a></p>
+                <p>¿Olvidaste tu contraseña? <a href="recuperar_contrasena.php">Recuperar contraseña</a></p>
             </form>
         <?php endif; ?>
     </div>
 
     <?php require_once 'includes/footer.php'; ?>
 </body>
-</html> 
+</html>
