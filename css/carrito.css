@@ -2,9 +2,21 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1rem;
-}
-
-.product-card {
+  }
+  
+  /* Remove extra space at the top */
+  .content {
+    margin-top: 0;
+    padding-top: 0;
+  }
+  
+  /* Reduce spacing in the hero header */
+  .hero {
+    margin-top: 0;
+    padding: 10px 0;
+  }
+  
+  .product-card {
     min-width: 990px; /* Ajusta según necesidad */
     width: 100%; /* Ocupará todo el espacio disponible */
     display: flex;
@@ -16,57 +28,57 @@
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     height: 400px;
-}
-
-.product-card img {
+  }
+  
+  .product-card img {
     width: 200px;
     height: 300px;
     object-fit: cover;
     margin-left: 15px; /* Cambiado de margin-right a margin-left */
     border-radius: var(--border-radius);
-}
-
-.product-card-content {
+  }
+  
+  .product-card-content {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     min-width: 0; /* Permite que el contenido se ajuste correctamente */
-}
-
-.product-card-content h3 {
+  }
+  
+  .product-card-content h3 {
     font-size: 1.2rem;
     margin: 0;
     color: var(--text-color);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
-
-.price {
+  }
+  
+  .price {
     font-size: 1.2rem;
     color: var(--primary-color);
     font-weight: bold;
     margin: 5px 0;
-}
-
-.quantity {
+  }
+  
+  .quantity {
     display: flex;
     align-items: center;
     margin: 5px 0;
-}
-
-.quantity label {
+  }
+  
+  .quantity label {
     margin-right: 5px;
-}
-
-.quantity select {
+  }
+  
+  .quantity select {
     width: 50px;
     margin-left: 5px;
     padding: 2px;
-}
-
-.btn {
+  }
+  
+  .btn {
     background-color: var(--primary-color);
     color: white;
     padding: 8px 15px;
@@ -76,32 +88,34 @@
     transition: background-color 0.3s;
     min-width: 100px;
     font-size: 0.9rem;
-}
-
-.btn:hover {
+  }
+  
+  .btn:hover {
     background-color: var(--secondary-color);
-}
-
-.cart-container {
+  }
+  
+  .cart-container {
     display: flex;
     flex-direction: column;
     padding: 20px;
     margin: 0 15%;
-}
-
-.cart-content {
+    /* Remove top margin */
+    margin-top: 0;
+  }
+  
+  .cart-content {
     display: flex;
     gap: 20px;
-}
-
-.products-list {
+  }
+  
+  .products-list {
     display: flex;
     flex-direction: column;
     gap: 15px;
     flex-grow: 1;
-}
-
-.cart-summary {
+  }
+  
+  .cart-summary {
     width: 300px;
     padding: 20px;
     background: #ffffff;
@@ -111,76 +125,76 @@
     align-self: flex-start;
     position: sticky;
     top: 20px;
-}
-
-.cart-summary h2 {
+  }
+  
+  .cart-summary h2 {
     margin-bottom: 10px;
-}
-
-.cart-summary p {
+  }
+  
+  .cart-summary p {
     margin: 5px 0;
     font-size: 1rem;
-}
-
-.cart-summary .btn {
+  }
+  
+  .cart-summary .btn {
     width: 100%;
     margin-top: 10px;
     padding: 12px;
-}
-
-.recommended-products {
+  }
+  
+  .recommended-products {
     margin-top: 40px;
-}
-
-.recommended-products h2 {
+  }
+  
+  .recommended-products h2 {
     margin-bottom: 20px;
-}
-
-.recommended-products .products-list {
+  }
+  
+  .recommended-products .products-list {
     display: flex;
     flex-direction: column;
     gap: 15px;
     margin: 0 15%;
-}
-
-/* Similar Games Section */
-.similar-games {
+  }
+  
+  /* Similar Games Section */
+  .similar-games {
     display: flex;
     gap: 20px;
     overflow-x: auto;
     padding: 10px 0;
-}
-
-.game-card {
+  }
+  
+  .game-card {
     flex: 0 0 200px;
     text-align: center;
-}
-
-.game-card img {
+  }
+  
+  .game-card img {
     width: 100%;
     height: 150px;
     object-fit: cover;
     border-radius: 8px;
-}
-
-.game-card h3 {
+  }
+  
+  .game-card h3 {
     margin: 10px 0;
     font-size: 16px;
-}
-
-/* Modern Form Styling */
-#add-game-form {
+  }
+  
+  /* Modern Form Styling */
+  #add-game-form {
     max-width: 600px;
     margin: 2rem auto;
     padding: 2rem;
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-#add-game-form input,
-#add-game-form select,
-#add-game-form textarea {
+  }
+  
+  #add-game-form input,
+  #add-game-form select,
+  #add-game-form textarea {
     width: 100%;
     padding: 12px;
     margin: 8px 0 16px;
@@ -188,23 +202,23 @@
     border-radius: 8px;
     font-size: 16px;
     transition: border-color 0.3s ease;
-}
-
-#add-game-form input:focus,
-#add-game-form select:focus,
-#add-game-form textarea:focus {
+  }
+  
+  #add-game-form input:focus,
+  #add-game-form select:focus,
+  #add-game-form textarea:focus {
     border-color: #3182ce;
     outline: none;
-}
-
-/* Radio Button Styling */
-.radio-group {
+  }
+  
+  /* Radio Button Styling */
+  .radio-group {
     display: flex;
     gap: 1rem;
     margin: 1rem 0;
-}
-
-.radio-group label {
+  }
+  
+  .radio-group label {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -213,13 +227,13 @@
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
-}
-
-.radio-group label:hover {
+  }
+  
+  .radio-group label:hover {
     border-color: #3182ce;
-}
-
-.radio-group input[type='radio'] {
+  }
+  
+  .radio-group input[type="radio"] {
     appearance: none;
     width: 16px;
     height: 16px;
@@ -227,14 +241,14 @@
     border-radius: 50%;
     position: relative;
     transition: all 0.3s ease;
-}
-
-.radio-group input[type='radio']:checked {
+  }
+  
+  .radio-group input[type="radio"]:checked {
     border-color: #3182ce;
-}
-
-.radio-group input[type='radio']:checked::before {
-    content: '';
+  }
+  
+  .radio-group input[type="radio"]:checked::before {
+    content: "";
     width: 8px;
     height: 8px;
     background: #3182ce;
@@ -243,19 +257,21 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-}
-
-@media (max-width: 768px) {
+  }
+  
+  @media (max-width: 768px) {
     .cart-container {
-        margin: 0 5%;
+      margin: 0 5%;
     }
-
+  
     .cart-content {
-        flex-direction: column;
+      flex-direction: column;
     }
-
+  
     .cart-summary {
-        width: 100%;
-        position: static;
+      width: 100%;
+      position: static;
     }
-}
+  }
+  
+  

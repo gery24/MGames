@@ -26,6 +26,18 @@ require_once 'includes/header.php';
     <title>Carrito - MGames</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/carrito.css">
+    <style>
+        /* Estilos adicionales para eliminar espacios */
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .content {
+            margin-top: 0;
+            padding-top: 0;
+        }
+    </style>
 </head>
 <body>
     <div class="content">
@@ -47,7 +59,7 @@ require_once 'includes/header.php';
             </div>
         <?php endif; ?>
 
-        <header class="hero">
+        <header >
             <h1>Tu Carrito</h1>
         </header>
 
@@ -159,3 +171,4 @@ require_once 'includes/header.php';
     <?php require_once 'includes/footer.php'; ?>
 </body>
 </html>
+
