@@ -113,7 +113,7 @@ require_once 'includes/header.php';
                         <p>Precio oficial: €<?php echo number_format($total, 2); ?></p>
                         <p>Descuento: -€<?php echo number_format($descuento, 2); ?></p>
                         <p>Subtotal: €<?php echo number_format($subtotal, 2); ?></p>
-                        <button class="btn" onclick="checkout()">Proceder con el pago</button>
+                        <button class="btn" onclick="window.location.href='pago.php'">Proceder con el pago</button>
                     </div>
                 </div>
             <?php endif; ?>
