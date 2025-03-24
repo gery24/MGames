@@ -19,4 +19,102 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-} 
+}
+
+.review {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-left: 5px solid #007bff; /* Color de la barra lateral */
+}
+
+.review p {
+    margin: 5px 0;
+}
+
+/* Estrellas para la media de reseñas */
+.rating-stars {
+    display: inline-flex;
+    margin-left: 5px;
+}
+
+.rating-stars .star {
+    cursor: default;
+    font-size: 30px;
+}
+
+.rating-stars .star.filled {
+    color: #ff6600; /* Color de estrellas llenas */
+}
+
+.rating-stars .star.half-filled {
+    position: relative;
+    color: #ddd;
+}
+
+.rating-stars .star.half-filled:before {
+    content: "★";
+    position: absolute;
+    color: #ff6600;
+    width: 50%;
+    overflow: hidden;
+}
+
+.rating-stars .star.empty {
+    color: #ddd; /* Color de estrellas vacías */
+}
+
+/* Estrellas para las reseñas individuales */
+.review-stars {
+    display: inline-flex;
+}
+
+.review-stars .star {
+    font-size: 20px; /* Tamaño más pequeño para las reseñas individuales */
+    cursor: default;
+}
+
+.review-stars .star.filled {
+    color: #ff6600;
+}
+
+.review-stars .star.empty {
+    color: #ddd;
+}
+
+/* Estilos para el formulario de reseña */
+.rating-container {
+    margin-bottom: 15px;
+}
+
+.rating-label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.user-star-rating {
+    display: flex;
+    flex-direction: row-reverse; /* Para que las estrellas se seleccionen de derecha a izquierda */
+    justify-content: flex-end; /* Alinear a la izquierda */
+}
+
+.user-star-rating .star {
+    font-size: 30px;
+    color: #ddd;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.user-star-rating .star:hover,
+.user-star-rating .star:hover ~ .star {
+    color: #ff6600;
+}
+
+.user-star-rating input[type="radio"]:checked ~ .star {
+    color: #ff6600;
+}
+
+input[type="radio"] {
+    display: none; /* Ocultar los botones de radio */
+}

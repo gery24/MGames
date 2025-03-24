@@ -23,6 +23,11 @@ try {
     $stmt_similares->execute([$producto['categoria_id'], $id]);
     $juegos_similares = $stmt_similares->fetchAll(PDO::FETCH_ASSOC);
 
+    // Obtener la media de las reseñas
+    $stmt_reseñas = $pdo->prepare("SELECT AVG(puntuacion) as media, COUNT(*) as total FROM reseñas WHERE producto_id = ?");
+    $stmt_reseñas->execute([$id]);
+    $reseñas = $stmt_reseñas->fetch(PDO::FETCH_ASSOC);
+
 } catch (PDOException $e) {
     die("Error en la base de datos: " . $e->getMessage());
 }
@@ -226,6 +231,125 @@ if (isset($_GET['already_in_cart'])) {
             background-color: #1d4ed8;
         }
 
+        /* Estilos para las estrellas */
+        .review {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-left: 5px solid #007bff; /* Color de la barra lateral */
+        }
+
+        .review p {
+            margin: 5px 0;
+        }
+
+        .star-rating {
+            direction: rtl; /* Para que las estrellas se seleccionen de derecha a izquierda */
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .star {
+            font-size: 30px; /* Tamaño de las estrellas */
+            color: #ddd; /* Color por defecto */
+            cursor: pointer;
+        }
+
+        .star:hover,
+        .star:hover ~ .star {
+            color: #ff6600; /* Color al pasar el ratón */
+        }
+
+        input[type="radio"] {
+            display: none; /* Ocultar los botones de radio */
+        }
+
+        input[type="radio"]:checked ~ .star {
+            color: #ff6600; /* Color de las estrellas seleccionadas */
+        }
+
+        /* Estrellas para la media de reseñas */
+        .rating-stars {
+            display: inline-flex;
+            margin-left: 5px;
+        }
+
+        .rating-stars .star {
+            cursor: default;
+        }
+
+        .rating-stars .star.filled {
+            color: #ff6600; /* Color de estrellas llenas */
+        }
+
+        .rating-stars .star.half-filled {
+            position: relative;
+            color: #ddd;
+        }
+
+        .rating-stars .star.half-filled:before {
+            content: "★";
+            position: absolute;
+            color: #ff6600;
+            width: 50%;
+            overflow: hidden;
+        }
+
+        .rating-stars .star.empty {
+            color: #ddd; /* Color de estrellas vacías */
+        }
+
+        /* Estrellas para las reseñas individuales */
+        .review-stars {
+            display: inline-flex;
+        }
+
+        .review-stars .star {
+            font-size: 20px; /* Tamaño más pequeño para las reseñas individuales */
+            cursor: default;
+        }
+
+        .review-stars .star.filled {
+            color: #ff6600;
+        }
+
+        .review-stars .star.empty {
+            color: #ddd;
+        }
+
+        /* Estilos para el formulario de reseña */
+        .rating-container {
+            margin-bottom: 15px;
+        }
+
+        .rating-label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .user-star-rating {
+            display: flex;
+            flex-direction: row-reverse; /* Para que las estrellas se seleccionen de derecha a izquierda */
+            justify-content: flex-end; /* Alinear a la izquierda */
+        }
+
+        .user-star-rating .star {
+            font-size: 30px;
+            color: #ddd;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .user-star-rating .star:hover,
+        .user-star-rating .star:hover ~ .star {
+            color: #ff6600;
+        }
+
+        .user-star-rating input[type="radio"]:checked ~ .star {
+            color: #ff6600;
+        }
+
         @media (max-width: 768px) {
             .product-header {
                 flex-direction: column; /* Apilar en móviles */
@@ -296,6 +420,96 @@ if (isset($_GET['already_in_cart'])) {
                 </div>
             </div>
         </div>
+
+        <!-- Mostrar la media de las reseñas -->
+        <?php if ($reseñas['total'] > 0): ?>
+            <div class="product-section">
+                <h2 class="section-title">Valoración</h2>
+                <p>Media de Reseñas: 
+                    <span class="rating-stars">
+                        <?php 
+                        $media = $reseñas['media'];
+                        for ($i = 1; $i <= 5; $i++) {
+                            if ($i <= floor($media)) {
+                                // Estrella completa
+                                echo "<span class='star filled'>&#9733;</span>";
+                            } elseif ($i - 0.5 <= $media) {
+                                // Media estrella
+                                echo "<span class='star half-filled'>&#9733;</span>";
+                            } else {
+                                // Estrella vacía
+                                echo "<span class='star empty'>&#9733;</span>";
+                            }
+                        }
+                        ?>
+                    </span>
+                    (<?php echo number_format($reseñas['media'], 1); ?> de 5 - <?php echo $reseñas['total']; ?> reseñas)
+                </p>
+            </div>
+        <?php endif; ?>
+
+        <div class="review-section">
+            <h2 class="section-title">Deja tu reseña</h2>
+            <form method="POST" action="guardar_reseña.php">
+                <input type="hidden" name="producto_id" value="<?php echo $producto['id']; ?>">
+                <div class="rating-container">
+                    <label class="rating-label">Puntuación:</label>
+                    <div class="user-star-rating">
+                        <input type="radio" id="star5" name="puntuacion" value="5" required>
+                        <label for="star5" class="star">&#9733;</label>
+                        <input type="radio" id="star4" name="puntuacion" value="4">
+                        <label for="star4" class="star">&#9733;</label>
+                        <input type="radio" id="star3" name="puntuacion" value="3">
+                        <label for="star3" class="star">&#9733;</label>
+                        <input type="radio" id="star2" name="puntuacion" value="2">
+                        <label for="star2" class="star">&#9733;</label>
+                        <input type="radio" id="star1" name="puntuacion" value="1">
+                        <label for="star1" class="star">&#9733;</label>
+                    </div>
+                </div>
+                <div class="review-comment">
+                    <label for="comentario">Comentario:</label>
+                    <textarea id="comentario" name="comentario" rows="4" placeholder="Escribe tu reseña aquí..."></textarea>
+                </div>
+                <button type="submit" class="btn">Enviar Reseña</button>
+            </form>
+        </div>
+
+        <!-- Mostrar las reseñas -->
+        <?php
+        $stmt_todas_reseñas = $pdo->prepare("
+            SELECT r.*, u.nombre 
+            FROM reseñas r 
+            JOIN usuarios u ON r.usuario_id = u.id 
+            WHERE r.producto_id = ? 
+            ORDER BY r.fecha DESC
+        ");
+        $stmt_todas_reseñas->execute([$id]);
+        $lista_reseñas = $stmt_todas_reseñas->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($lista_reseñas) {
+            echo "<h3>Reseñas:</h3>";
+            foreach ($lista_reseñas as $reseña) {
+                echo "<div class='review'>";
+                echo "<p><strong>" . htmlspecialchars($reseña['nombre']) . "</strong> - ";
+                echo "<span class='review-stars'>";
+                for ($i = 1; $i <= 5; $i++) {
+                    if ($i <= $reseña['puntuacion']) {
+                        echo "<span class='star filled'>&#9733;</span>"; // Estrella llena
+                    } else {
+                        echo "<span class='star empty'>&#9733;</span>"; // Estrella vacía
+                    }
+                }
+                echo "</span>";
+                echo "</p>";
+                echo "<p>" . htmlspecialchars($reseña['comentario']) . "</p>";
+                echo "<p><em>" . htmlspecialchars($reseña['fecha']) . "</em></p>";
+                echo "</div>";
+            }
+        } else {
+            echo "<p>No hay reseñas para este producto.</p>";
+        }
+        ?>
     </div>
 
     <section class="similar-games-section">
