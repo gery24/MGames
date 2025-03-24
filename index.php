@@ -59,7 +59,8 @@ try {
         $query .= " WHERE " . implode(" AND ", $where);
     }
 
-    $query .= " ORDER BY p.id DESC";
+    // Cambiar el ORDER BY para mostrar productos en orden aleatorio
+    $query .= " ORDER BY RAND()";
 
     // Ejecutar la consulta
     $stmt = $pdo->prepare($query);
