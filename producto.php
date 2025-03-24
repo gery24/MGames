@@ -76,25 +76,19 @@ require_once 'includes/header.php';
                     <div class="requirements">
                         <div class="min-requirements">
                             <h3>Requisitos Mínimos</h3>
-                            <ul>
-                                <li>SO: Windows 10 64-bit</li>
-                                <li>Procesador: Intel Core i5-2500K | AMD FX-6300</li>
-                                <li>Memoria: 8 GB RAM</li>
-                                <li>Gráficos: NVIDIA GTX 770 2GB | AMD Radeon R9 280</li>
-                                <li>DirectX: Versión 11</li>
-                                <li>Almacenamiento: 50 GB</li>
-                            </ul>
+                            <?php if (!empty($producto['reqmin'])): ?>
+                                <?php echo nl2br(htmlspecialchars($producto['reqmin'])); ?>
+                            <?php else: ?>
+                                <p>No se han especificado los requisitos mínimos para este juego.</p>
+                            <?php endif; ?>
                         </div>
                         <div class="rec-requirements">
                             <h3>Requisitos Recomendados</h3>
-                            <ul>
-                                <li>SO: Windows 10 64-bit</li>
-                                <li>Procesador: Intel Core i7-4770K | AMD Ryzen 5 1500X</li>
-                                <li>Memoria: 16 GB RAM</li>
-                                <li>Gráficos: NVIDIA GTX 1060 6GB | AMD RX 580 8GB</li>
-                                <li>DirectX: Versión 12</li>
-                                <li>Almacenamiento: 50 GB SSD</li>
-                            </ul>
+                            <?php if (!empty($producto['reqmax'])): ?>
+                                <?php echo nl2br(htmlspecialchars($producto['reqmax'])); ?>
+                            <?php else: ?>
+                                <p>No se han especificado los requisitos recomendados para este juego.</p>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
