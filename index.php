@@ -164,6 +164,9 @@ require_once 'includes/header.php';
         <div class="products-grid">
             <?php foreach($productos as $producto): ?>
                 <div class="product-card">
+                    <div class="wishlist-icon" data-product-id="<?php echo $producto['id']; ?>">
+                        <i class="fas fa-heart"></i>
+                    </div>
                     <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" 
                          alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
                     <div class="product-card-content">
@@ -344,6 +347,45 @@ require_once 'includes/header.php';
             // Mostrar el icono de reproducción
             playIcon.style.display = 'block';
             pauseIcon.style.display = 'none';
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const wishlistIcons = document.querySelectorAll('.wishlist-icon');
+        
+        wishlistIcons.forEach(icon => {
+            icon.addEventListener('click', async function(e) {
+                e.preventDefault(); // Prevenir cualquier comportamiento por defecto
+                
+                const productId = this.getAttribute('data-product-id');
+                
+                try {
+                    const response = await fetch('add_to_wishlist.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ productId: productId })
+                    });
+
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        // Si la operación fue exitosa, redirigir a lista_deseos.php
+                        window.location.href = 'lista_deseos.php';
+                    } else {
+                        // Si hay un error, mostrar el mensaje
+                        if (data.message === 'Debes iniciar sesión') {
+                            window.location.href = 'login.php';
+                        } else {
+                            alert(data.message);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Ha ocurrido un error al procesar tu solicitud');
+                }
+            });
         });
     });
 </script>

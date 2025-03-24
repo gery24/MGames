@@ -6,6 +6,7 @@ USE tienda_videojuegos;
 DROP TABLE IF EXISTS productos;
 DROP TABLE IF EXISTS categorias;
 DROP TABLE IF EXISTS usuarios;
+DROP TABLE IF EXISTS lista_deseos;
 
 -- Tabla de categorías
 CREATE TABLE categorias (
@@ -34,6 +35,17 @@ CREATE TABLE usuarios (
     email VARCHAR(100) NOT NULL UNIQUE,
     contraseña VARCHAR(255) NOT NULL,
     rol ENUM('ADMIN', 'USER') DEFAULT 'USER'
+);
+
+-- Tabla de lista de deseos
+CREATE TABLE IF NOT EXISTS lista_deseos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    usuario_id INT NOT NULL,
+    producto_id INT NOT NULL,
+    fecha_agregado TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+    FOREIGN KEY (producto_id) REFERENCES productos(id),
+    UNIQUE KEY unique_wishlist (usuario_id, producto_id)
 );
 
 -- Insertar algunas categorías de ejemplo
