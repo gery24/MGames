@@ -1,8 +1,30 @@
 <?php
 session_start();
+require_once 'config/database.php';
 
-// Verifica si hay productos en la lista de deseos
-$lista_deseos = $_SESSION['lista_deseos'] ?? [];
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['usuario'])) {
+    header('Location: login.php');
+    exit;
+}
+
+try {
+    // Obtener los productos de la lista de deseos del usuario
+    $stmt = $pdo->prepare("
+        SELECT p.*, c.nombre as categoria_nombre 
+        FROM lista_deseos l
+        JOIN productos p ON l.producto_id = p.id
+        LEFT JOIN categorias c ON p.categoria_id = c.id
+        WHERE l.usuario_id = ?
+        ORDER BY l.fecha_agregado DESC
+    ");
+    $stmt->execute([$_SESSION['usuario']['id']]);
+    $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch(PDOException $e) {
+    die("Error en la base de datos: " . $e->getMessage());
+}
+
+$titulo = "Lista de Deseos - MGames";
 require_once 'includes/header.php';
 ?>
 
@@ -189,21 +211,25 @@ require_once 'includes/header.php';
         </header>
 
         <div class="wishlist-container">
-            <?php if (empty($lista_deseos)): ?>
-                <p>No hay productos en tu lista de deseos.</p>
+            <?php if (empty($productos)): ?>
+                <div class="no-results">
+                    <p>No tienes productos en tu lista de deseos.</p>
+                    <a href="index.php" class="btn">Explorar Productos</a>
+                </div>
             <?php else: ?>
                 <div class="wishlist-content">
                     <div class="products-list">
-                        <?php foreach ($lista_deseos as $producto): ?>
+                        <?php foreach ($productos as $producto): ?>
                             <div class="product-card">
                                 <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
                                 <div class="product-card-content">
                                     <h3><a href="producto.php?id=<?php echo $producto['id']; ?>"><?php echo htmlspecialchars($producto['nombre']); ?></a></h3>
                                     <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
-                                    <form method="POST" action="eliminar_deseos.php">
-                                        <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
-                                        <button type="submit" class="btn">Eliminar</button>
-                                    </form>
+                                    <p class="category"><?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>
+                                    <a href="producto.php?id=<?php echo $producto['id']; ?>" class="btn">Ver Detalles</a>
+                                    <button onclick="eliminarDeLista(<?php echo $producto['id']; ?>)" class="btn btn-danger">
+                                        Eliminar de la lista
+                                    </button>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -212,6 +238,29 @@ require_once 'includes/header.php';
             <?php endif; ?>
         </div>
     </div>
+
+    <script>
+    function eliminarDeLista(productoId) {
+        if (confirm('¿Estás seguro de que quieres eliminar este producto de tu lista de deseos?')) {
+            fetch('eliminar_de_lista.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productId: productoId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    }
+    </script>
 
     <?php require_once 'includes/footer.php'; ?>
 </body>

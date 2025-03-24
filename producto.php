@@ -2,329 +2,269 @@
 session_start();
 require_once 'config/database.php';
 
-if (!isset($_GET['id'])) {
-    header('Location: index.php');
-    exit;
-}
-
-$id = $_GET['id'];
+// Obtener el ID del producto de la URL
+$producto_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 try {
-    $stmt = $pdo->prepare("SELECT p.*, c.nombre as categoria_nombre FROM productos p LEFT JOIN categorias c ON p.categoria_id = c.id WHERE p.id = ?");
-    $stmt->execute([$id]);
-    $producto = $stmt->fetch(PDO::FETCH_ASSOC);
+    // Obtener los detalles del producto
+    $stmt = $pdo->prepare("
+        SELECT p.*, c.nombre as categoria_nombre 
+        FROM productos p 
+        LEFT JOIN categorias c ON p.categoria_id = c.id 
+        WHERE p.id = ?
+    ");
+    $stmt->execute([$producto_id]);
+    $producto = $stmt->fetch();
 
     if (!$producto) {
         header('Location: index.php');
         exit;
     }
 
-    $stmt_similares = $pdo->prepare("SELECT * FROM productos WHERE categoria_id = ? AND id != ? LIMIT 4");
-    $stmt_similares->execute([$producto['categoria_id'], $id]);
-    $juegos_similares = $stmt_similares->fetchAll(PDO::FETCH_ASSOC);
-
-} catch (PDOException $e) {
+} catch(PDOException $e) {
     die("Error en la base de datos: " . $e->getMessage());
 }
 
-$titulo = htmlspecialchars($producto['nombre']);
+$titulo = $producto['nombre'] . " - MGames";
 require_once 'includes/header.php';
-
-// Mostrar mensaje si el producto ya está en el carrito
-if (isset($_GET['already_in_cart'])) {
-    echo '<p style="color: red;">Este producto ya está en tu carrito.</p>';
-}
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $titulo; ?></title>
-    <style>
-        body {
-            background-color: #ffffff;
-            color: #333333;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        .product-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .product-header {
-            display: flex; /* Cambiar a flexbox */
-            align-items: center; /* Centrar verticalmente */
-            gap: 30px; /* Espacio entre la imagen y el contenido */
-            margin-bottom: 40px;
-            background-color: #f8f9fa; /* Fondo claro para el encabezado del producto */
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        .product-image {
-            width: 300px; /* Ajustar el tamaño de la imagen */
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .product-info {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .product-title {
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .price {
-            font-size: 2em;
-            color: #2563eb;
-            margin-bottom: 20px;
-        }
-
-        .buy-button {
-            background-color: #2563eb;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 5px;
-            font-size: 1.2em;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .buy-button:hover {
-            background-color: #1d4ed8;
-        }
-
-        .product-section {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-        }
-
-        .section-title {
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            color: #2563eb;
-        }
-
-        .requirements-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .similar-games-section {
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .similar-games-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 1.5rem;
-            color: #333;
-        }
-
-        /* Modificación para mostrar los juegos horizontalmente */
-        .similar-games-grid {
-            display: flex; /* Cambiar a flexbox para layout horizontal */
-            flex-wrap: nowrap; /* Evitar que se envuelvan a la siguiente línea */
-            gap: 1.5rem;
-            overflow-x: auto; /* Permitir desplazamiento horizontal si hay muchos juegos */
-            padding-bottom: 1rem; /* Espacio para la barra de desplazamiento */
-            scrollbar-width: thin; /* Para Firefox */
-            -ms-overflow-style: none; /* Para IE y Edge */
-        }
-
-        /* Ocultar la barra de desplazamiento en Chrome, Safari y Opera */
-        .similar-games-grid::-webkit-scrollbar {
-            height: 6px;
-        }
-
-        .similar-games-grid::-webkit-scrollbar-thumb {
-            background-color: #c1c1c1;
-            border-radius: 6px;
-        }
-
-        .game-card {
-            position: relative;
-            border-radius: 8px;
-            overflow: hidden;
-            background: #fff;
-            transition: transform 0.2s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            flex: 0 0 250px; /* Ancho fijo para cada tarjeta */
-            max-width: 250px; /* Asegurar que no crezcan demasiado */
-        }
-
-        .game-card:hover {
-            transform: translateY(-4px);
-        }
-
-        .game-image {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-        }
-
-        .game-info {
-            padding: 1rem;
-        }
-
-        .game-title {
-            font-size: 1rem;
-            font-weight: 600;
-            margin: 0;
-            color: #333;
-        }
-
-        .game-price {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #333;
-            margin-top: 0.5rem;
-        }
-
-        .discount-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: #ff4444;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.875rem;
-            font-weight: 600;
-        }
-
-        .view-details {
-            display: inline-block;
-            background-color: #2563eb;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            text-decoration: none;
-            margin-top: 0.5rem;
-            transition: background-color 0.2s;
-        }
-
-        .view-details:hover {
-            background-color: #1d4ed8;
-        }
-
-        @media (max-width: 768px) {
-            .product-header {
-                flex-direction: column; /* Apilar en móviles */
-                align-items: flex-start;
-            }
-
-            .product-image {
-                width: 100%; /* Imagen a ancho completo en móviles */
-                max-width: 300px;
-                margin: 0 auto;
-            }
-
-            .requirements-grid {
-                grid-template-columns: 1fr;
-            }
-
-            /* Mantener el scroll horizontal en móviles */
-            .similar-games-grid {
-                padding-bottom: 0.5rem;
-            }
-
-            .game-card {
-                flex: 0 0 200px; /* Tarjetas más pequeñas en móviles */
-                max-width: 200px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="product-container">
+<div class="content">
+    <div class="product-details">
         <div class="product-header">
-            <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" alt="<?php echo htmlspecialchars($producto['nombre']); ?>" class="product-image">
+            <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" 
+                 alt="<?php echo htmlspecialchars($producto['nombre']); ?>" 
+                 class="product-image">
             <div class="product-info">
                 <h1><?php echo htmlspecialchars($producto['nombre']); ?></h1>
                 <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
-                <p class="platform">Categoria: <?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>                
-                <!-- Formulario modificado para añadir al carrito -->
-                <form method="POST" action="agregar_al_carrito.php">
-                    <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
-                    <input type="hidden" name="nombre" value="<?php echo htmlspecialchars($producto['nombre']); ?>">
-                    <input type="hidden" name="precio" value="<?php echo $producto['precio']; ?>">
-                    <button type="submit" class="btn buy-button">Añadir al carrito</button>
-                </form>
-                    <br>
-                <form method="POST" action="agregar_lista_deseos.php">
-                    <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
-                    <button type="submit" class="btn buy-button">Añadir a lista de deseos</button>
-                </form> 
+                <p class="category"><?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>
                 
-            </div>
-        </div>
-
-        <div class="product-section">
-            <h2 class="section-title">Acerca del juego</h2>
-            <p><?php echo htmlspecialchars($producto['acerca_de']); ?></p>
-        </div>
-
-        <div class="product-section">
-            <h2 class="section-title">Requisitos del sistema</h2>
-            <div class="requirements-grid">
-                <div>
-                    <h3>Mínimos</h3>
-                    <p><?php echo htmlspecialchars($producto['reqmin']); ?></p>
-                </div>
-                <div>
-                    <h3>Recomendados</h3>
-                    <p><?php echo htmlspecialchars($producto['reqmax']); ?></p>
+                <div class="product-actions">
+                    <button class="btn add-to-cart">Añadir al Carrito</button>
+                    <button class="btn add-to-wishlist" data-product-id="<?php echo $producto['id']; ?>">
+                        <i class="fas fa-heart"></i> Añadir a Lista de Deseos
+                    </button>
                 </div>
             </div>
         </div>
-    </div>
 
-    <section class="similar-games-section">
-        <h2 class="similar-games-title">Juegos similares</h2>
-        <div class="similar-games-grid">
-            <?php foreach ($juegos_similares as $juego): ?>
-                <div class="game-card">
-                    <?php if (isset($juego['descuento']) && $juego['descuento'] > 0): ?>
-                        <div class="discount-badge">
-                            -<?php echo $juego['descuento']; ?>%
+        <!-- Sección de Detalles -->
+        <div class="product-sections">
+            <!-- Acerca del Juego -->
+            <section class="product-section">
+                <h2>Acerca del Juego</h2>
+                <div class="section-content">
+                    <?php echo nl2br(htmlspecialchars($producto['descripcion'])); ?>
+                </div>
+            </section>
+
+            <!-- Requisitos del Sistema -->
+            <section class="product-section">
+                <h2>Requisitos del Sistema</h2>
+                <div class="section-content">
+                    <div class="requirements">
+                        <div class="min-requirements">
+                            <h3>Requisitos Mínimos</h3>
+                            <ul>
+                                <li>SO: Windows 10 64-bit</li>
+                                <li>Procesador: Intel Core i5-2500K | AMD FX-6300</li>
+                                <li>Memoria: 8 GB RAM</li>
+                                <li>Gráficos: NVIDIA GTX 770 2GB | AMD Radeon R9 280</li>
+                                <li>DirectX: Versión 11</li>
+                                <li>Almacenamiento: 50 GB</li>
+                            </ul>
                         </div>
-                    <?php endif; ?>
-                    <img 
-                        src="<?php echo htmlspecialchars($juego['imagen']); ?>" 
-                        alt="<?php echo htmlspecialchars($juego['nombre']); ?>"
-                        class="game-image"
-                    >
-                    <div class="game-info">
-                        <h3 class="game-title"><?php echo htmlspecialchars($juego['nombre']); ?></h3>
-                        <p class="game-price">€<?php echo number_format($juego['precio'], 2); ?></p>
-                        <a href="producto.php?id=<?php echo $juego['id']; ?>" class="view-details">
-                            Ver detalles
-                        </a>
+                        <div class="rec-requirements">
+                            <h3>Requisitos Recomendados</h3>
+                            <ul>
+                                <li>SO: Windows 10 64-bit</li>
+                                <li>Procesador: Intel Core i7-4770K | AMD Ryzen 5 1500X</li>
+                                <li>Memoria: 16 GB RAM</li>
+                                <li>Gráficos: NVIDIA GTX 1060 6GB | AMD RX 580 8GB</li>
+                                <li>DirectX: Versión 12</li>
+                                <li>Almacenamiento: 50 GB SSD</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            <?php endforeach; ?>
+            </section>
         </div>
-    </section>
+    </div>
+</div>
 
-    <?php require_once 'includes/footer.php'; ?>
-</body>
-</html>
+<style>
+.product-details {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.product-header {
+    display: flex;
+    gap: 2rem;
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.product-image {
+    width: 400px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.product-info {
+    flex: 1;
+}
+
+.product-info h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.price {
+    font-size: 1.5rem;
+    color: #4747ff;
+    font-weight: bold;
+    margin: 1rem 0;
+}
+
+.category {
+    display: inline-block;
+    background: #f3f4f6;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    margin: 1rem 0;
+}
+
+.product-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.add-to-wishlist {
+    background-color: #ff4747 !important;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.add-to-wishlist:hover {
+    background-color: #ff3333 !important;
+}
+
+/* Estilos para las secciones de detalles */
+.product-sections {
+    margin-top: 2rem;
+}
+
+.product-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.product-section h2 {
+    color: #333;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.requirements {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.min-requirements, .rec-requirements {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.requirements h3 {
+    color: #4747ff;
+    margin-bottom: 1rem;
+}
+
+.requirements ul {
+    list-style: none;
+    padding: 0;
+}
+
+.requirements li {
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.requirements li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #4747ff;
+}
+
+@media (max-width: 768px) {
+    .product-header {
+        flex-direction: column;
+    }
+    
+    .product-image {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    
+    .requirements {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const wishlistButton = document.querySelector('.add-to-wishlist');
+    
+    wishlistButton.addEventListener('click', async function(e) {
+        e.preventDefault();
+        
+        const productId = this.getAttribute('data-product-id');
+        
+        try {
+            const response = await fetch('add_to_wishlist.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productId: productId })
+            });
+
+            const data = await response.json();
+            
+            if (data.success) {
+                // Si la operación fue exitosa, redirigir a lista_deseos.php
+                window.location.href = 'lista_deseos.php';
+            } else {
+                // Si hay un error, mostrar el mensaje
+                if (data.message === 'Debes iniciar sesión') {
+                    window.location.href = 'login.php';
+                } else {
+                    alert(data.message);
+                }
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Ha ocurrido un error al procesar tu solicitud');
+        }
+    });
+});
+</script>
+
+<?php require_once 'includes/footer.php'; ?>
