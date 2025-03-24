@@ -2,19 +2,17 @@
 session_start();
 require_once 'config/database.php';
 
-// Obtener el ID del producto de la URL
-$producto_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+if (!isset($_GET['id'])) {
+    header('Location: index.php');
+    exit;
+}
+
+$id = $_GET['id'];
 
 try {
-    // Obtener los detalles del producto
-    $stmt = $pdo->prepare("
-        SELECT p.*, c.nombre as categoria_nombre 
-        FROM productos p 
-        LEFT JOIN categorias c ON p.categoria_id = c.id 
-        WHERE p.id = ?
-    ");
-    $stmt->execute([$producto_id]);
-    $producto = $stmt->fetch();
+    $stmt = $pdo->prepare("SELECT p.*, c.nombre as categoria_nombre FROM productos p LEFT JOIN categorias c ON p.categoria_id = c.id WHERE p.id = ?");
+    $stmt->execute([$id]);
+    $producto = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$producto) {
         header('Location: index.php');
@@ -31,334 +29,150 @@ try {
     $reseñas = $stmt_reseñas->fetch(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
-} catch(PDOException $e) {
     die("Error en la base de datos: " . $e->getMessage());
 }
 
-$titulo = $producto['nombre'] . " - MGames";
+$titulo = htmlspecialchars($producto['nombre']);
 require_once 'includes/header.php';
+
+// Mostrar mensaje si el producto ya está en el carrito
+if (isset($_GET['already_in_cart'])) {
+    echo '<p style="color: red;">Este producto ya está en tu carrito.</p>';
+}
 ?>
 
-<div class="content">
-    <div class="product-details">
-        <div class="product-header">
-            <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" 
-                 alt="<?php echo htmlspecialchars($producto['nombre']); ?>" 
-                 class="product-image">
-            <div class="product-info">
-                <h1><?php echo htmlspecialchars($producto['nombre']); ?></h1>
-                <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
-                <p class="category"><?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>
-                
-                <div class="product-actions">
-                    <button class="btn add-to-cart">Añadir al Carrito</button>
-                    <button class="btn add-to-wishlist" data-product-id="<?php echo $producto['id']; ?>">
-                        <i class="fas fa-heart"></i> Añadir a Lista de Deseos
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sección de Detalles -->
-        <div class="product-sections">
-            <!-- Acerca del Juego -->
-            <section class="product-section">
-                <h2>Acerca del Juego</h2>
-                <div class="section-content">
-                    <?php echo nl2br(htmlspecialchars($producto['descripcion'])); ?>
-                </div>
-            </section>
-
-            <!-- Requisitos del Sistema -->
-            <section class="product-section">
-                <h2>Requisitos del Sistema</h2>
-                <div class="section-content">
-                    <div class="requirements">
-                        <div class="min-requirements">
-                            <h3>Requisitos Mínimos</h3>
-                            <ul>
-                                <li>SO: Windows 10 64-bit</li>
-                                <li>Procesador: Intel Core i5-2500K | AMD FX-6300</li>
-                                <li>Memoria: 8 GB RAM</li>
-                                <li>Gráficos: NVIDIA GTX 770 2GB | AMD Radeon R9 280</li>
-                                <li>DirectX: Versión 11</li>
-                                <li>Almacenamiento: 50 GB</li>
-                            </ul>
-                        </div>
-                        <div class="rec-requirements">
-                            <h3>Requisitos Recomendados</h3>
-                            <ul>
-                                <li>SO: Windows 10 64-bit</li>
-                                <li>Procesador: Intel Core i7-4770K | AMD Ryzen 5 1500X</li>
-                                <li>Memoria: 16 GB RAM</li>
-                                <li>Gráficos: NVIDIA GTX 1060 6GB | AMD RX 580 8GB</li>
-                                <li>DirectX: Versión 12</li>
-                                <li>Almacenamiento: 50 GB SSD</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-</div>
-
-<style>
-.product-details {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1rem;
-}
-
-.product-header {
-    display: flex;
-    gap: 2rem;
-    background: white;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.product-image {
-    width: 400px;
-    height: auto;
-    object-fit: cover;
-    border-radius: 10px;
-}
-
-.product-info {
-    flex: 1;
-}
-
-.product-info h1 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-}
-
-.price {
-    font-size: 1.5rem;
-    color: #4747ff;
-    font-weight: bold;
-    margin: 1rem 0;
-}
-
-.category {
-    display: inline-block;
-    background: #f3f4f6;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    margin: 1rem 0;
-}
-
-.product-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-}
-
-.add-to-wishlist {
-    background-color: #ff4747 !important;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.add-to-wishlist:hover {
-    background-color: #ff3333 !important;
-}
-
-/* Estilos para las secciones de detalles */
-.product-sections {
-    margin-top: 2rem;
-}
-
-.product-section {
-    background: white;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 2rem;
-}
-
-.product-section h2 {
-    color: #333;
-    margin-bottom: 1.5rem;
-    font-size: 1.5rem;
-}
-
-.requirements {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-}
-
-.min-requirements, .rec-requirements {
-    background: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 8px;
-}
-
-.requirements h3 {
-    color: #4747ff;
-    margin-bottom: 1rem;
-}
-
-.requirements ul {
-    list-style: none;
-    padding: 0;
-}
-
-.requirements li {
-    margin-bottom: 0.5rem;
-    padding-left: 1.5rem;
-    position: relative;
-}
-
-.requirements li:before {
-    content: "•";
-    position: absolute;
-    left: 0;
-    color: #4747ff;
-}
-
-@media (max-width: 768px) {
-    .product-header {
-        flex-direction: column;
-    }
-    
-    .product-image {
-        width: 100%;
-        max-width: 400px;
-        margin: 0 auto;
-    }
-    
-    .requirements {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const wishlistButton = document.querySelector('.add-to-wishlist');
-    
-    wishlistButton.addEventListener('click', async function(e) {
-        e.preventDefault();
-        
-        const productId = this.getAttribute('data-product-id');
-        
-        try {
-            const response = await fetch('add_to_wishlist.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ productId: productId })
-            });
-
-        .view-details {
-            display: inline-block;
-            background-color: #2563eb;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            text-decoration: none;
-            margin-top: 0.5rem;
-            transition: background-color 0.2s;
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $titulo; ?></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f5f5f5;
+            color: #333333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
-        .view-details:hover {
-            background-color: #1d4ed8;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
-        /* Estilos para las estrellas */
-        .review {
-            background-color: #f8f9fa;
-            border-radius: 5px;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-left: 5px solid #007bff; /* Color de la barra lateral */
-        }
-
-        .review p {
-            margin: 5px 0;
-        }
-
-        .star-rating {
-            direction: rtl; /* Para que las estrellas se seleccionen de derecha a izquierda */
-            display: flex;
-            justify-content: flex-start;
-        }
-
-        .star {
-            font-size: 30px; /* Tamaño de las estrellas */
-            color: #ddd; /* Color por defecto */
-            cursor: pointer;
-        }
-
-        .star:hover,
-        .star:hover ~ .star {
-            color: #ff6600; /* Color al pasar el ratón */
-        }
-
-        input[type="radio"] {
-            display: none; /* Ocultar los botones de radio */
-        }
-
-        input[type="radio"]:checked ~ .star {
-            color: #ff6600; /* Color de las estrellas seleccionadas */
-        }
-
-        /* Estrellas para la media de reseñas */
-        .rating-stars {
-            display: inline-flex;
-            margin-left: 5px;
-        }
-
-        .rating-stars .star {
-            cursor: default;
-        }
-
-        .rating-stars .star.filled {
-            color: #ff6600; /* Color de estrellas llenas */
-        }
-
-        .rating-stars .star.half-filled {
-            position: relative;
-            color: #ddd;
-        }
-
-        .rating-stars .star.half-filled:before {
-            content: "★";
-            position: absolute;
-            color: #ff6600;
-            width: 50%;
+        /* Estilos de tarjeta principal */
+        .card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            padding: 20px;
             overflow: hidden;
         }
 
-        .rating-stars .star.empty {
-            color: #ddd; /* Color de estrellas vacías */
+        /* Estilos del producto */
+        .product-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
         }
 
-        /* Estrellas para las reseñas individuales */
-        .review-stars {
-            display: inline-flex;
+        .product-image {
+            width: 300px;
+            height: auto;
+            border-radius: 5px;
+            object-fit: cover;
         }
 
-        .review-stars .star {
-            font-size: 20px; /* Tamaño más pequeño para las reseñas individuales */
-            cursor: default;
+        .product-info {
+            flex: 1;
         }
 
-        .review-stars .star.filled {
-            color: #ff6600;
+        .product-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 0 15px 0;
+            color: #333;
         }
 
-        .review-stars .star.empty {
-            color: #ddd;
+        .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4a4af4;
+            margin: 15px 0;
         }
 
-        /* Estilos para el formulario de reseña */
+        .category {
+            background-color: #f8f9fa;
+            padding: 8px 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            display: inline-block;
+        }
+
+        /* Botones */
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: #4a4af4;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #3939d0;
+        }
+
+        .btn-wishlist {
+            background-color: #e74c3c;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-wishlist:hover {
+            background-color: #c0392b;
+        }
+
+        /* Secciones */
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .requirements-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .requirements-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #4a4af4;
+            margin-bottom: 10px;
+        }
+
+        /* Valoración y estrellas */
         .rating-container {
             margin-bottom: 15px;
         }
@@ -366,12 +180,55 @@ document.addEventListener('DOMContentLoaded', function() {
         .rating-label {
             display: block;
             margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .rating-stars {
+            display: inline-flex;
+            margin-left: 5px;
+        }
+
+        .star {
+            font-size: 24px;
+            color: #ddd;
+            cursor: default;
+        }
+
+        .star.filled {
+            color: #ff6600;
+        }
+
+        .star.half-filled {
+            position: relative;
+            color: #ddd;
+        }
+
+        .star.half-filled:before {
+            content: "★";
+            position: absolute;
+            color: #ff6600;
+            width: 50%;
+            overflow: hidden;
+        }
+
+        .star.empty {
+            color: #ddd;
+        }
+
+        /* Estrellas para reseñas */
+        .review-stars .star {
+            font-size: 18px;
+        }
+
+        /* Formulario de reseña */
+        .review-form {
+            margin-top: 20px;
         }
 
         .user-star-rating {
             display: flex;
-            flex-direction: row-reverse; /* Para que las estrellas se seleccionen de derecha a izquierda */
-            justify-content: flex-end; /* Alinear a la izquierda */
+            flex-direction: row-reverse;
+            justify-content: flex-end;
         }
 
         .user-star-rating .star {
@@ -390,80 +247,225 @@ document.addEventListener('DOMContentLoaded', function() {
             color: #ff6600;
         }
 
+        input[type="radio"] {
+            display: none;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 5px;
+            resize: vertical;
+        }
+
+        /* Reseñas */
+        .review {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 3px solid #4a4af4;
+        }
+
+        .review p {
+            margin: 5px 0;
+        }
+
+        /* Juegos similares */
+        .similar-games-grid {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 15px;
+            scrollbar-width: thin;
+        }
+
+        .similar-games-grid::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .similar-games-grid::-webkit-scrollbar-thumb {
+            background-color: #c1c1c1;
+            border-radius: 6px;
+        }
+
+        .game-card {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fff;
+            transition: transform 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex: 0 0 250px;
+            max-width: 250px;
+        }
+
+        .game-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .game-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .game-info {
+            padding: 15px;
+        }
+
+        .game-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+            color: #333;
+        }
+
+        .game-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4a4af4;
+            margin-top: 10px;
+        }
+
+        .view-details {
+            display: inline-block;
+            background-color: #4a4af4;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-top: 10px;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .view-details:hover {
+            background-color: #3939d0;
+        }
+
+        .discount-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #ff4444;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
         @media (max-width: 768px) {
             .product-header {
-                flex-direction: column; /* Apilar en móviles */
-                align-items: flex-start;
-            const data = await response.json();
-            
-            if (data.success) {
-                // Si la operación fue exitosa, redirigir a lista_deseos.php
-                window.location.href = 'lista_deseos.php';
-            } else {
-                // Si hay un error, mostrar el mensaje
-                if (data.message === 'Debes iniciar sesión') {
-                    window.location.href = 'login.php';
-                } else {
-                    alert(data.message);
-                }
+                flex-direction: column;
             }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Ha ocurrido un error al procesar tu solicitud');
-        }
-    });
-});
-</script>
 
-        <div class="product-section">
+            .product-image {
+                width: 100%;
+                max-width: 300px;
+                margin: 0 auto 20px;
+            }
+
+            .requirements-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .game-card {
+                flex: 0 0 200px;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Tarjeta principal del producto -->
+        <div class="card">
+            <div class="product-header">
+                <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" alt="<?php echo htmlspecialchars($producto['nombre']); ?>" class="product-image">
+                <div class="product-info">
+                    <h1 class="product-title"><?php echo htmlspecialchars($producto['nombre']); ?></h1>
+                    <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
+                    <div class="category">
+                        <?php echo htmlspecialchars($producto['categoria_nombre']); ?>
+                    </div>
+                    <div class="button-group">
+                        <form method="POST" action="agregar_al_carrito.php">
+                            <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
+                            <input type="hidden" name="nombre" value="<?php echo htmlspecialchars($producto['nombre']); ?>">
+                            <input type="hidden" name="precio" value="<?php echo $producto['precio']; ?>">
+                            <button type="submit" class="btn btn-primary">Añadir al Carrito</button>
+                        </form>
+                        <form method="POST" action="agregar_lista_deseos.php">
+                            <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
+                            <button type="submit" class="btn btn-wishlist" data-product-id="<?php echo $producto['id']; ?>">
+                                <i class="fas fa-heart"></i> Añadir a Lista de Deseos
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Acerca del juego -->
+        <div class="card">
             <h2 class="section-title">Acerca del juego</h2>
             <p><?php echo htmlspecialchars($producto['acerca_de']); ?></p>
         </div>
 
-        <div class="product-section">
-            <h2 class="section-title">Requisitos del sistema</h2>
+        <!-- Requisitos del sistema -->
+        <div class="card">
+            <h2 class="section-title">Requisitos del Sistema</h2>
             <div class="requirements-grid">
                 <div>
-                    <h3>Mínimos</h3>
+                    <h3 class="requirements-title">Requisitos Mínimos</h3>
                     <p><?php echo htmlspecialchars($producto['reqmin']); ?></p>
                 </div>
                 <div>
-                    <h3>Recomendados</h3>
+                    <h3 class="requirements-title">Requisitos Recomendados</h3>
                     <p><?php echo htmlspecialchars($producto['reqmax']); ?></p>
                 </div>
             </div>
         </div>
 
-        <!-- Mostrar la media de las reseñas -->
+        <!-- Valoración -->
         <?php if ($reseñas['total'] > 0): ?>
-            <div class="product-section">
-                <h2 class="section-title">Valoración</h2>
-                <p>Media de Reseñas: 
-                    <span class="rating-stars">
-                        <?php 
-                        $media = $reseñas['media'];
-                        for ($i = 1; $i <= 5; $i++) {
-                            if ($i <= floor($media)) {
-                                // Estrella completa
-                                echo "<span class='star filled'>&#9733;</span>";
-                            } elseif ($i - 0.5 <= $media) {
-                                // Media estrella
-                                echo "<span class='star half-filled'>&#9733;</span>";
-                            } else {
-                                // Estrella vacía
-                                echo "<span class='star empty'>&#9733;</span>";
-                            }
+        <div class="card">
+            <h2 class="section-title">Valoración</h2>
+            <p>Media de Reseñas: 
+                <span class="rating-stars">
+                    <?php 
+                    $media = $reseñas['media'];
+                    for ($i = 1; $i <= 5; $i++) {
+                        if ($i <= floor($media)) {
+                            // Estrella completa
+                            echo "<span class='star filled'>&#9733;</span>";
+                        } elseif ($i - 0.5 <= $media) {
+                            // Media estrella
+                            echo "<span class='star half-filled'>&#9733;</span>";
+                        } else {
+                            // Estrella vacía
+                            echo "<span class='star empty'>&#9733;</span>";
                         }
-                        ?>
-                    </span>
-                    (<?php echo number_format($reseñas['media'], 1); ?> de 5 - <?php echo $reseñas['total']; ?> reseñas)
-                </p>
-            </div>
+                    }
+                    ?>
+                </span>
+                (<?php echo number_format($reseñas['media'], 1); ?> de 5 - <?php echo $reseñas['total']; ?> reseñas)
+            </p>
+        </div>
         <?php endif; ?>
 
-        <div class="review-section">
+        <!-- Formulario de reseña -->
+        <div class="card">
             <h2 class="section-title">Deja tu reseña</h2>
-            <form method="POST" action="guardar_reseña.php">
+            <form method="POST" action="guardar_reseña.php" class="review-form">
                 <input type="hidden" name="producto_id" value="<?php echo $producto['id']; ?>">
                 <div class="rating-container">
                     <label class="rating-label">Puntuación:</label>
@@ -484,11 +486,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     <label for="comentario">Comentario:</label>
                     <textarea id="comentario" name="comentario" rows="4" placeholder="Escribe tu reseña aquí..."></textarea>
                 </div>
-                <button type="submit" class="btn">Enviar Reseña</button>
+                <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Enviar Reseña</button>
             </form>
         </div>
 
-        <!-- Mostrar las reseñas -->
+        <!-- Reseñas existentes -->
         <?php
         $stmt_todas_reseñas = $pdo->prepare("
             SELECT r.*, u.nombre 
@@ -500,59 +502,65 @@ document.addEventListener('DOMContentLoaded', function() {
         $stmt_todas_reseñas->execute([$id]);
         $lista_reseñas = $stmt_todas_reseñas->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($lista_reseñas) {
-            echo "<h3>Reseñas:</h3>";
-            foreach ($lista_reseñas as $reseña) {
-                echo "<div class='review'>";
-                echo "<p><strong>" . htmlspecialchars($reseña['nombre']) . "</strong> - ";
-                echo "<span class='review-stars'>";
-                for ($i = 1; $i <= 5; $i++) {
-                    if ($i <= $reseña['puntuacion']) {
-                        echo "<span class='star filled'>&#9733;</span>"; // Estrella llena
-                    } else {
-                        echo "<span class='star empty'>&#9733;</span>"; // Estrella vacía
-                    }
-                }
-                echo "</span>";
-                echo "</p>";
-                echo "<p>" . htmlspecialchars($reseña['comentario']) . "</p>";
-                echo "<p><em>" . htmlspecialchars($reseña['fecha']) . "</em></p>";
-                echo "</div>";
-            }
-        } else {
-            echo "<p>No hay reseñas para este producto.</p>";
-        }
-        ?>
-    </div>
-
-    <section class="similar-games-section">
-        <h2 class="similar-games-title">Juegos similares</h2>
-        <div class="similar-games-grid">
-            <?php foreach ($juegos_similares as $juego): ?>
-                <div class="game-card">
-                    <?php if (isset($juego['descuento']) && $juego['descuento'] > 0): ?>
-                        <div class="discount-badge">
-                            -<?php echo $juego['descuento']; ?>%
-                        </div>
-                    <?php endif; ?>
-                    <img 
-                        src="<?php echo htmlspecialchars($juego['imagen']); ?>" 
-                        alt="<?php echo htmlspecialchars($juego['nombre']); ?>"
-                        class="game-image"
-                    >
-                    <div class="game-info">
-                        <h3 class="game-title"><?php echo htmlspecialchars($juego['nombre']); ?></h3>
-                        <p class="game-price">€<?php echo number_format($juego['precio'], 2); ?></p>
-                        <a href="producto.php?id=<?php echo $juego['id']; ?>" class="view-details">
-                            Ver detalles
-                        </a>
-                    </div>
+        if ($lista_reseñas): ?>
+        <div class="card">
+            <h2 class="section-title">Reseñas</h2>
+            <?php foreach ($lista_reseñas as $reseña): ?>
+                <div class="review">
+                    <p><strong><?php echo htmlspecialchars($reseña['nombre']); ?></strong> - 
+                        <span class="review-stars">
+                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                <?php if ($i <= $reseña['puntuacion']): ?>
+                                    <span class="star filled">&#9733;</span>
+                                <?php else: ?>
+                                    <span class="star empty">&#9733;</span>
+                                <?php endif; ?>
+                            <?php endfor; ?>
+                        </span>
+                    </p>
+                    <p><?php echo htmlspecialchars($reseña['comentario']); ?></p>
+                    <p><em><?php echo htmlspecialchars($reseña['fecha']); ?></em></p>
                 </div>
             <?php endforeach; ?>
         </div>
-    </section>
+        <?php else: ?>
+        <div class="card">
+            <h2 class="section-title">Reseñas</h2>
+            <p>No hay reseñas para este producto.</p>
+        </div>
+        <?php endif; ?>
+
+        <!-- Juegos similares -->
+        <?php if ($juegos_similares): ?>
+        <div class="card">
+            <h2 class="section-title">Juegos similares</h2>
+            <div class="similar-games-grid">
+                <?php foreach ($juegos_similares as $juego): ?>
+                    <div class="game-card">
+                        <?php if (isset($juego['descuento']) && $juego['descuento'] > 0): ?>
+                            <div class="discount-badge">
+                                -<?php echo $juego['descuento']; ?>%
+                            </div>
+                        <?php endif; ?>
+                        <img 
+                            src="<?php echo htmlspecialchars($juego['imagen']); ?>" 
+                            alt="<?php echo htmlspecialchars($juego['nombre']); ?>"
+                            class="game-image"
+                        >
+                        <div class="game-info">
+                            <h3 class="game-title"><?php echo htmlspecialchars($juego['nombre']); ?></h3>
+                            <p class="game-price">€<?php echo number_format($juego['precio'], 2); ?></p>
+                            <a href="producto.php?id=<?php echo $juego['id']; ?>" class="view-details">
+                                Ver detalles
+                            </a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php endif; ?>
+    </div>
 
     <?php require_once 'includes/footer.php'; ?>
 </body>
 </html>
-<?php require_once 'includes/footer.php'; ?>
