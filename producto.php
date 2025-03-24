@@ -35,69 +35,6 @@ try {
 $titulo = htmlspecialchars($producto['nombre']);
 require_once 'includes/header.php';
 
-<div class="content">
-    <div class="product-details">
-        <div class="product-header">
-            <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" 
-                 alt="<?php echo htmlspecialchars($producto['nombre']); ?>" 
-                 class="product-image">
-            <div class="product-info">
-                <h1><?php echo htmlspecialchars($producto['nombre']); ?></h1>
-                <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
-                <p class="category"><?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>
-                
-                <div class="product-actions">
-                    <button class="btn add-to-cart">Añadir al Carrito</button>
-                    <button class="btn add-to-wishlist" data-product-id="<?php echo $producto['id']; ?>">
-                        <i class="fas fa-heart"></i> Añadir a Lista de Deseos
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sección de Detalles -->
-        <div class="product-sections">
-            <!-- Acerca del Juego -->
-            <section class="product-section">
-                <h2>Acerca del Juego</h2>
-                <div class="section-content">
-                    <?php echo nl2br(htmlspecialchars($producto['descripcion'])); ?>
-                </div>
-            </section>
-
-            <!-- Requisitos del Sistema -->
-            <section class="product-section">
-                <h2>Requisitos del Sistema</h2>
-                <div class="section-content">
-                    <div class="requirements">
-                        <div class="min-requirements">
-                            <h3>Requisitos Mínimos</h3>
-                            <?php if (!empty($producto['reqmin'])): ?>
-                                <?php echo nl2br(htmlspecialchars($producto['reqmin'])); ?>
-                            <?php else: ?>
-                                <p>No se han especificado los requisitos mínimos para este juego.</p>
-                            <?php endif; ?>
-                        </div>
-                        <div class="rec-requirements">
-                            <h3>Requisitos Recomendados</h3>
-                            <?php if (!empty($producto['reqmax'])): ?>
-                                <?php echo nl2br(htmlspecialchars($producto['reqmax'])); ?>
-                            <?php else: ?>
-                                <p>No se han especificado los requisitos recomendados para este juego.</p>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-</div>
-
-<style>
-.product-details {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1rem;
 // Mostrar mensaje si el producto ya está en el carrito
 if (isset($_GET['already_in_cart'])) {
     echo '<p style="color: red;">Este producto ya está en tu carrito.</p>';
@@ -468,7 +405,7 @@ if (isset($_GET['already_in_cart'])) {
                         </form>
                         <form method="POST" action="agregar_lista_deseos.php">
                             <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
-                            <button type="submit" class="btn btn-wishlist" data-product-id="<?php echo $producto['id']; ?>">
+                            <button type="submit" class="btn btn-wishlist">
                                 <i class="fas fa-heart"></i> Añadir a Lista de Deseos
                             </button>
                         </form>
@@ -489,11 +426,11 @@ if (isset($_GET['already_in_cart'])) {
             <div class="requirements-grid">
                 <div>
                     <h3 class="requirements-title">Requisitos Mínimos</h3>
-                    <p><?php echo htmlspecialchars($producto['reqmin']); ?></p>
+                    <p><?php echo !empty($producto['reqmin']) ? htmlspecialchars($producto['reqmin']) : 'No se han especificado los requisitos mínimos para este juego.'; ?></p>
                 </div>
                 <div>
                     <h3 class="requirements-title">Requisitos Recomendados</h3>
-                    <p><?php echo htmlspecialchars($producto['reqmax']); ?></p>
+                    <p><?php echo !empty($producto['reqmax']) ? htmlspecialchars($producto['reqmax']) : 'No se han especificado los requisitos recomendados para este juego.'; ?></p>
                 </div>
             </div>
         </div>
