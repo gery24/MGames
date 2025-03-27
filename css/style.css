@@ -810,8 +810,7 @@ body:not(.admin) .menu-dropdown .menu-item:hover {
 }
 
 .cart-icon i {
-    font-size: 1.2rem;
-    color: white;
+    color: white !important; /* Asegúrate de que el ícono del carrito sea siempre blanco */
 }
 
 .cart-count {
@@ -968,15 +967,15 @@ textarea {
 }
 
 .menu-item {
-    color: black; /* Color del texto en negro */
-    padding: 0.8rem 1.5rem; /* Espaciado interno */
-    display: block; /* Mostrar como bloque */
-    text-decoration: none; /* Sin subrayado */
-    transition: background-color 0.3s ease; /* Transición suave */
+    color: white; /* Cambia el color del ícono a blanco */
+    font-size: 1.5em; /* Tamaño del ícono */
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Espacio entre el ícono y el texto (si decides mantener el texto) */
 }
 
 .menu-item:hover {
-    background-color: #f0f0f0; /* Color de fondo al pasar el ratón */
+    color: #f0f0f0; /* Color más claro al pasar el ratón */
 }
 
 /* Ajustes para el nav-right */
@@ -1198,7 +1197,7 @@ body.admin .navbar a {
 
 /* Cambiar el color del icono del carrito a blanco */
 .cart-icon i {
-    color: white; /* Cambiar el color del icono a blanco */
+    color: white !important; /* Asegúrate de que el ícono del carrito sea siempre blanco */
 }
 
 .product-header {
@@ -1440,4 +1439,16 @@ body:not(.admin) .user-menu .dropdown-menu a:hover {
     padding: 40px;
     color: #666;
     grid-column: 1 / -1;
+}
+
+.btn-wishlist {
+    background-color: #e74c3c; /* Color rojo */
+    color: white; /* Texto en blanco */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-wishlist:hover {
+    background-color: #c0392b; /* Color rojo más oscuro al pasar el ratón */
 }

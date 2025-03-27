@@ -166,6 +166,11 @@
                     </div>
                 </div>
             <?php endif; ?>
+            <?php if(isset($_SESSION['usuario'])): ?>
+                <a href="cartera.php" class="menu-item">
+                    <i class="fas fa-wallet"></i>
+                </a>
+            <?php endif; ?>
         </div>
     </nav>
 
