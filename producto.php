@@ -39,6 +39,13 @@ require_once 'includes/header.php';
 if (isset($_GET['already_in_cart'])) {
     echo '<p style="color: red;">Este producto ya está en tu carrito.</p>';
 }
+
+// Mostrar mensaje si hay un error o éxito en la reseña
+if (isset($_GET['review_error'])) {
+    echo '<p style="color: red;">Error al guardar la reseña: ' . htmlspecialchars($_GET['review_error']) . '</p>';
+} elseif (isset($_GET['review_success'])) {
+    echo '<p style="color: green;">¡Reseña guardada correctamente!</p>';
+}
 ?>
 
 <!DOCTYPE html>
@@ -358,6 +365,24 @@ if (isset($_GET['already_in_cart'])) {
             font-weight: 600;
         }
 
+        .login-message {
+            background-color: #f8f9fa;
+            border-left: 3px solid #4a4af4;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .login-link {
+            color: #4a4af4;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link:hover {
+            text-decoration: underline;
+        }
+
         @media (max-width: 768px) {
             .product-header {
                 flex-direction: column;
@@ -465,29 +490,37 @@ if (isset($_GET['already_in_cart'])) {
         <!-- Formulario de reseña -->
         <div class="card">
             <h2 class="section-title">Deja tu reseña</h2>
-            <form method="POST" action="guardar_reseña.php" class="review-form">
-                <input type="hidden" name="producto_id" value="<?php echo $producto['id']; ?>">
-                <div class="rating-container">
-                    <label class="rating-label">Puntuación:</label>
-                    <div class="user-star-rating">
-                        <input type="radio" id="star5" name="puntuacion" value="5" required>
-                        <label for="star5" class="star">&#9733;</label>
-                        <input type="radio" id="star4" name="puntuacion" value="4">
-                        <label for="star4" class="star">&#9733;</label>
-                        <input type="radio" id="star3" name="puntuacion" value="3">
-                        <label for="star3" class="star">&#9733;</label>
-                        <input type="radio" id="star2" name="puntuacion" value="2">
-                        <label for="star2" class="star">&#9733;</label>
-                        <input type="radio" id="star1" name="puntuacion" value="1">
-                        <label for="star1" class="star">&#9733;</label>
+            
+            <?php if (isset($_SESSION['usuario']) && isset($_SESSION['usuario']['id'])): ?>
+                <form method="POST" action="guardar_reseña.php" class="review-form">
+                    <input type="hidden" name="producto_id" value="<?php echo $producto['id']; ?>">
+                    <input type="hidden" name="usuario_id" value="<?php echo $_SESSION['usuario']['id']; ?>">
+                    <div class="rating-container">
+                        <label class="rating-label">Puntuación:</label>
+                        <div class="user-star-rating">
+                            <input type="radio" id="star5" name="puntuacion" value="5" required>
+                            <label for="star5" class="star">&#9733;</label>
+                            <input type="radio" id="star4" name="puntuacion" value="4">
+                            <label for="star4" class="star">&#9733;</label>
+                            <input type="radio" id="star3" name="puntuacion" value="3">
+                            <label for="star3" class="star">&#9733;</label>
+                            <input type="radio" id="star2" name="puntuacion" value="2">
+                            <label for="star2" class="star">&#9733;</label>
+                            <input type="radio" id="star1" name="puntuacion" value="1">
+                            <label for="star1" class="star">&#9733;</label>
+                        </div>
                     </div>
+                    <div class="review-comment">
+                        <label for="comentario">Comentario:</label>
+                        <textarea id="comentario" name="comentario" rows="4" placeholder="Escribe tu reseña aquí..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Enviar Reseña</button>
+                </form>
+            <?php else: ?>
+                <div class="login-message">
+                    <p>Debes iniciar sesión para dejar una reseña. <a href="login.php?redirect=producto.php?id=<?php echo $producto['id']; ?>" class="login-link">Iniciar sesión</a></p>
                 </div>
-                <div class="review-comment">
-                    <label for="comentario">Comentario:</label>
-                    <textarea id="comentario" name="comentario" rows="4" placeholder="Escribe tu reseña aquí..."></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Enviar Reseña</button>
-            </form>
+            <?php endif; ?>
         </div>
 
         <!-- Reseñas existentes -->
@@ -564,3 +597,4 @@ if (isset($_GET['already_in_cart'])) {
     <?php require_once 'includes/footer.php'; ?>
 </body>
 </html>
+
