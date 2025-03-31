@@ -45,6 +45,11 @@ document.addEventListener("DOMContentLoaded", () => {
         productId = url.searchParams.get("id")
       }
   
+      // Asegúrate de que productId sea un número
+      if (productId) {
+        productId = parseInt(productId, 10);
+      }
+  
       if (!productId) {
         console.error("No se pudo determinar el ID del producto")
         showNotification("Error: No se pudo identificar el producto", "error")

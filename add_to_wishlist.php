@@ -2,6 +2,9 @@
 session_start();
 require_once 'config/database.php';
 
+// Establecer el tipo de contenido como JSON
+header('Content-Type: application/json');
+
 // Preparar la respuesta
 $response = [
     'success' => false,
@@ -10,14 +13,8 @@ $response = [
 
 // Verificar si el usuario está logueado
 if (!isset($_SESSION['usuario'])) {
-    // Si es una solicitud AJAX, devolver JSON
-    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-        $response['message'] = 'Debes iniciar sesión';
-        echo json_encode($response);
-    } else {
-        // Si es una solicitud normal, redirigir al login
-        header('Location: login.php?redirect=' . urlencode($_SERVER['HTTP_REFERER'] ?? 'index.php'));
-    }
+    $response['message'] = 'Debes iniciar sesión';
+    echo json_encode($response);
     exit;
 }
 
@@ -25,7 +22,8 @@ if (!isset($_SESSION['usuario'])) {
 $producto_id = null;
 
 // Verificar si es una solicitud JSON
-if ($_SERVER['CONTENT_TYPE'] === 'application/json' || strpos($_SERVER['CONTENT_TYPE'], 'application/json') !== false) {
+$contentType = isset($_SERVER['CONTENT_TYPE']) ? $_SERVER['CONTENT_TYPE'] : '';
+if (strpos($contentType, 'application/json') !== false) {
     $data = json_decode(file_get_contents('php://input'), true);
     $producto_id = isset($data['productId']) ? (int)$data['productId'] : null;
 } else {
@@ -40,12 +38,8 @@ if (!$producto_id) {
 
 // Verificar si se recibió el ID del producto
 if (!$producto_id) {
-    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-        $response['message'] = 'ID de producto no válido';
-        echo json_encode($response);
-    } else {
-        header('Location: index.php?error=producto_no_valido');
-    }
+    $response['message'] = 'ID de producto no válido';
+    echo json_encode($response);
     exit;
 }
 
@@ -57,12 +51,8 @@ try {
     $stmt->execute([$usuario_id, $producto_id]);
     
     if ($stmt->rowCount() > 0) {
-        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-            $response['message'] = 'Este producto ya está en tu lista de deseos';
-            echo json_encode($response);
-        } else {
-            header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? 'index.php') . '?wishlist_error=already_exists');
-        }
+        $response['message'] = 'Este producto ya está en tu lista de deseos';
+        echo json_encode($response);
         exit;
     }
 
@@ -72,21 +62,11 @@ try {
 
     $response['success'] = true;
     $response['message'] = 'Producto añadido a la lista de deseos';
-
-    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-        echo json_encode($response);
-    } else {
-        header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? 'index.php') . '?wishlist_success=true');
-    }
+    echo json_encode($response);
 
 } catch(PDOException $e) {
-    $response['message'] = 'Error al añadir el producto a la lista de deseos';
-    
-    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-        echo json_encode($response);
-    } else {
-        header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? 'index.php') . '?wishlist_error=' . urlencode($e->getMessage()));
-    }
+    $response['message'] = 'Error al añadir el producto a la lista de deseos: ' . $e->getMessage();
+    echo json_encode($response);
 }
 ?>
 
