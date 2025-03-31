@@ -146,7 +146,7 @@
                 </div>
             </div>
             <a href="carrito.php" class="cart-icon">
-                <i class="fas fa-shopping-cart"></i>
+                <i class="fas fa-shopping-cart" style="color: transparent;"></i>
                 <?php if(isset($_SESSION['carrito']) && count($_SESSION['carrito']) > 0): ?>
                     <span class="cart-count"><?php echo count($_SESSION['carrito']); ?></span>
                 <?php endif; ?>
@@ -165,6 +165,11 @@
                         <a href="logout.php">Cerrar Sesión</a>
                     </div>
                 </div>
+            <?php endif; ?>
+            <?php if(isset($_SESSION['usuario'])): ?>
+                <a href="cartera.php" class="menu-item">
+                    <i class="fas fa-wallet"></i>
+                </a>
             <?php endif; ?>
         </div>
     </nav>

@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS productos;
 DROP TABLE IF EXISTS categorias;
 DROP TABLE IF EXISTS usuarios;
 DROP TABLE IF EXISTS lista_deseos;
+DROP TABLE IF EXISTS transacciones;
 
 -- Tabla de categorías
 CREATE TABLE categorias (
@@ -36,7 +37,8 @@ CREATE TABLE usuarios (
     apellido VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     contraseña VARCHAR(255) NOT NULL,
-    rol ENUM('ADMIN', 'USER') DEFAULT 'USER'
+    rol ENUM('ADMIN', 'USER') DEFAULT 'USER',
+    cartera DECIMAL(10, 2) DEFAULT 0.00
 );
 
 -- Tabla de lista de deseos
@@ -48,6 +50,16 @@ CREATE TABLE IF NOT EXISTS lista_deseos (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
     FOREIGN KEY (producto_id) REFERENCES productos(id),
     UNIQUE KEY unique_wishlist (usuario_id, producto_id)
+);
+
+-- Tabla de transacciones
+CREATE TABLE transacciones (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    usuario_id INT NOT NULL,
+    monto DECIMAL(10, 2) NOT NULL,
+    descripcion VARCHAR(255),
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
 
 -- Insertar algunas categorías de ejemplo
