@@ -933,7 +933,7 @@ textarea {
 }
 
 .dropdown-menu a {
-    color: black; /* Color del texto en negro */
+    color: white; /* Cambiar el color del texto a blanco */
     padding: 0.8rem 1.5rem; /* Espaciado interno */
     display: block; /* Mostrar como bloque */
     text-decoration: none; /* Sin subrayado */
@@ -941,7 +941,7 @@ textarea {
 }
 
 .dropdown-menu a:hover {
-    background-color: #f0f0f0; /* Color de fondo al pasar el ratón */
+    background-color: rgba(255, 255, 255, 0.1); /* Color de fondo al pasar el ratón */
 }
 
 /* Estilos para el menú desplegable */
@@ -1195,9 +1195,9 @@ body.admin .navbar a {
     color: white; /* Asegúrate de que el texto del menú sea blanco */
 }
 
-/* Cambiar el color del icono del carrito a blanco */
-.cart-icon i {
-    color: white !important; /* Asegúrate de que el ícono del carrito sea siempre blanco */
+/* Cambiar el color del ícono de la cartera */
+.nav-right a i.fas.fa-wallet {
+    color: white; /* Cambiar el color del ícono de la cartera a blanco */
 }
 
 .product-header {
@@ -1226,15 +1226,15 @@ body.admin .navbar a {
 }
 
 .user-menu .dropdown-menu {
-    background-color: white; /* Color de fondo del menú desplegable */
+    background-color: var(--navbar-color); /* Asegúrate de que el fondo del menú sea el correcto */
 }
 
 .user-menu .dropdown-menu a {
-    color: rgb(0, 0, 0) !important; /* Cambiar el color del texto a negro */
+    color: white; /* Cambiar el color del texto a blanco */
 }
 
 .user-menu .dropdown-menu a:hover {
-    background-color: #f0f0f0; /* Color de fondo al pasar el ratón */
+    background-color: rgba(255, 255, 255, 0.1); /* Color de fondo al pasar el ratón */
 }
 
 .login-icon {
