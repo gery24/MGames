@@ -174,7 +174,13 @@ require_once 'includes/header.php';
                         <h3><?php echo htmlspecialchars($producto['nombre']); ?></h3>
                         <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
                         <p class="category"><?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>
-                        <a href="producto.php?id=<?php echo $producto['id']; ?>" class="btn">Ver Detalles</a>
+                        <div class="product-actions">
+                            <a href="producto.php?id=<?php echo $producto['id']; ?>" class="btn">Ver Detalles</a>
+                            <button class="btn btn-wishlist" 
+                                    data-product-id="<?php echo $producto['id']; ?>">
+                                <i class="fas fa-heart"></i> Añadir a la lista de deseos
+                            </button>
+                        </div>
                     </div>
                 </div>
             <?php endforeach; ?>
