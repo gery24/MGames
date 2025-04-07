@@ -1,0 +1,193 @@
+body {
+    background-color: #f4f4f4;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .content {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 25px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+    font-size: 28px;
+  }
+  
+  h2 {
+    color: #444;
+    margin-bottom: 15px;
+    font-size: 20px;
+  }
+  
+  .payment-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .payment-selector {
+    margin-bottom: 10px;
+  }
+  
+  .payment-methods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+  
+  .payment-method-option {
+    flex: 1;
+    min-width: 150px;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .payment-method-option:hover {
+    background-color: #fff9f5;
+  }
+  
+  .payment-method-option.visa:hover {
+    border-color: #003366;
+  }
+  
+  .payment-method-option.bizum:hover {
+    border-color: #007bff;
+  }
+  
+  .payment-method-option.paypal:hover {
+    border-color: #003366;
+  }
+  
+  .payment-method-option.visa.active {
+    border-color: #003366;
+  }
+  
+  .payment-method-option.bizum.active {
+    border-color: #007bff;
+  }
+  
+  .payment-method-option.paypal.active {
+    border-color: #003366;
+  }
+  
+  .payment-icon {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    margin-bottom: 10px;
+  }
+  
+  .payment-method-option span {
+    font-weight: 500;
+    color: #444;
+  }
+  
+  .payment-form {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 10px;
+    border: 1px solid #eee;
+    display: none;
+  }
+  
+  .payment-form.visa {
+    border-color: #003366;
+  }
+  
+  .payment-form.bizum {
+    border-color: #007bff;
+  }
+  
+  .payment-form.paypal {
+    border-color: #003366;
+  }
+  
+  .payment-form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .payment-form-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+  }
+  
+  .payment-info {
+    margin-bottom: 20px;
+    color: #666;
+    line-height: 1.5;
+  }
+  
+  .payment-option {
+    margin-bottom: 20px;
+  }
+  
+  .payment-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .payment-option.half {
+    flex: 1;
+  }
+  
+  .payment-option label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+  }
+  
+  .payment-option input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: border-color 0.3s;
+  }
+  
+  .payment-option input:focus {
+    border-color: #ff6600;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.1);
+  }
+  
+  .btn {
+    width: 100%;
+    padding: 14px;
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background-color 0.3s;
+  }
+  
+  .btn:hover {
+    background-color: #e65c00;
+  }
+  
+  

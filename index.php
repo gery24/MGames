@@ -59,7 +59,8 @@ try {
         $query .= " WHERE " . implode(" AND ", $where);
     }
 
-    $query .= " ORDER BY p.id DESC";
+    // Cambiar el ORDER BY para mostrar productos en orden aleatorio
+    $query .= " ORDER BY RAND()";
 
     // Ejecutar la consulta
     $stmt = $pdo->prepare($query);
@@ -164,6 +165,9 @@ require_once 'includes/header.php';
         <div class="products-grid">
             <?php foreach($productos as $producto): ?>
                 <div class="product-card">
+                    <div class="wishlist-icon" data-product-id="<?php echo $producto['id']; ?>">
+                        <i class="fas fa-heart"></i>
+                    </div>
                     <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" 
                          alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
                     <div class="product-card-content">
@@ -294,58 +298,319 @@ require_once 'includes/header.php';
     .hero .btn:nth-child(2):hover {
         background-color: #f0f0f0;
     }
+
+/* Estilos para los iconos de lista de deseos */
+.wishlist-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.wishlist-icon:hover {
+    transform: scale(1.1);
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.wishlist-icon i {
+    color: #ccc;
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.wishlist-icon:hover i {
+    color: #ff6b6b;
+}
+
+.wishlist-icon.active i {
+    color: #ff6b6b;
+}
+
+/* Estilos para las tarjetas de producto */
+.product-card {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para las notificaciones */
+#notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.notification {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 350px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.notification.success {
+    border-left: 4px solid #2ecc71;
+}
+
+.notification.error {
+    border-left: 4px solid #e74c3c;
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+}
+
+.notification-content i {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.notification-content i.fa-check-circle {
+    color: #2ecc71;
+}
+
+.notification-content i.fa-exclamation-circle {
+    color: #e74c3c;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #999;
+}
 </style>
 
 <script>
     // JavaScript para controlar el video
     document.addEventListener('DOMContentLoaded', function() {
         const video = document.getElementById('hero-video');
+        
+        // Verificar si los elementos existen antes de agregar event listeners
         const playPauseBtn = document.getElementById('play-pause-btn');
         const muteBtn = document.getElementById('mute-btn');
-        const playIcon = document.querySelector('.play-icon');
-        const pauseIcon = document.querySelector('.pause-icon');
-        const muteIcon = document.querySelector('.mute-icon');
-        const volumeIcon = document.querySelector('.volume-icon');
         
-        // Función para alternar reproducción/pausa
-        playPauseBtn.addEventListener('click', function() {
-            if (video.paused) {
-                video.play();
-                playIcon.style.display = 'none';
-                pauseIcon.style.display = 'block';
-                playPauseBtn.setAttribute('aria-label', 'Pausar video');
-            } else {
-                video.pause();
-                playIcon.style.display = 'block';
-                pauseIcon.style.display = 'none';
-                playPauseBtn.setAttribute('aria-label', 'Reproducir video');
-            }
-        });
+        if (playPauseBtn) {
+            const playIcon = document.querySelector('.play-icon');
+            const pauseIcon = document.querySelector('.pause-icon');
+            
+            // Función para alternar reproducción/pausa
+            playPauseBtn.addEventListener('click', function() {
+                if (video.paused) {
+                    video.play();
+                    playIcon.style.display = 'none';
+                    pauseIcon.style.display = 'block';
+                    playPauseBtn.setAttribute('aria-label', 'Pausar video');
+                } else {
+                    video.pause();
+                    playIcon.style.display = 'block';
+                    pauseIcon.style.display = 'none';
+                    playPauseBtn.setAttribute('aria-label', 'Reproducir video');
+                }
+            });
+        }
         
-        // Función para alternar silencio
-        muteBtn.addEventListener('click', function() {
-            if (video.muted) {
-                video.muted = false;
-                muteIcon.style.display = 'none';
-                volumeIcon.style.display = 'block';
-                muteBtn.setAttribute('aria-label', 'Silenciar');
-            } else {
-                video.muted = true;
-                muteIcon.style.display = 'block';
-                volumeIcon.style.display = 'none';
-                muteBtn.setAttribute('aria-label', 'Activar sonido');
-            }
-        });
+        if (muteBtn) {
+            const muteIcon = document.querySelector('.mute-icon');
+            const volumeIcon = document.querySelector('.volume-icon');
+            
+            // Función para alternar silencio
+            muteBtn.addEventListener('click', function() {
+                if (video.muted) {
+                    video.muted = false;
+                    muteIcon.style.display = 'none';
+                    volumeIcon.style.display = 'block';
+                    muteBtn.setAttribute('aria-label', 'Silenciar');
+                } else {
+                    video.muted = true;
+                    muteIcon.style.display = 'block';
+                    volumeIcon.style.display = 'none';
+                    muteBtn.setAttribute('aria-label', 'Activar sonido');
+                }
+            });
+        }
         
         // Asegurarse de que el video se reproduzca automáticamente
         video.play().catch(function(error) {
             // El autoplay fue bloqueado por el navegador
             console.log("Autoplay bloqueado:", error);
-            // Mostrar el icono de reproducción
-            playIcon.style.display = 'block';
-            pauseIcon.style.display = 'none';
+            // Mostrar el icono de reproducción si existe
+            if (playPauseBtn) {
+                const playIcon = document.querySelector('.play-icon');
+                const pauseIcon = document.querySelector('.pause-icon');
+                if (playIcon && pauseIcon) {
+                    playIcon.style.display = 'block';
+                    pauseIcon.style.display = 'none';
+                }
+            }
         });
+        
+        // Configurar los iconos de la lista de deseos
+        const wishlistIcons = document.querySelectorAll('.wishlist-icon');
+        
+        wishlistIcons.forEach(icon => {
+            icon.addEventListener('click', async function(e) {
+                e.preventDefault();
+                
+                const productId = this.getAttribute('data-product-id');
+                
+                try {
+                    const response = await fetch('add_to_wishlist.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({ productId: productId })
+                    });
+                    
+                    try {
+                        // Intentar parsear la respuesta como JSON
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            // Cambiar el estilo del icono para indicar que está en la lista
+                            this.classList.add('active');
+                            // Mostrar notificación
+                            showNotification(data.message, 'success');
+                            
+                            // Opcional: redirigir a la lista de deseos
+                            // window.location.href = 'lista_deseos.php';
+                        } else {
+                            // Si hay un error, mostrar el mensaje
+                            if (data.message === 'Debes iniciar sesión') {
+                                window.location.href = 'login.php?redirect=' + encodeURIComponent(window.location.href);
+                            } else {
+                                showNotification(data.message, 'error');
+                            }
+                        }
+                    } catch (jsonError) {
+                        // Si no se puede parsear como JSON, mostrar el error
+                        console.error('Error al parsear JSON:', jsonError);
+                        const text = await response.text();
+                        console.error('Contenido de la respuesta:', text);
+                        showNotification('Error al procesar la respuesta del servidor', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error de red:', error);
+                    showNotification('Ha ocurrido un error al procesar tu solicitud', 'error');
+                }
+            });
+        });
+    });
+    
+    // Función para mostrar notificaciones
+    function showNotification(message, type = 'success') {
+        // Verificar si ya existe un contenedor de notificaciones
+        let notificationContainer = document.getElementById('notification-container');
+        
+        if (!notificationContainer) {
+            notificationContainer = document.createElement('div');
+            notificationContainer.id = 'notification-container';
+            notificationContainer.style.position = 'fixed';
+            notificationContainer.style.top = '20px';
+            notificationContainer.style.right = '20px';
+            notificationContainer.style.zIndex = '9999';
+            document.body.appendChild(notificationContainer);
+        }
+        
+        // Crear la notificación
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                <span>${message}</span>
+            </div>
+            <button class="notification-close">&times;</button>
+        `;
+        
+        // Añadir estilos inline para asegurar que se muestren correctamente
+        notification.style.backgroundColor = 'white';
+        notification.style.borderRadius = '8px';
+        notification.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+        notification.style.padding = '15px';
+        notification.style.marginBottom = '10px';
+        notification.style.display = 'flex';
+        notification.style.alignItems = 'center';
+        notification.style.justifyContent = 'space-between';
+        notification.style.maxWidth = '350px';
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.3s ease';
+        notification.style.borderLeft = `4px solid ${type === 'success' ? '#2ecc71' : '#e74c3c'}`;
+        
+        // Añadir al contenedor
+        notificationContainer.appendChild(notification);
+        
+        // Mostrar con animación
+        setTimeout(() => {
+            notification.style.opacity = '1';
+        }, 10);
+        
+        // Configurar cierre automático
+        const timeout = setTimeout(() => {
+            notification.style.opacity = '0';
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 5000);
+        
+        // Configurar botón de cierre
+        const closeBtn = notification.querySelector('.notification-close');
+        closeBtn.style.background = 'none';
+        closeBtn.style.border = 'none';
+        closeBtn.style.fontSize = '20px';
+        closeBtn.style.cursor = 'pointer';
+        closeBtn.style.color = '#999';
+        
+        closeBtn.addEventListener('click', () => {
+            clearTimeout(timeout);
+            notification.style.opacity = '0';
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        });
+    }
+    
+    // Verificar mensajes en la URL al cargar
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        if (urlParams.has('wishlist_success')) {
+            showNotification('¡Producto añadido a tu lista de deseos!', 'success');
+        } else if (urlParams.has('wishlist_error')) {
+            const errorMsg = urlParams.get('wishlist_error') === 'already_exists'
+                ? 'Este producto ya está en tu lista de deseos'
+                : 'Error al añadir a la lista de deseos';
+            showNotification(errorMsg, 'error');
+        }
     });
 </script>
 
 <?php require_once 'includes/footer.php'; ?>
+

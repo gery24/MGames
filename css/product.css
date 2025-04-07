@@ -1,22 +1,338 @@
-.product-header {
-    display: flex; /* Cambiar a flexbox */
-    align-items: center; /* Centrar verticalmente */
-    gap: 30px; /* Espacio entre la imagen y el contenido */
-    margin-bottom: 40px;
-    background-color: #f8f9fa; /* Fondo claro para el encabezado del producto */
+body {
+    background-color: #f5f5f5;
+    color: #333333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
     padding: 20px;
+}
+
+/* Estilos de tarjeta principal */
+.card {
+    background-color: #ffffff;
     border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+    padding: 20px;
+    overflow: hidden;
+}
+
+/* Estilos del producto */
+.product-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
 }
 
 .product-image {
-    width: 300px; /* Ajustar el tamaño de la imagen */
+    width: 300px;
     height: auto;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    object-fit: cover;
 }
 
 .product-info {
+    flex: 1;
+}
+
+.product-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 0 15px 0;
+    color: #333;
+}
+
+.price {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4a4af4;
+    margin: 15px 0;
+}
+
+.category {
+    background-color: #f8f9fa;
+    padding: 8px 15px;
+    border-radius: 5px;
+    margin: 15px 0;
+    display: inline-block;
+}
+
+/* Botones */
+.button-group {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-} 
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background-color: #4a4af4;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #3939d0;
+}
+
+.btn-wishlist {
+    background-color: #e74c3c;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-wishlist:hover {
+    background-color: #c0392b;
+}
+
+/* Secciones */
+.section-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.requirements-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.requirements-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #4a4af4;
+    margin-bottom: 10px;
+}
+
+/* Valoración y estrellas */
+.rating-container {
+    margin-bottom: 15px;
+}
+
+.rating-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.rating-stars {
+    display: inline-flex;
+    margin-left: 5px;
+}
+
+.star {
+    font-size: 24px;
+    color: #ddd;
+    cursor: default;
+}
+
+.star.filled {
+    color: #ff6600;
+}
+
+.star.half-filled {
+    position: relative;
+    color: #ddd;
+}
+
+.star.half-filled:before {
+    content: "★";
+    position: absolute;
+    color: #ff6600;
+    width: 50%;
+    overflow: hidden;
+}
+
+.star.empty {
+    color: #ddd;
+}
+
+/* Estrellas para reseñas */
+.review-stars .star {
+    font-size: 18px;
+}
+
+/* Formulario de reseña */
+.review-form {
+    margin-top: 20px;
+}
+
+.user-star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+.user-star-rating .star {
+    font-size: 30px;
+    color: #ddd;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.user-star-rating .star:hover,
+.user-star-rating .star:hover ~ .star {
+    color: #ff6600;
+}
+
+.user-star-rating input[type="radio"]:checked ~ .star {
+    color: #ff6600;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-top: 5px;
+    resize: vertical;
+}
+
+/* Reseñas */
+.review {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-left: 3px solid #4a4af4;
+}
+
+.review p {
+    margin: 5px 0;
+}
+
+/* Juegos similares */
+.similar-games-grid {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 15px;
+    scrollbar-width: thin;
+}
+
+.similar-games-grid::-webkit-scrollbar {
+    height: 6px;
+}
+
+.similar-games-grid::-webkit-scrollbar-thumb {
+    background-color: #c1c1c1;
+    border-radius: 6px;
+}
+
+.game-card {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    transition: transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    flex: 0 0 250px;
+    max-width: 250px;
+}
+
+.game-card:hover {
+    transform: translateY(-4px);
+}
+
+.game-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.game-info {
+    padding: 15px;
+}
+
+.game-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    color: #333;
+}
+
+.game-price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #4a4af4;
+    margin-top: 10px;
+}
+
+.view-details {
+    display: inline-block;
+    background-color: #4a4af4;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-top: 10px;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.view-details:hover {
+    background-color: #3939d0;
+}
+
+.discount-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #ff4444;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .product-header {
+        flex-direction: column;
+    }
+
+    .product-image {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto 20px;
+    }
+
+    .requirements-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .game-card {
+        flex: 0 0 200px;
+        max-width: 200px;
+    }
+}
