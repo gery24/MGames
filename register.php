@@ -32,7 +32,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmt = $pdo->prepare("INSERT INTO usuarios (nombre, apellido, email, contraseña, rol) VALUES (?, ?, ?, ?, 'CLIENTE')");
                 $stmt->execute([$nombre, $apellido, $email, $hashed_password]);
                 
-                $success = 'Registro completado con éxito. Ya puedes iniciar sesión.';
+                // Almacenar la información del usuario en la sesión
+                $_SESSION['usuario'] = [
+                    'id' => $pdo->lastInsertId(),
+                    'nombre' => $nombre,
+                    'apellido' => $apellido,
+                    'email' => $email,
+                    'rol' => 'CLIENTE'
+                ];
+                header('Location: index.php'); // Redirigir a la página principal
+                exit;
             } catch(PDOException $e) {
                 $error = 'Error al crear la cuenta. Por favor, inténtalo de nuevo.';
             }
