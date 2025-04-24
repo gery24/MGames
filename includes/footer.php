@@ -1,11 +1,31 @@
 <style>
+/* Reset para eliminar márgenes y paddings por defecto */
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Asegura que el body ocupe al menos toda la altura de la ventana */
+}
+
+/* Hacer que el contenido principal ocupe todo el espacio disponible */
+.content {
+    flex: 1;
+}
+
 /* Estilos integrados para el footer */
 .mgames-footer {
     background-color: #1e2530;
     color: #ffffff;
     padding: 3rem 0 1.5rem;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin-top: 2rem;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 0; /* Elimina cualquier margen inferior */
 }
 
 .mgames-footer a {
@@ -199,3 +219,33 @@
         </div>
     </div>
 </footer>
+
+<script>
+// Script para asegurar que el footer llegue hasta el final de la página
+document.addEventListener('DOMContentLoaded', function() {
+    // Función para ajustar el footer
+    function adjustFooter() {
+        const body = document.body;
+        const html = document.documentElement;
+        const footer = document.querySelector('.mgames-footer');
+        
+        // Obtener la altura del documento
+        const docHeight = Math.max(
+            body.scrollHeight, body.offsetHeight,
+            html.clientHeight, html.scrollHeight, html.offsetHeight
+        );
+        
+        // Obtener la posición actual del footer
+        const footerTop = footer.offsetTop + footer.offsetHeight;
+        
+        // Si el footer no llega al final de la página, ajustar
+        if (footerTop < window.innerHeight) {
+            footer.style.marginTop = (window.innerHeight - footerTop) + 'px';
+        }
+    }
+    
+    // Ejecutar al cargar y al cambiar el tamaño de la ventana
+    adjustFooter();
+    window.addEventListener('resize', adjustFooter);
+});
+</script>

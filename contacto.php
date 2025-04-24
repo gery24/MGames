@@ -295,42 +295,5 @@ require_once 'includes/header.php';
     </div>
 </div>
 
-<!-- Footer -->
-<link rel="stylesheet" href="css/footer.css"> <!-- Asegúrate de que esta ruta sea correcta -->
-<footer class="footer">
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-logo">
-                <img src="FotosWeb/logo.png" alt="MGames Logo">
-                <h3>MGames</h3>
-            </div>
-            <div class="footer-links">
-                <h4>Enlaces rápidos</h4>
-                <ul>
-                    <li><a href="index.php">Inicio</a></li>
-                    <li><a href="todos_productos.php">Tienda</a></li>
-                    <li><a href="novedades.php">Novedades</a></li>
-                    <li><a href="contacto.php">Contacto</a></li>
-                </ul>
-            </div>
-            <div class="footer-contact">
-                <h4>Contacto</h4>
-                <p><i class="fas fa-map-marker-alt"></i> Calle Principal 123, Ciudad</p>
-                <p><i class="fas fa-phone"></i> +34 123 456 789</p>
-                <p><i class="fas fa-envelope"></i> info@mgames.com</p>
-            </div>
-            <div class="footer-social">
-                <h4>Síguenos</h4>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; <?php echo date('Y'); ?> MGames. Todos los derechos reservados.</p>
-        </div>
-    </div>
-</footer>
+<?php require_once 'includes/footer.php'; ?>
+
