@@ -80,14 +80,12 @@ require_once 'includes/header.php';
     <link rel="stylesheet" href="css/segunda_mano.css"> <!-- Estilos específicos -->
 </head>
 <body>
-            
-        </div>
-    </nav>
-
     <div class="content">
-
-        <section class="featured-products">
-            <h1>Productos Disponibles</h1>
+        <section class="segunda-mano-section">
+            <div class="section-header">
+                <h1>Juegos de Segunda Mano</h1>
+                <p>Encuentra grandes títulos a precios increíbles</p>
+            </div>
             
             <!-- Filtros -->
             <div class="filters-container">
@@ -142,14 +140,15 @@ require_once 'includes/header.php';
                 <?php else: ?>
                     <?php foreach($productos as $producto): ?>
                         <div class="product-card">
-                            <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" 
-                                 alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
+                            <div class="product-image">
+                                <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" 
+                                     alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
+                            </div>
                             <div class="product-card-content">
-                                <h3><?php echo htmlspecialchars($producto['nombre']); ?></h3>
-                                <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
-                                <p class="category"><?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>
-                                <p class="estado"><?php echo htmlspecialchars($producto['estado'] ?? 'Usado'); ?></p>
-                                <a href="detalle_segunda_mano.php?id=<?php echo $producto['id']; ?>" class="btn">
+                                <h3 class="product-title"><?php echo htmlspecialchars($producto['nombre']); ?></h3>
+                                <p class="product-price"><?php echo number_format($producto['precio'], 2); ?>€</p>
+                                <p class="product-category"><?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>
+                                <a href="detalle_segunda_mano.php?id=<?php echo $producto['id']; ?>" class="btn-details">
                                     Ver Detalles
                                 </a>
                             </div>
@@ -157,7 +156,13 @@ require_once 'includes/header.php';
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
-            <a href="agregar_segunda_mano.php" class="btn">Añadir Juego de Segunda Mano</a>
+            
+            <div class="add-game-container">
+                <a href="agregar_segunda_mano.php" class="btn-add-game">
+                    <span class="add-icon">+</span>
+                    <span class="add-text">Añadir Juego de Segunda Mano</span>
+                </a>
+            </div>
         </section>
     </div>
 
