@@ -353,3 +353,4 @@ if (isset($_GET['already_in_cart'])) {
     <?php require_once 'includes/footer.php'; ?>
 </body>
 </html>
+                        

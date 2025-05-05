@@ -80,7 +80,7 @@ $titulo = "Panel de Administración - MGames";
 require_once 'includes/header.php';
 ?>
 
-<link rel="stylesheet" href="css/panel_admin.css">
+<link rel="stylesheet" href="panel_admin.css">
 
 <div class="admin-panel">
     <h1>Panel de Administración</h1>

@@ -182,6 +182,9 @@ $titulo = "MGames - Tu tienda de videojuegos";
                                 <a href="perfil.php"><i class="fas fa-user"></i> Mi Perfil</a>
                                 <a href="pedidos.php"><i class="fas fa-box"></i> Mis Pedidos</a>
                                 <a href="configuracion.php"><i class="fas fa-cog"></i> Configuración</a>
+                                <?php if(isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN'): ?>
+                                    <a href="panel_admin.php"><i class="fas fa-shield-alt"></i> Panel Admin</a>
+                                <?php endif; ?>
                                 <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
                             </div>
                         </div>
@@ -1660,4 +1663,4 @@ body {
 </style>
 
 </body>
-</html> 
+</html>

@@ -14,8 +14,8 @@ try {
     $productos_recomendados = [];
     $_SESSION['error'] = "Error al cargar productos recomendados: " . $e->getMessage();
 }
-
 require_once 'includes/header.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -24,20 +24,7 @@ require_once 'includes/header.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carrito - MGames</title>
-    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/carrito.css">
-    <style>
-        /* Estilos adicionales para eliminar espacios */
-        body {
-            margin: 0;
-            padding: 0;
-        }
-        
-        .content {
-            margin-top: 0;
-            padding-top: 0;
-        }
-    </style>
 </head>
 <body>
     <div class="content">
