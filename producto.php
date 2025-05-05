@@ -10,7 +10,13 @@ if (!isset($_GET['id'])) {
 $id = $_GET['id'];
 
 try {
-    $stmt = $pdo->prepare("SELECT p.*, c.nombre as categoria_nombre FROM productos p LEFT JOIN categorias c ON p.categoria_id = c.id WHERE p.id = ?");
+    // Obtener el producto y sus plataformas
+    $stmt = $pdo->prepare("
+        SELECT p.*, c.nombre as categoria_nombre
+        FROM productos p
+        LEFT JOIN categorias c ON p.categoria_id = c.id
+        WHERE p.id = ?
+    ");
     $stmt->execute([$id]);
     $producto = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -437,6 +443,30 @@ if (isset($_GET['review_error'])) {
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Mostrar plataformas -->
+        <div class="platforms">
+            <strong>Plataformas:</strong>
+            <p>
+                <?php
+                // Mostrar las plataformas
+                $plataformas = [];
+                if (!empty($producto['plataforma1'])) {
+                    $plataformas[] = htmlspecialchars($producto['plataforma1']);
+                }
+                if (!empty($producto['plataforma2'])) {
+                    $plataformas[] = htmlspecialchars($producto['plataforma2']);
+                }
+                if (!empty($producto['plataforma3'])) {
+                    $plataformas[] = htmlspecialchars($producto['plataforma3']);
+                }
+                if (!empty($producto['plataforma4'])) {
+                    $plataformas[] = htmlspecialchars($producto['plataforma4']);
+                }
+                echo implode(', ', $plataformas);
+                ?>
+            </p>
         </div>
 
         <!-- Acerca del juego -->
