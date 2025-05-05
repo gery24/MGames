@@ -413,6 +413,12 @@ if (isset($_GET['review_error'])) {
                 max-width: 200px;
             }
         }
+
+        .platform img {
+            width: 20px;
+            height: auto;
+            margin-right: 10px; /* Espacio entre las imágenes */
+        }
     </style>
 </head>
 <body>
@@ -425,8 +431,38 @@ if (isset($_GET['review_error'])) {
                     <h1 class="product-title"><?php echo htmlspecialchars($producto['nombre']); ?></h1>
                     <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
                     <div class="category">
-                        <?php echo htmlspecialchars($producto['categoria_nombre']); ?>
+                        <?php echo isset($producto['categoria_nombre']) ? htmlspecialchars($producto['categoria_nombre']) : 'Categoría no disponible'; ?>
                     </div>
+
+                    <!-- Mostrar plataformas justo debajo de la imagen del juego seleccionado -->
+                    <div class="platform">
+                        <?php
+                        // Mostrar las plataformas
+                        $plataformas = [];
+                        if (!empty($producto['plataforma1'])) {
+                            $plataformas[] = htmlspecialchars($producto['plataforma1']);
+                        }
+                        if (!empty($producto['plataforma2'])) {
+                            $plataformas[] = htmlspecialchars($producto['plataforma2']);
+                        }
+                        if (!empty($producto['plataforma3'])) {
+                            $plataformas[] = htmlspecialchars($producto['plataforma3']);
+                        }
+                        if (!empty($producto['plataforma4'])) {
+                            $plataformas[] = htmlspecialchars($producto['plataforma4']);
+                        }
+
+                        // Mostrar las imágenes de las plataformas solo si hay plataformas disponibles
+                        if (!empty($plataformas)) {
+                            foreach ($plataformas as $plataforma) {
+                                echo '<img src="' . htmlspecialchars($plataforma) . '" alt="Plataforma" class="platform-img">';
+                            }
+                        } else {
+                            echo '<p>No hay plataformas disponibles.</p>'; // Mensaje opcional si no hay plataformas
+                        }
+                        ?>
+                    </div>
+
                     <div class="button-group">
                         <form method="POST" action="agregar_al_carrito.php">
                             <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
@@ -445,29 +481,7 @@ if (isset($_GET['review_error'])) {
             </div>
         </div>
 
-        <!-- Mostrar plataformas -->
-        <div class="platforms">
-            <strong>Plataformas:</strong>
-            <p>
-                <?php
-                // Mostrar las plataformas
-                $plataformas = [];
-                if (!empty($producto['plataforma1'])) {
-                    $plataformas[] = htmlspecialchars($producto['plataforma1']);
-                }
-                if (!empty($producto['plataforma2'])) {
-                    $plataformas[] = htmlspecialchars($producto['plataforma2']);
-                }
-                if (!empty($producto['plataforma3'])) {
-                    $plataformas[] = htmlspecialchars($producto['plataforma3']);
-                }
-                if (!empty($producto['plataforma4'])) {
-                    $plataformas[] = htmlspecialchars($producto['plataforma4']);
-                }
-                echo implode(', ', $plataformas);
-                ?>
-            </p>
-        </div>
+       
 
         <!-- Acerca del juego -->
         <div class="card">
@@ -613,6 +627,36 @@ if (isset($_GET['review_error'])) {
                         <div class="game-info">
                             <h3 class="game-title"><?php echo htmlspecialchars($juego['nombre']); ?></h3>
                             <p class="game-price">€<?php echo number_format($juego['precio'], 2); ?></p>
+                            <div class="category">
+                            <?php echo isset($producto['categoria_nombre']) ? htmlspecialchars($producto['categoria_nombre']) : 'Categoría no disponible'; ?>
+                            </div>
+                            <div class="platform">
+                                <?php
+                                // Mostrar las plataformas
+                                $plataformas = [];
+                                if (!empty($juego['plataforma1'])) {
+                                    $plataformas[] = htmlspecialchars($juego['plataforma1']);
+                                }
+                                if (!empty($juego['plataforma2'])) {
+                                    $plataformas[] = htmlspecialchars($juego['plataforma2']);
+                                }
+                                if (!empty($juego['plataforma3'])) {
+                                    $plataformas[] = htmlspecialchars($juego['plataforma3']);
+                                }
+                                if (!empty($juego['plataforma4'])) {
+                                    $plataformas[] = htmlspecialchars($juego['plataforma4']);
+                                }
+
+                                // Mostrar las imágenes de las plataformas solo si hay plataformas disponibles
+                                if (!empty($plataformas)) {
+                                    foreach ($plataformas as $plataforma) {
+                                        echo '<img src="' . htmlspecialchars($plataforma) . '" alt="Plataforma" class="platform-img">';
+                                    }
+                                } else {
+                                    echo '<p>No hay plataformas disponibles.</p>'; // Mensaje opcional si no hay plataformas
+                                }
+                                ?>
+                            </div>
                             <a href="producto.php?id=<?php echo $juego['id']; ?>" class="view-details">
                                 Ver detalles
                             </a>
