@@ -297,6 +297,44 @@ $titulo = "MGames - Tu tienda de videojuegos";
                 <?php endforeach; ?>
             </div>
         </section>
+
+    <!-- Explora por Categorías -->
+    <section class="categories-section">
+        <div class="container">
+            <h2>Explora por Categorías</h2>
+            <div class="categories-grid" id="categories-grid">
+                <?php 
+                // Colores para las categorías
+                $colors = [
+                    'from-red-500 to-orange-500',
+                    'from-blue-500 to-indigo-500',
+                    'from-green-500 to-emerald-500',
+                    'from-yellow-500 to-amber-500',
+                    'from-purple-500 to-pink-500',
+                    'from-indigo-500 to-purple-500'
+                ];
+                $i = 0;
+
+                // Mostrar solo las primeras 4 categorías inicialmente
+                foreach(array_slice($categorias_count, 0, 4) as $cat): 
+                    $color = $colors[$i % count($colors)];
+                    $i++;
+                ?>
+                    <a href="todos_productos.php?categoria=<?php echo $cat['id']; ?>" class="category-card <?php echo $color; ?>">
+                        <div class="category-content">
+                            <h3><?php echo htmlspecialchars($cat['nombre']); ?></h3>
+                            <p><?php echo $cat['count']; ?> juegos</p>
+                        </div>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Botón para mostrar todas las categorías -->
+            <div class="button-group" style="margin-top: 20px; text-align: center;">
+                <button id="toggle-categories" class="btn btn-primary" onclick="toggleCategories()">Mostrar Todas las Categorías</button>
+            </div>
+        </div>
+    </section>
     </div>
 
 <style>
@@ -1457,6 +1495,61 @@ body {
             }
         });
     });
+
+    // Guardar todas las categorías en variables JavaScript
+    var todasLasCategorias = [
+        <?php 
+        $i = 0;
+        foreach($categorias_count as $cat): 
+        ?>
+        {
+            id: <?php echo $cat['id']; ?>,
+            nombre: "<?php echo addslashes(htmlspecialchars($cat['nombre'])); ?>",
+            count: <?php echo $cat['count']; ?>,
+            color: "<?php echo $colors[$i % count($colors)]; ?>"
+        },
+        <?php $i++; endforeach; ?>
+    ];
+
+    // Guardar las 4 primeras categorías
+    var primerasCategorias = todasLasCategorias.slice(0, 4);
+    
+    // Variable para controlar el estado
+    var mostrandoTodas = false;
+
+    function toggleCategories() {
+        const categoriesGrid = document.getElementById('categories-grid');
+        const button = document.getElementById('toggle-categories');
+        
+        // Cambiar el estado
+        mostrandoTodas = !mostrandoTodas;
+        
+        // Limpiar el grid actual
+        categoriesGrid.innerHTML = '';
+        
+        // Determinar qué categorías mostrar
+        var categoriasAMostrar = mostrandoTodas ? todasLasCategorias : primerasCategorias;
+        
+        // Actualizar el texto del botón
+        button.innerText = mostrandoTodas ? "Ocultar Categorías" : "Mostrar Todas las Categorías";
+        
+        // Crear y añadir las tarjetas de categoría
+        categoriasAMostrar.forEach(function(cat) {
+            const categoryCard = document.createElement('a');
+            categoryCard.href = "todos_productos.php?categoria=" + cat.id;
+            categoryCard.className = "category-card " + cat.color;
+            categoryCard.innerHTML = `
+                <div class="category-content">
+                    <h3>${cat.nombre}</h3>
+                    <p>${cat.count} juegos</p>
+                </div>
+            `;
+            categoriesGrid.appendChild(categoryCard);
+        });
+        
+        // Prevenir que la página se desplace
+        return false;
+    }
 </script>
 
 <footer class="site-footer">
@@ -1612,4 +1705,4 @@ body {
 </style>
 
 </body>
-</html> 
+</html>
