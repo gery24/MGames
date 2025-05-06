@@ -61,9 +61,6 @@ try {
 
     // Cambiar el ORDER BY para mostrar productos en orden aleatorio
     $query .= " ORDER BY RAND()";
-    
-    // Limitar a 20 productos
-    $query .= " LIMIT 20";
 
     // Ejecutar la consulta
     $stmt = $pdo->prepare($query);
@@ -275,7 +272,7 @@ $titulo = "MGames - Tu tienda de videojuegos";
 
         <!-- Productos -->
         <section class="featured-products">
-            <h2>Productos</h2>
+            <h2> Todos los productos</h2>
             <div class="products-grid">
                 <?php foreach($productos as $producto): ?>
                     <div class="product-card">
