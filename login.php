@@ -67,7 +67,63 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <p><a href="recuperar_contrasena.php">¿Olvidaste tu contraseña?</a></p>
         </form>
     </div>
+    </style>
+<!-- Botón -->
+<!-- Botón scroll arriba -->
+<button id="scrollToTopBtn" aria-label="Volver arriba">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-up">
+    <polyline points="18 15 12 9 6 15"></polyline>
+  </svg>
+</button>
 
+<!-- Estilos CSS -->
+<style>
+ #scrollToTopBtn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background-color: #0d6efd; /* Azul Bootstrap */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  z-index: 1000;
+}
+
+#scrollToTopBtn:hover {
+  background-color: #0b5ed7;
+  transform: scale(1.1);
+}
+
+#scrollToTopBtn svg {
+  width: 24px;
+  height: 24px;
+}
+</style>
+
+<!-- Script JS -->
+<script>
+ const scrollBtn = document.getElementById('scrollToTopBtn');
+
+window.addEventListener('scroll', () => {
+  scrollBtn.style.display = window.scrollY > 300 ? 'flex' : 'none';
+});
+
+scrollBtn.addEventListener('click', () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+});
+</script>
     <?php require_once 'includes/footer.php'; ?>
 </body>
 </html> 
