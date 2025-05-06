@@ -562,7 +562,8 @@ if (isset($_GET['review_error'])) {
                 </form>
             <?php else: ?>
                 <div class="login-message">
-                    <p>Debes iniciar sesión para dejar una reseña. <a href="login.php?redirect=producto.php?id=<?php echo $producto['id']; ?>" class="login-link">Iniciar sesión</a></p>
+                    <p>Debes iniciar sesión para dejar una reseña. <a href="login.php" class="login-link">Iniciar sesión</a></p>
+                    <img src="ruta/a/la/imagen/pelo_largo.png" alt="Usuario no registrado">
                 </div>
             <?php endif; ?>
         </div>
@@ -666,6 +667,12 @@ if (isset($_GET['review_error'])) {
             </div>
         </div>
         <?php endif; ?>
+
+        <!-- Mostrar últimas noticias del producto -->
+        <div class="card">
+            <h2 class="section-title">Últimas Noticias del Producto</h2>
+            <p><?php echo !empty($producto['ultimas_noticias']) ? htmlspecialchars($producto['ultimas_noticias']) : 'No hay noticias disponibles para este producto.'; ?></p>
+        </div>
     </div>
 
     <?php require_once 'includes/footer.php'; ?>
