@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 require_once 'config/database.php';
 
 // Verificar si el usuario está logueado
@@ -7,6 +8,7 @@ if (!isset($_SESSION['usuario'])) {
     header('Location: login.php');
     exit;
 }
+
 
 // Verificar si el usuario es admin para añadir la clase 'admin' al body
 $isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN';
@@ -36,6 +38,8 @@ try {
 }
 
 $titulo = "Cartera - MGames";
+
+// Incluir el header después de definir $bodyClass y $titulo
 require_once 'includes/header.php';
 ?>  
 
@@ -86,8 +90,27 @@ require_once 'includes/header.php';
 </div>
 
 <style>
-/* Estilos para administradores */
-body.admin h1 {
+/* Estilos para el header - Asegurarse que el header se vea correctamente */
+body.admin header,
+body.admin nav,
+body.admin .logo,
+body.admin .nav-links,
+body.admin .nav-links a {
+    /* Restablecer cualquier estilo que pueda estar afectando al header */
+    color: inherit !important;
+    background-color: inherit !important;
+}
+
+/* Asegurarse que el logo MGames siempre sea rojo */
+body.admin .logo a,
+body .logo a,
+body.admin .logo,
+body .logo {
+    color: #ff0000 !important;
+}
+
+/* Estilos para administradores - Solo para el contenido de la cartera */
+body.admin .content h1 {
     color: #ff0000;
 }
 

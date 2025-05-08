@@ -159,7 +159,7 @@ body {
             <!-- Logo y nombre -->
             <div class="footer-column">
                 <div class="footer-logo">
-                    <img src="FotosWeb/logo.png" alt="MGames Logo">
+                    <img src="FotosWeb/tarjeta_50.jpg" alt="MGames Logo">
                     <h2>MGames</h2>
                 </div>
             </div>

@@ -1,6 +1,9 @@
 <?php
+require_once 'includes/header.php';
 session_start();
 require_once 'config/database.php';
+
+
 
 // Verificar si el usuario es admin para añadir la clase 'admin' al body
 $isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN';
@@ -30,8 +33,9 @@ try {
 }
 
 $titulo = "Lista de Deseos - MGames";
-require_once 'includes/header.php';
 ?>
+
+
 
 <div class="content">
     <div class="wishlist-container">
@@ -116,38 +120,6 @@ body {
     color: var(--text-color);
 }
 
-/* Estilos específicos para administradores */
-body.admin .site-header {
-    border-bottom: 3px solid #ff0000;
-}
-
-body.admin .logo span {
-    color: #ff0000;
-}
-
-body.admin .category-badge {
-    background-color: #ff0000;
-}
-
-body.admin .price {
-    color: #ff0000;
-}
-
-body.admin .btn-primary {
-    background-color: #ff0000;
-}
-
-body.admin .btn-primary:hover {
-    background-color: #cc0000;
-}
-
-body.admin .btn-overlay:hover {
-    background-color: #ff0000;
-}
-
-body.admin .pulse-animation {
-    animation: pulse-red 2s infinite;
-}
 
 @keyframes pulse-red {
     0% {
