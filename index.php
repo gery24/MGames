@@ -2,6 +2,10 @@
 session_start();
 require_once 'config/database.php';
 
+// Verificar si el usuario es admin para añadir la clase 'admin' al body
+$isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN';
+$bodyClass = $isAdmin ? 'admin' : '';
+
 try {
     // Verificar la conexión
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -111,97 +115,11 @@ $titulo = "MGames - Tu tienda de videojuegos";
     <title><?php echo $titulo; ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="admin-styles.css">
 </head>
-<body>
-    <!-- Header Mejorado -->
-    <header class="site-header">
-        <div class="container header-container">
-            <a href="index.php" class="logo">
-                <span>MGames</span>
-            </a>
-            
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="index.php">Inicio</a></li>
-                    <li><a href="tienda.php">Tienda</a></li>
-                    <li><a href="contacto.php">Contacto</a></li>
-                </ul>
-            </nav>
-            
-            <div class="header-actions">
-                <div class="search-container">
-                    <button class="search-button" id="search-toggle">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    <form class="search-form" method="GET" action="index.php" id="search-form" style="display: none;">
-                        <select name="categoria" class="filter-select">
-                            <option value="">Todas las categorías</option>
-                            <?php foreach($categorias as $cat): ?>
-                                <option value="<?php echo htmlspecialchars($cat['id']); ?>">
-                                    <?php echo htmlspecialchars($cat['nombre']); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                        <input type="text" name="buscar" placeholder="Buscar productos..." required>
-                        <button type="submit" class="btn">Buscar</button>
-                    </form>
-                </div>
-                <a href="lista_deseos.php" class="header-icon">
-                    <i class="fas fa-heart"></i>
-                    <?php if(isset($_SESSION['wishlist_count']) && $_SESSION['wishlist_count'] > 0): ?>
-                        <span class="badge"><?php echo $_SESSION['wishlist_count']; ?></span>
-                <?php endif; ?>
-                </a>
-                <a href="carrito.php" class="header-icon">
-                    <i class="fas fa-shopping-cart"></i>
-                    <?php if(isset($_SESSION['cart_count']) && $_SESSION['cart_count'] > 0): ?>
-                        <span class="badge"><?php echo $_SESSION['cart_count']; ?></span>
-                    <?php endif; ?>
-                </a>
-                <a href="cartera.php" class="header-icon">
-                    <i class="fas fa-wallet"></i>
-                    <?php if(isset($_SESSION['user_balance'])): ?>
-                        <span class="balance-indicator"><?php echo number_format($_SESSION['user_balance'], 2); ?>€</span>
-                    <?php endif; ?>
-                </a>
-                <div class="user-profile">
-                    <?php if(isset($_SESSION['usuario'])): ?>
-                        <div class="profile-dropdown">
-                            <button class="profile-button">
-                                <div class="avatar-circle">
-                                    <?php 
-                                    // Obtener la primera letra del nombre de usuario
-                                    $initial = strtoupper(substr($_SESSION['usuario']['nombre'], 0, 1));
-                                    echo $initial;
-                                    ?>
-                                </div>
-                                <span class="username"><?php echo htmlspecialchars($_SESSION['usuario']['nombre']); ?></span>
-                                <i class="fas fa-chevron-down"></i>
-                            </button>
-                            <div class="dropdown-content">
-                                <a href="perfil.php"><i class="fas fa-user"></i> Mi Perfil</a>
-                                <a href="pedidos.php"><i class="fas fa-box"></i> Mis Pedidos</a>
-                                <a href="configuracion.php"><i class="fas fa-cog"></i> Configuración</a>
-                                <?php if(isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN'): ?>
-                                    <a href="panel_admin.php"><i class="fas fa-shield-alt"></i> Panel Admin</a>
-                                <?php endif; ?>
-                                <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
-                            </div>
-                        </div>
-            <?php else: ?>
-                        <div class="auth-buttons">
-                            <a href="login.php" class="btn btn-sm btn-outline">Iniciar Sesión</a>
-                            <a href="register.php" class="btn btn-sm btn-primary">Registrarse</a>
-                        </div>
-            <?php endif; ?>
-            </div>
-                <button id="menuToggle" class="mobile-menu-toggle">
-                    <i class="fas fa-bars"></i>
-                </button>
-        </div>
-        </div>
-    </header>
-
+<body class="<?php echo $bodyClass; ?>">
+    <?php require_once 'includes/header.php'; ?>
+    
     <div class="content">
     <!-- Hero Section con Video de Fondo -->
         <header class="hero">
@@ -281,7 +199,7 @@ $titulo = "MGames - Tu tienda de videojuegos";
             <h2>Productos</h2>
             <div class="products-grid">
                 <?php foreach($productos as $producto): ?>
-                    <div class="product-card">
+                    <div class="product-card <?php echo $isAdmin ? 'admin-product' : ''; ?>">
                     <div class="wishlist-icon" data-product-id="<?php echo $producto['id']; ?>">
                         <i class="fas fa-heart"></i>
                     </div>
@@ -324,7 +242,7 @@ $titulo = "MGames - Tu tienda de videojuegos";
                     $color = $colors[$i % count($colors)];
                     $i++;
                 ?>
-                    <a href="index.php?categoria=<?php echo $cat['id']; ?>" class="category-card <?php echo $color; ?>">
+                    <a href="index.php?categoria=<?php echo $cat['id']; ?>" class="category-card <?php echo $color; ?> <?php echo $isAdmin ? 'admin-category' : ''; ?>">
                         <div class="category-content">
                             <h3><?php echo htmlspecialchars($cat['nombre']); ?></h3>
                             <p><?php echo $cat['count']; ?> juegos</p>
@@ -363,6 +281,9 @@ $titulo = "MGames - Tu tienda de videojuegos";
     --bg-white: #ffffff;
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --radius: 0.5rem;
+    --admin-color: #ff0000;
+    --admin-dark: #cc0000;
+    --admin-bg-light: #fff0f0;
 }
 
 body {
@@ -372,6 +293,71 @@ body {
     background-color: var(--bg-light);
     margin: 0;
     padding: 0;
+}
+
+/* Estilos específicos para administradores */
+body.admin {
+    background-color: var(--admin-bg-light);
+}
+
+body.admin .site-header {
+    border-bottom: 3px solid var(--admin-color);
+}
+
+body.admin .logo span {
+    color: var(--admin-color);
+}
+
+.admin-badge {
+    background-color: #ff0000 !important; /* Fondo rojo con !important */
+    color: white !important; /* Texto blanco con !important */
+    font-size: 0.7rem !important;
+    padding: 0.2rem 0.5rem !important;
+    border-radius: 0.25rem !important;
+    margin-left: 0.5rem !important;
+    font-weight: bold !important;
+    display: inline-block !important; /* Asegura que el badge tenga las dimensiones correctas */
+    line-height: 1 !important; /* Mejora la alineación vertical del texto */
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2) !important; /* Añade sombra para mejorar legibilidad */
+}
+
+body.admin .avatar-circle {
+    background-color: var(--admin-color);
+}
+
+body.admin .admin-username {
+    color: white;
+    font-weight: bold;
+}
+
+body.admin .dropdown-content {
+    border: 2px solid var(--admin-color);
+}
+
+body.admin .admin-link {
+    background-color: var(--admin-color);
+    color: white !important;
+}
+
+body.admin .admin-link:hover {
+    background-color: var(--admin-dark);
+}
+
+body.admin .product-card.admin-product .price {
+    color: var(--admin-color);
+    font-weight: bold;
+}
+
+body.admin .product-card.admin-product .btn {
+    background-color: var(--admin-color);
+}
+
+body.admin .product-card.admin-product .btn:hover {
+    background-color: var(--admin-dark);
+}
+
+body.admin .category-card.admin-category {
+    border: 2px solid var(--admin-color);
 }
 
 .container {
@@ -569,7 +555,7 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 0.5rem;
+    padding: 0.5rem 0.75rem;
     border-radius: var(--radius);
     transition: background-color 0.3s;
 }
@@ -758,15 +744,17 @@ body {
 }
 
 .filters-form {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    display: flex;
+    flex-direction: row;
     gap: 1.5rem;
-    align-items: end;
+    align-items: flex-end;
 }
 
 .filter-group {
     display: flex;
     flex-direction: column;
+    flex: 1;
+    min-width: 200px;
 }
 
 .filter-group label {
@@ -847,6 +835,14 @@ body {
     transition: background-color 0.3s ease;
 }
 
+body.admin .search-button {
+    background-color: var(--admin-color);
+}
+
+body.admin .search-button:hover {
+    background-color: var(--admin-dark);
+}
+
 .search-button:hover {
     background-color: var(--primary-dark);
 }
@@ -855,6 +851,7 @@ body {
     display: inline-flex;
     align-items: center;
     margin-top: 1rem;
+    margin-left: 1rem;
     color: var(--text-light);
     text-decoration: none;
     font-size: 0.9rem;
@@ -867,6 +864,10 @@ body {
 
 .clear-filters:hover {
     color: var(--primary-color);
+}
+
+body.admin .clear-filters:hover {
+    color: var(--admin-color);
 }
 
 /* Products Section */
@@ -891,6 +892,11 @@ body {
     background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
     margin: 0.5rem auto 0;
     border-radius: 2px;
+}
+
+body.admin .featured-products h2:after, 
+body.admin .categories-section h2:after {
+    background: linear-gradient(to right, var(--admin-color), var(--admin-dark));
 }
 
 .products-grid {
@@ -948,6 +954,10 @@ body {
     font-weight: 600;
     border-radius: 0 0.5rem 0 0;
     z-index: 5;
+}
+
+body.admin .category-badge {
+    background: linear-gradient(to right, var(--admin-color), var(--admin-dark));
 }
 
 /* Estilo para el icono de favoritos */
@@ -1128,6 +1138,10 @@ body {
     text-align: center;
 }
 
+body.admin .newsletter {
+    background: linear-gradient(to right, var(--admin-color), var(--admin-dark));
+}
+
 .newsletter h2 {
     font-size: 2rem;
     margin-bottom: 1rem;
@@ -1235,6 +1249,35 @@ body {
 }
 
 /* Video Controls */
+.video-controls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+
+.video-controls button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+
+.video-controls button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Mobile Menu */
 .video-controls {
     position: absolute;
     bottom: 20px;
@@ -1510,12 +1553,15 @@ body {
     });
 </script>
 
-<footer class="site-footer">
+<footer class="site-footer <?php echo $isAdmin ? 'admin-footer' : ''; ?>">
     <div class="container">
         <div class="footer-content">
             <div class="footer-logo">
                 <img src="FotosWeb/logo.png" alt="MGames Logo">
                 <h3>MGames</h3>
+                <?php if($isAdmin): ?>
+                    <span class="admin-badge">ADMIN</span>
+                <?php endif; ?>
             </div>
             <div class="footer-links">
                 <h4>Enlaces rápidos</h4>
@@ -1556,6 +1602,10 @@ body {
     padding: 3rem 0 1rem;
 }
 
+body.admin .site-footer {
+    background-color: var(--admin-color);
+}
+
 .footer-content {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -1594,6 +1644,12 @@ body {
     margin-top: 0.5rem;
 }
 
+body.admin .footer-links h4:after, 
+body.admin .footer-contact h4:after, 
+body.admin .footer-social h4:after {
+    background: white;
+}
+
 .footer-links ul {
     list-style: none;
     padding: 0;
@@ -1614,6 +1670,11 @@ body {
     color: var(--primary-color);
 }
 
+body.admin .footer-links ul li a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
 .footer-contact p {
     margin-bottom: 0.5rem;
     display: flex;
@@ -1623,6 +1684,10 @@ body {
 .footer-contact p i {
     margin-right: 0.5rem;
     color: var(--primary-color);
+}
+
+body.admin .footer-contact p i {
+    color: white;
 }
 
 .social-icons {
@@ -1645,6 +1710,11 @@ body {
 .social-icons a:hover {
     background-color: var(--primary-color);
     transform: translateY(-3px);
+}
+
+body.admin .social-icons a:hover {
+    background-color: white;
+    color: var(--admin-color);
 }
 
 .footer-bottom {

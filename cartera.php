@@ -8,6 +8,10 @@ if (!isset($_SESSION['usuario'])) {
     exit;
 }
 
+// Verificar si el usuario es admin para añadir la clase 'admin' al body
+$isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN';
+$bodyClass = $isAdmin ? 'admin' : '';
+
 $userId = $_SESSION['usuario']['id'];
 
 try {
@@ -33,7 +37,7 @@ try {
 
 $titulo = "Cartera - MGames";
 require_once 'includes/header.php';
-?>
+?>  
 
 <link rel="stylesheet" href="css/cartera.css">
 
@@ -82,6 +86,39 @@ require_once 'includes/header.php';
 </div>
 
 <style>
+/* Estilos para administradores */
+body.admin h1 {
+    color: #ff0000;
+}
+
+body.admin .balance {
+    background-color: #fff0f0;
+}
+
+body.admin .deposit {
+    border-left: 4px solid #ff0000;
+}
+
+body.admin .withdraw {
+    border-left: 4px solid #cc0000;
+}
+
+body.admin .btn-deposit {
+    background-color: #ff0000;
+}
+
+body.admin .btn-deposit:hover {
+    background-color: #cc0000;
+}
+
+body.admin .transaction-item .amount {
+    color: #ff0000;
+}
+
+body.admin .transaction-item.deposit {
+    background-color: rgba(255, 0, 0, 0.05);
+}
+
 /* Estilos adicionales para los formularios de transacción */
 .transaction-forms {
     display: flex;

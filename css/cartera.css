@@ -1,26 +1,26 @@
 /* Estilos generales para la página de cartera */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f3f4f6;
     color: #333;
-}
-
-.content {
+  }
+  
+  .content {
     max-width: 800px;
     margin: 2rem auto;
     padding: 2rem;
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
+  }
+  
+  h1 {
     text-align: center;
     margin-bottom: 1.5rem;
     color: #2563eb;
-}
-
-.balance {
+  }
+  
+  .balance {
     font-size: 1.5rem;
     font-weight: bold;
     text-align: center;
@@ -28,24 +28,24 @@ h1 {
     padding: 1rem;
     background-color: #e0f7fa;
     border-radius: 5px;
-}
-
-.transaction-form {
+  }
+  
+  .transaction-form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     margin-bottom: 2rem;
-}
-
-.transaction-form input[type="number"],
-.transaction-form input[type="text"] {
+  }
+  
+  .transaction-form input[type="number"],
+  .transaction-form input[type="text"] {
     padding: 0.8rem;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 1rem;
-}
-
-.transaction-form button {
+  }
+  
+  .transaction-form button {
     padding: 0.8rem;
     background-color: #2563eb;
     color: white;
@@ -53,30 +53,122 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
-}
-
-.transaction-form button:hover {
+  }
+  
+  .transaction-form button:hover {
     background-color: #1e2caf;
-}
-
-.transaction-list {
+  }
+  
+  .transaction-list {
     margin-top: 2rem;
-}
-
-.transaction-item {
+  }
+  
+  .transaction-item {
     padding: 1rem;
     border: 1px solid #ddd;
     border-radius: 5px;
     margin-bottom: 1rem;
     display: flex;
     justify-content: space-between;
-}
-
-.transaction-item p {
+  }
+  
+  .transaction-item p {
     margin: 0;
-}
-
-.transaction-item .amount {
+  }
+  
+  .transaction-item .amount {
     font-weight: bold;
     color: #2563eb;
-} 
+  }
+  
+  /* Estilos para administradores */
+  body.admin h1 {
+    color: #ff0000;
+  }
+  
+  body.admin .balance {
+    background-color: #fff0f0;
+  }
+  
+  body.admin .deposit {
+    border-left: 4px solid #ff0000;
+    background-color: #fff0f0;
+  }
+  
+  body.admin .withdraw {
+    border-left: 4px solid #cc0000;
+  }
+  
+  body.admin .btn-deposit {
+    background-color: #ff0000;
+  }
+  
+  body.admin .btn-deposit:hover {
+    background-color: #cc0000;
+  }
+  
+  body.admin .btn-withdraw {
+    background-color: #cc0000;
+  }
+  
+  body.admin .btn-withdraw:hover {
+    background-color: #990000;
+  }
+  
+  body.admin .transaction-item .amount {
+    color: #ff0000;
+  }
+  
+  body.admin .transaction-item.deposit {
+    background-color: rgba(255, 0, 0, 0.05);
+    border-left: 3px solid #ff0000;
+  }
+  
+  body.admin .transaction-item.withdrawal {
+    background-color: rgba(204, 0, 0, 0.05);
+    border-left: 3px solid #cc0000;
+  }
+  
+  /* Estilos para el header en modo admin */
+  body.admin .site-header {
+    border-bottom: 3px solid #ff0000;
+  }
+  
+  body.admin .logo span {
+    color: #ff0000;
+  }
+  
+  body.admin .nav-links li a:hover {
+    color: #ff0000;
+  }
+  
+  body.admin .header-icon:hover {
+    color: #ff0000;
+  }
+  
+  body.admin .badge {
+    background-color: #ff0000;
+  }
+  
+  body.admin .avatar-circle {
+    background-color: #ff0000;
+  }
+  
+  body.admin .admin-username {
+    color: white;
+    font-weight: bold;
+  }
+  
+  body.admin .dropdown-content a:hover {
+    color: #ff0000;
+  }
+  
+  body.admin .admin-link {
+    background-color: #ff0000;
+    color: white;
+  }
+  
+  body.admin .admin-link:hover {
+    background-color: #cc0000;
+  }
+  

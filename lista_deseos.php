@@ -2,6 +2,10 @@
 session_start();
 require_once 'config/database.php';
 
+// Verificar si el usuario es admin para añadir la clase 'admin' al body
+$isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN';
+$bodyClass = $isAdmin ? 'admin' : '';
+
 // Redirigir si el usuario no está logueado
 if (!isset($_SESSION['usuario'])) {
     header('Location: login.php');
@@ -101,9 +105,60 @@ require_once 'includes/header.php';
     --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
+/* Estilos para administradores */
+body.admin {
+    --primary-color: #ff0000;
+    --primary-hover: #cc0000;
+}
+
 body {
     background-color: var(--page-bg);
     color: var(--text-color);
+}
+
+/* Estilos específicos para administradores */
+body.admin .site-header {
+    border-bottom: 3px solid #ff0000;
+}
+
+body.admin .logo span {
+    color: #ff0000;
+}
+
+body.admin .category-badge {
+    background-color: #ff0000;
+}
+
+body.admin .price {
+    color: #ff0000;
+}
+
+body.admin .btn-primary {
+    background-color: #ff0000;
+}
+
+body.admin .btn-primary:hover {
+    background-color: #cc0000;
+}
+
+body.admin .btn-overlay:hover {
+    background-color: #ff0000;
+}
+
+body.admin .pulse-animation {
+    animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+    }
 }
 
 .content {
@@ -115,11 +170,6 @@ body {
     max-width: 1200px;
     margin: 2rem auto;
     padding: 0 1rem;
-}
-
-/* Manteniendo el estilo original del header */
-.wishlist-container h1 {
-    margin-bottom: 2rem;
 }
 
 .empty-wishlist {
