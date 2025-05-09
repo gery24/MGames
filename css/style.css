@@ -5,7 +5,6 @@
     --background-color: #f3f4f6;
     --card-background: #ffffff;
     --text-color: #1f2937;
-    --navbar-color: #1e3a8a;
     --footer-color: #fdfdfd;
     --border-radius: 8px;
     --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -18,9 +17,9 @@
 }
 
 html, body {
-    height: 100%; /* Asegura que el body ocupe toda la altura */
-    margin: 0; /* Asegúrate de que no haya margen por defecto */
-    padding: 0; /* Asegúrate de que no haya padding por defecto */
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 body {
@@ -29,184 +28,13 @@ body {
     color: var(--text-color);
     line-height: 1.6;
     display: flex;
-    flex-direction: column; /* Asegura que el contenido se apile verticalmente */
+    flex-direction: column;
 }
 
 .content {
-    flex: 1; /* Permite que el contenido ocupe el espacio restante */
-    padding: 0; /* Eliminar padding para que esté más cerca del navbar */
-    margin-top: 0; /* Asegúrate de que no haya margen superior */
-}
-
-/* Estilos del navbar */
-.navbar {
-    padding: 20px; /* Ajusta el padding para que sea más grande */
-    background-color: var(--navbar-color); /* Asegúrate de que el color de fondo sea el correcto */
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0; /* Asegúrate de que no haya margen */
-}
-
-.menu-container {
-    color: white;
-}
-
-.menu-dropdown {
-    display: none;
-    position: absolute;
-    background-color: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    padding: 15px;
-    border-radius: 8px;
-    min-width: 220px;
-    top: 100%;
-    left: 0;
-    border: 2px solid red;
-}
-
-body:not(.admin) .menu-dropdown {
-    border: 2px solid var(--navbar-color);
-}
-
-.menu-dropdown .menu-item {
-    color: red;
-    text-decoration: none;
-    display: block;
-    padding: 12px 20px;
-    transition: background-color 0.3s;
-    font-size: 1.1em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-body:not(.admin) .menu-dropdown .menu-item {
-    color: var(--navbar-color);
-}
-
-.menu-dropdown .menu-item:hover {
-    background-color: rgba(255, 0, 0, 0.1);
-}
-
-body:not(.admin) .menu-dropdown .menu-item:hover {
-    background-color: rgba(30, 58, 138, 0.1);
-}
-
-.menu-button {
-    background: none;
-    border: none;
-    color: white !important;
-    cursor: pointer;
-    font-size: 1.5em;
-    padding: 0.8rem;
-}
-
-.menu-button i {
-    color: white !important;
-}
-
-.menu-button:hover {
-    opacity: 0.8;
-}
-
-.nav-left {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    color: white;
-}
-
-.logo a {
-    color: white !important;
-    text-decoration: none;
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-
-.search-container {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Espacio entre el botón de búsqueda y el formulario */
-}
-
-.search-form {
-    display: flex;
-    gap: 10px; /* Espacio entre el campo de búsqueda y el botón */
-    display: none; /* Ocultar el formulario por defecto */
-}
-
-.search-form select {
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: var(--border-radius);
-    font-size: 1rem;
-}
-
-.search-form input {
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: var(--border-radius);
-    font-size: 1rem;
-}
-
-.search-button {
-    padding: 0.5rem 1rem;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.search-button:hover {
-    background-color: var(--secondary-color);
-}
-
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-}
-
-.nav-right > a {
-    color: white; /* Asegúrate de que el texto sea blanco */
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    border-radius: var(--border-radius);
-    transition: background-color 0.3s ease;
-}
-
-.nav-right > a:hover {
-    background-color: var(--secondary-color); /* Cambia el color al pasar el ratón */
-}
-
-.nav-right a.active {
-    background-color: transparent; /* Sin cambio de fondo */
-    color: white; /* Mantener el color del texto */
-}
-
-.nav-right a.btn {
-    background-color: var(--primary-color);
-    padding: 10px 20px; /* Aumenta el padding del botón */
-    border-radius: var(--border-radius);
-    transition: all 0.3s ease;
-}
-
-.nav-right a.btn:hover {
-    background-color: var(--secondary-color);
-    transform: translateY(-2px);
+    flex: 1;
+    padding: 0;
+    margin-top: 0;
 }
 
 /* Estilos de productos */
@@ -220,11 +48,11 @@ body:not(.admin) .menu-dropdown .menu-item:hover {
 }
 
 .product-card {
-    background-color: white; /* Fondo blanco */
-    border-radius: var(--border-radius); /* Bordes redondeados */
-    overflow: hidden; /* Ocultar desbordamiento */
-    box-shadow: var(--box-shadow); /* Sombra */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transiciones suaves */
+    background-color: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     width: 100%;
     max-width: 230px;
     margin: 0 auto;
@@ -232,8 +60,8 @@ body:not(.admin) .menu-dropdown .menu-item:hover {
 }
 
 .product-card:hover {
-    transform: translateY(-5px); /* Efecto de elevación al pasar el ratón */
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Sombra más intensa */
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .product-card img {
@@ -326,22 +154,22 @@ body:not(.admin) .menu-dropdown .menu-item:hover {
 }
 
 .wishlist-icon i {
-    color: #ff0000; /* Color del ícono */
+    color: #ff0000;
     font-size: 1.2rem;
     transition: transform 0.3s ease;
 }
 
 .wishlist-icon:hover {
-    transform: scale(1.1); /* Efecto de hover */
+    transform: scale(1.1);
     background-color: rgba(255, 255, 255, 1);
 }
 
 .wishlist-icon:active {
-    transform: scale(0.95); /* Efecto de clic */
+    transform: scale(0.95);
 }
 
 .wishlist-icon.active i {
-    color: #ff0000; /* Color del ícono cuando está activo */
+    color: #ff0000;
 }
 
 @media (max-width: 1000px) {
@@ -400,13 +228,13 @@ body:not(.admin) .menu-dropdown .menu-item:hover {
 
 /* Estilos del footer */
 .footer {
-    background-color: #0c1ca8; /* Color de fondo del pie de página */
-    color: white; /* Color del texto del pie de página */
+    background-color: #0c1ca8;
+    color: white;
     padding: 3rem 1rem 1rem;
     margin-top: 4rem;
-    position: relative; /* Asegura que el footer esté en su lugar */
-    bottom: 0; /* Asegura que el footer esté al final */
-    width: 100%; /* Asegura que el footer ocupe todo el ancho */
+    position: relative;
+    bottom: 0;
+    width: 100%;
 }
 
 .footer-content {
@@ -489,203 +317,14 @@ body:not(.admin) .menu-dropdown .menu-item:hover {
 
 /* Responsive */
 @media (max-width: 1024px) {
-    .navbar {
-        padding: 1rem 2%;
-    }
-
-    .search-bar {
-        max-width: 300px;
-    }
-}
-
-@media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        padding: 1rem;
-    }
-
-    .nav-left {
-        width: 100%;
-    }
-
-    .nav-right {
-        margin-top: 1rem;
-        justify-content: center;
-        width: 100%;
-    }
-
-    .search-bar {
-        width: 100%;
-        margin: 1rem 0;
-    }
-
-    .user-menu {
-        margin-left: 0;
-    }
-
     .content {
-        padding: 0; /* Eliminar padding para móviles */
-        margin-top: 0; /* Asegúrate de que no haya margen superior */
+        padding: 0;
     }
 }
 
-/* Hero Section */
-.hero {
-    position: relative;
-    height: 100vh; /* Asegúrate de que el hero ocupe toda la altura de la ventana */
-    overflow: hidden; /* Ocultar cualquier desbordamiento */
-    margin-bottom: 20px; /* Mantén un margen inferior adecuado */
-    padding: 20px; /* Aumenta el padding para que se vea más grande */
-}
-
-.video-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1; /* Asegúrate de que el video esté detrás del contenido */
-}
-
-#hero-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Asegúrate de que el video cubra toda el área */
-}
-
-.video-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Overlay oscuro para mejorar la legibilidad */
-    z-index: 2; /* Asegúrate de que el overlay esté encima del video */
-}
-
-.hero-content {
-    position: relative;
-    z-index: 3; /* Asegúrate de que el contenido esté encima del overlay */
-    color: white; /* Cambia el color del texto si es necesario */
-    text-align: center; /* Centrar el texto */
-}
-
-.hero h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-}
-
-/* Estilos para los filtros */
-.filters-container {
-    background-color: #f8f9fa; /* Color de fondo */
-    padding: 20px;
-    border-radius: 10px;
-    margin: 2rem auto;
-    max-width: 1200px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
-}
-
-.filters-form {
-    display: flex;
-    gap: 20px; /* Espacio entre los grupos de filtros */
-    flex-wrap: wrap; /* Permitir que los filtros se ajusten en pantallas más pequeñas */
-}
-
-.filter-group {
-    flex: 1; /* Permitir que los grupos de filtros crezcan */
-    min-width: 200px; /* Ancho mínimo para los grupos de filtros */
-}
-
-.filter-group h3 {
-    font-size: 1em;
-    color: #333;
-    margin-bottom: 8px;
-    font-weight: 600;
-}
-
-.filter-select, .filter-input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: white;
-    font-size: 0.9em;
-    color: #333;
-    transition: all 0.3s ease;
-}
-
-.filter-select:hover, .filter-input:hover {
-    border-color: var(--primary-color);
-}
-
-.filter-select:focus, .filter-input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
-}
-
-.search-input-group {
-    display: flex;
-    gap: 10px;
-}
-
-.search-button {
-    padding: 10px 20px;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    font-size: 0.9em;
-}
-
-.search-button:hover {
-    background-color: var(--secondary-color);
-}
-
-.clear-filters {
-    display: inline-block;
-    margin-top: 15px;
-    color: #666;
-    text-decoration: none;
-    font-size: 0.9em;
-    transition: all 0.3s ease;
-}
-
-.clear-filters:hover {
-    color: var(--primary-color);
-    text-decoration: underline;
-}
-
-/* Responsive */
 @media (max-width: 768px) {
-    .filters-container {
-        padding: 15px;
-        margin: 1rem auto;
-    }
-
-    .filters-form {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .filter-group {
-        width: 100%;
-    }
-
-    .search-input-group {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .search-button {
-        width: 100%;
-        height: 40px;
-    }
-
-    .filter-select, .filter-input {
-        font-size: 16px; /* Mejor para móviles */
+    .content {
+        padding: 0;
     }
 }
 
@@ -718,21 +357,21 @@ body:not(.admin) .menu-dropdown .menu-item:hover {
 }
 
 .input-container {
-    border: 1px solid #ccc; /* Borde del cuadro de entrada */
+    border: 1px solid #ccc;
     border-radius: var(--border-radius);
     padding: 0.5rem;
 }
 
 .input-container input {
-    border: none; /* Sin borde en el input */
-    outline: none; /* Sin contorno al hacer clic */
-    width: 100%; /* Ancho completo */
-    background: transparent; /* Fondo transparente */
-    color: #333; /* Color del texto */
+    border: none;
+    outline: none;
+    width: 100%;
+    background: transparent;
+    color: #333;
 }
 
 .input-container input[readonly] {
-    background: #f9f9f9; /* Fondo gris claro para campos de solo lectura */
+    background: #f9f9f9;
 }
 
 .form-group label {
@@ -826,7 +465,7 @@ body:not(.admin) .menu-dropdown .menu-item:hover {
 }
 
 .cart-icon i {
-    color: white !important; /* Asegúrate de que el ícono del carrito sea siempre blanco */
+    color: white;
 }
 
 .cart-count {
@@ -928,7 +567,7 @@ textarea {
 .user-avatar {
     width: 35px;
     height: 35px;
-    background-color: var(--primary-color); /* Cambia a un color que contraste con el fondo */
+    background-color: var(--primary-color);
     color: white;
     border-radius: 50%;
     display: flex;
@@ -944,23 +583,23 @@ textarea {
 }
 
 .user-menu .dropdown-menu {
-    display: none; /* Ocultar el menú por defecto */
+    display: none;
 }
 
 .user-menu:hover .dropdown-menu {
-    display: block; /* Mostrar el menú al pasar el ratón */
+    display: block;
 }
 
 .dropdown-menu a {
-    color: white; /* Cambiar el color del texto a blanco */
-    padding: 0.8rem 1.5rem; /* Espaciado interno */
-    display: block; /* Mostrar como bloque */
-    text-decoration: none; /* Sin subrayado */
-    transition: background-color 0.3s; /* Transición suave */
+    color: white;
+    padding: 0.8rem 1.5rem;
+    display: block;
+    text-decoration: none;
+    transition: background-color 0.3s;
 }
 
 .dropdown-menu a:hover {
-    background-color: rgba(255, 255, 255, 0.1); /* Color de fondo al pasar el ratón */
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Estilos para el menú desplegable */
@@ -982,19 +621,19 @@ textarea {
 }
 
 .user-menu .dropdown-menu.show {
-    display: block; /* Mostrar el menú cuando se activa la clase 'show' */
+    display: block;
 }
 
 .menu-item {
-    color: white; /* Cambia el color del ícono a blanco */
-    font-size: 1.5em; /* Tamaño del ícono */
+    color: white;
+    font-size: 1.5em;
     display: flex;
     align-items: center;
-    gap: 5px; /* Espacio entre el ícono y el texto (si decides mantener el texto) */
+    gap: 5px;
 }
 
 .menu-item:hover {
-    color: #f0f0f0; /* Color más claro al pasar el ratón */
+    color: #f0f0f0;
 }
 
 /* Ajustes para el nav-right */
@@ -1123,205 +762,6 @@ textarea {
 
 .btn-danger:hover {
     background-color: darkred;
-}
-
-/* Estilos para el rol ADMIN */
-body.admin {
-    background-color: #ffcccc; /* Fondo rojo claro */
-    color: #333; /* Color del texto */
-}
-
-.admin .sidebar {
-    background-color: #c0392b; /* Color de fondo del menú */
-    color: white; /* Color del texto del menú */
-}
-
-.admin .sidebar a {
-    color: white; /* Color de los enlaces del menú */
-}
-
-.admin .header {
-    background-color: #c0392b; /* Color de fondo del encabezado para ADMIN */
-    color: white; /* Color del texto del encabezado */
-}
-
-.admin .footer {
-    background-color: #c0392b; /* Color de fondo del pie de página para ADMIN */
-    color: white; /* Color del texto del pie de página */
-}
-
-.admin button {
-    background-color: #c0392b; /* Color de fondo del botón para ADMIN */
-}
-
-.admin button:hover {
-    background-color: #e74c3c; /* Color de fondo al pasar el ratón */
-}
-
-.header {
-    background-color: #2980b9; /* Color de fondo del encabezado */
-    color: white; /* Color del texto del encabezado */
-}
-
-.header .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-}
-
-.header .logo a {
-    color: white; /* Cambiado a blanco */
-    text-decoration: none;
-    font-size: 1.5rem;
-    font-weight: bold; /* Asegúrate de que esté en negrita */
-}
-
-.header .nav-right {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-}
-
-.menu-dropdown {
-    display: none; /* Ocultar el menú por defecto */
-}
-
-.menu-button:hover + .menu-dropdown,
-.menu-dropdown:hover {
-    display: block; /* Mostrar el menú al pasar el ratón */
-}
-
-#add-game-form {
-    margin-top: 20px;
-    padding: 20px;
-    background-color: var(--card-background);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-}
-
-.navbar a {
-    color: rgb(0, 0, 0); /* Cambiado a negro */
-}
-
-/* Estilos para el rol ADMIN */
-body.admin .header {
-    background-color: #c0392b; /* Color de fondo del encabezado para ADMIN */
-    color: rgb(0, 0, 0); /* Color del texto del encabezado */
-}
-
-body.admin .navbar a {
-    color: white; /* Asegúrate de que el texto del menú sea blanco */
-}
-
-/* Cambiar el color del ícono de la cartera */
-.nav-right a i.fas.fa-wallet {
-    color: white; /* Cambiar el color del ícono de la cartera a blanco */
-}
-
-.product-header {
-    display: flex; /* Cambiar a flexbox */
-    align-items: center; /* Centrar verticalmente */
-    gap: 30px; /* Espacio entre la imagen y el contenido */
-    margin-bottom: 40px;
-    background-color: #f8f9fa; /* Fondo claro para el encabezado del producto */
-    padding: 20px;
-    border-radius: 10px;
-    margin: 0; /* Asegúrate de que no haya margen */
-    padding: 0; /* Asegúrate de que no haya padding */
-}
-
-.product-image {
-    width: 300px; /* Ajustar el tamaño de la imagen */
-    height: auto;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.product-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.user-menu .dropdown-menu {
-    background-color: var(--navbar-color); /* Asegúrate de que el fondo del menú sea el correcto */
-}
-
-.user-menu .dropdown-menu a {
-    color: white; /* Cambiar el color del texto a blanco */
-}
-
-.user-menu .dropdown-menu a:hover {
-    background-color: rgba(255, 255, 255, 0.1); /* Color de fondo al pasar el ratón */
-}
-
-.login-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 1rem; /* Espaciado a la izquierda */
-}
-
-.login-icon img {
-    width: 35px; /* Ajusta el tamaño según sea necesario */
-    height: 35px; /* Ajusta el tamaño según sea necesario */
-    transition: transform 0.3s ease;
-    border: none; /* Asegúrate de que no haya borde */
-    outline: none; /* Elimina el contorno al hacer clic */
-}
-
-.login-icon:hover img {
-    transform: scale(1.1); /* Efecto de hover */
-}
-
-/* Estilos para el rol ADMIN */
-body.admin .navbar {
-    background-color: #c0392b; /* Color de fondo del encabezado para ADMIN */
-    color: white; /* Color del texto del encabezado */
-}
-
-body.admin .navbar a {
-    color: rgb(255, 0, 0); /* Asegúrate de que el texto del menú sea blanco */
-}
-
-.user-menu .dropdown-menu {
-    display: none;
-    position: absolute;
-    background-color: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    padding: 15px;
-    border-radius: 8px;
-    min-width: 160px;
-    right: 0;
-    top: 100%;
-    border: 2px solid red;
-}
-
-.user-menu .dropdown-menu a {
-    color: red;
-    text-decoration: none;
-    display: block;
-    padding: 12px 20px;
-    white-space: nowrap;
-    transition: background-color 0.3s;
-}
-
-.user-menu .dropdown-menu a:hover {
-    background-color: rgba(255, 0, 0, 0.1);
-}
-
-body:not(.admin) .user-menu .dropdown-menu {
-    border: 2px solid var(--navbar-color);
-}
-
-body:not(.admin) .user-menu .dropdown-menu a {
-    color: var(--navbar-color);
-}
-
-body:not(.admin) .user-menu .dropdown-menu a:hover {
-    background-color: rgba(30, 58, 138, 0.1);
 }
 
 /* Estilo para las imágenes de juegos en el panel de administración */
@@ -1454,30 +894,30 @@ body:not(.admin) .user-menu .dropdown-menu a:hover {
 }
 
 .btn-wishlist {
-    background-color: #e74c3c; /* Color rojo */
-    color: white; /* Texto en blanco */
+    background-color: #e74c3c;
+    color: white;
     display: flex;
     align-items: center;
     gap: 5px;
 }
 
 .btn-wishlist:hover {
-    background-color: #c0392b; /* Color rojo más oscuro al pasar el ratón */
+    background-color: #c0392b;
 }
 
 /* Estilos para el botón de Lista de Deseos */
 .btn-transparent {
-    background-color: transparent; /* Fondo transparente */
-    color: var(--primary-color); /* Color del texto */
-    border: 2px solid white; /* Bordes blancos */
-    padding: 0.75rem 1.5rem; /* Espaciado del botón */
-    border-radius: var(--border-radius); /* Bordes redondeados */
-    transition: background-color 0.3s ease; /* Transición suave */
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 2px solid white;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s ease;
 }
 
 .btn-transparent:hover {
-    background-color: rgba(255, 255, 255, 0.1); /* Fondo al pasar el ratón */
-    transform: translateY(-2px); /* Efecto de elevación */
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
 }
 
 .avatar-circle {
@@ -1496,12 +936,12 @@ body:not(.admin) .user-menu .dropdown-menu a:hover {
 .search-container {
     display: flex;
     align-items: center;
-    gap: 10px; /* Espacio entre el campo de búsqueda y el botón */
+    gap: 10px;
 }
 
 .search-form {
     display: flex;
-    gap: 10px; /* Espacio entre el campo de búsqueda y el botón */
+    gap: 10px;
 }
 
 .search-form select {
@@ -1530,4 +970,4 @@ body:not(.admin) .user-menu .dropdown-menu a:hover {
 
 .search-button:hover {
     background-color: var(--secondary-color);
-} 
+}

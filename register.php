@@ -57,54 +57,57 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - MGames</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <?php require_once 'includes/header.php'; ?>
 
-    <!-- Register Form -->
-    <div class="form-container">
-        <?php if ($error): ?>
-            <div class="error-message">
-                <?php echo htmlspecialchars($error); ?>
-            </div>
-        <?php endif; ?>
+    <div class="content">
+        <!-- Register Form -->
+        <div class="form-container">
+            <?php if ($error): ?>
+                <div class="error-message">
+                    <?php echo htmlspecialchars($error); ?>
+                </div>
+            <?php endif; ?>
 
-        <?php if ($success): ?>
-            <div class="success-message">
-                <?php echo htmlspecialchars($success); ?>
-                <p><a href="login.php">Ir a iniciar sesión</a></p>
-            </div>
-        <?php else: ?>
-            <form class="register-form" method="POST" action="register.php">
-                <h2>Crear Cuenta</h2>
-                <div class="form-group">
-                    <label for="nombre">Nombre:</label>
-                    <input type="text" id="nombre" name="nombre" required>
+            <?php if ($success): ?>
+                <div class="success-message">
+                    <?php echo htmlspecialchars($success); ?>
+                    <p><a href="login.php">Ir a iniciar sesión</a></p>
                 </div>
-                <div class="form-group">
-                    <label for="apellido">Apellido:</label>
-                    <input type="text" id="apellido" name="apellido" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Contraseña:</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                <div class="form-group">
-                    <label for="confirm-password">Confirmar Contraseña:</label>
-                    <input type="password" id="confirm-password" name="confirm_password" required>
-                </div>
-                <button type="submit">Registrarse</button>
-                <p>¿Ya tienes cuenta? <a href="login.php">Inicia sesión aquí</a></p>
-                <p>¿Olvidaste tu contraseña? <a href="recuperar_contrasena.php">Recuperar contraseña</a></p>
-            </form>
-        <?php endif; ?>
+            <?php else: ?>
+                <form class="register-form" method="POST" action="register.php">
+                    <h2>Crear Cuenta</h2>
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido">Apellido:</label>
+                        <input type="text" id="apellido" name="apellido" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Contraseña:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirmar Contraseña:</label>
+                        <input type="password" id="confirm-password" name="confirm_password" required>
+                    </div>
+                    <button type="submit">Registrarse</button>
+                    <p>¿Ya tienes cuenta? <a href="login.php">Inicia sesión aquí</a></p>
+                    <p>¿Olvidaste tu contraseña? <a href="recuperar_contrasena.php">Recuperar contraseña</a></p>
+                </form>
+            <?php endif; ?>
+        </div>
+
+        <?php require_once 'includes/footer.php'; ?>
     </div>
-
-    <?php require_once 'includes/footer.php'; ?>
 </body>
 </html>
