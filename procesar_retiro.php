@@ -4,71 +4,107 @@ require_once 'config/database.php';
 
 // Verificar si el usuario está logueado
 if (!isset($_SESSION['usuario'])) {
+    // Responder con JSON para solicitudes AJAX
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Debes iniciar sesión para realizar esta acción']);
+        exit;
+    }
+    
+    // Redirección normal para solicitudes no-AJAX
     header('Location: login.php');
     exit;
 }
 
-$userId = $_SESSION['usuario']['id'];
+// Verificar si se enviaron los datos necesarios
+if (!isset($_POST['monto']) || !isset($_POST['descripcion'])) {
+    // Responder con JSON para solicitudes AJAX
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Faltan datos requeridos']);
+        exit;
+    }
+    
+    // Redirección normal para solicitudes no-AJAX
+    header('Location: perfil.php?error=' . urlencode('Faltan datos requeridos'));
+    exit;
+}
+
 $monto = floatval($_POST['monto']);
-$descripcion = $_POST['descripcion'];
+$descripcion = trim($_POST['descripcion']);
+$usuarioId = $_SESSION['usuario']['id'];
 $origen = isset($_POST['origen']) ? $_POST['origen'] : 'cartera';
 
+// Validar el monto
+if ($monto <= 0) {
+    // Responder con JSON para solicitudes AJAX
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'El monto debe ser mayor que cero']);
+        exit;
+    }
+    
+    // Redirección normal para solicitudes no-AJAX
+    header('Location: perfil.php?error=' . urlencode('El monto debe ser mayor que cero'));
+    exit;
+}
+
+// Verificar si el usuario tiene saldo suficiente
+if ($_SESSION['usuario']['cartera'] < $monto) {
+    // Responder con JSON para solicitudes AJAX
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Saldo insuficiente']);
+        exit;
+    }
+    
+    // Redirección normal para solicitudes no-AJAX
+    header('Location: perfil.php?error=' . urlencode('Saldo insuficiente'));
+    exit;
+}
+
 try {
-    // Verificar que el usuario tenga saldo suficiente
-    $stmt = $pdo->prepare("SELECT cartera FROM usuarios WHERE id = ?");
-    $stmt->execute([$userId]);
-    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    if (!$usuario) {
-        throw new Exception("Usuario no encontrado.");
-    }
-    
-    $saldoActual = floatval($usuario['cartera']);
-    
-    if ($saldoActual < $monto) {
-        throw new Exception("Saldo insuficiente para realizar el retiro.");
-    }
-    
     // Iniciar transacción
     $pdo->beginTransaction();
     
-    // Restar el monto de la cartera del usuario (el monto se guarda como negativo para retiros)
-    $montoNegativo = -1 * abs($monto); // Aseguramos que sea negativo
-    $stmt = $pdo->prepare("UPDATE usuarios SET cartera = cartera + ? WHERE id = ?");
-    $stmt->execute([$montoNegativo, $userId]);
+    // Registrar la transacción (monto negativo para retiros)
+    $stmt = $pdo->prepare("INSERT INTO transacciones (usuario_id, monto, descripcion, fecha) VALUES (?, ?, ?, NOW())");
+    $stmt->execute([$usuarioId, -$monto, $descripcion]);
     
-    // Registrar la transacción con monto negativo
-    $stmt_transaccion = $pdo->prepare("INSERT INTO transacciones (usuario_id, monto, descripcion) VALUES (?, ?, ?)");
-    $stmt_transaccion->execute([$userId, $montoNegativo, $descripcion]);
-    
-    // Confirmar la transacción
-    $pdo->commit();
+    // Actualizar el saldo del usuario
+    $stmt = $pdo->prepare("UPDATE usuarios SET cartera = cartera - ? WHERE id = ?");
+    $stmt->execute([$monto, $usuarioId]);
     
     // Actualizar el saldo en la sesión
-    $stmt = $pdo->prepare("SELECT cartera FROM usuarios WHERE id = ?");
-    $stmt->execute([$userId]);
-    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-    $_SESSION['usuario']['cartera'] = $usuario['cartera'];
+    $_SESSION['usuario']['cartera'] -= $monto;
     
-    // Redirigir según el origen
-    if ($origen === 'perfil') {
-        header('Location: perfil.php');
-    } else {
-        header('Location: cartera.php?success=true');
+    // Confirmar transacción
+    $pdo->commit();
+    
+    // Responder con JSON para solicitudes AJAX
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true, 'message' => 'Fondos retirados correctamente', 'saldo' => $_SESSION['usuario']['cartera']]);
+        exit;
     }
     
-} catch (Exception $e) {
-    // Revertir la transacción en caso de error
-    if ($pdo->inTransaction()) {
-        $pdo->rollBack();
+    // Redirección normal para solicitudes no-AJAX
+    header('Location: ' . ($origen === 'perfil' ? 'perfil.php' : 'cartera.php') . '?success=true');
+    exit;
+    
+} catch(PDOException $e) {
+    // Revertir transacción en caso de error
+    $pdo->rollBack();
+    
+    // Responder con JSON para solicitudes AJAX
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Error al procesar el retiro: ' . $e->getMessage()]);
+        exit;
     }
     
-    $errorMsg = urlencode($e->getMessage());
-    
-    // Redirigir con mensaje de error
-    if ($origen === 'perfil') {
-        header("Location: perfil.php?error=$errorMsg");
-    } else {
-        header("Location: cartera.php?error=$errorMsg");
-    }
+    // Redirección normal para solicitudes no-AJAX
+    header('Location: ' . ($origen === 'perfil' ? 'perfil.php' : 'cartera.php') . '?error=' . urlencode('Error al procesar el retiro'));
+    exit;
 }
+?>

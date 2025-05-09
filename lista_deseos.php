@@ -1,9 +1,6 @@
 <?php
-require_once 'includes/header.php';
 session_start();
 require_once 'config/database.php';
-
-
 
 // Verificar si el usuario es admin para añadir la clase 'admin' al body
 $isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN';
@@ -32,65 +29,76 @@ try {
     die("Error en la base de datos: " . $e->getMessage());
 }
 
+// Título de la página
 $titulo = "Lista de Deseos - MGames";
 ?>
 
-
-
-<div class="content">
-    <div class="wishlist-container">
-        <h1>Mi Lista de Deseos</h1>
-        
-        <?php if (empty($productos)): ?>
-            <div class="empty-wishlist">
-                <div class="empty-icon">
-                    <i class="fas fa-heart-broken"></i>
-                </div>
-                <p>Tu lista de deseos está vacía</p>
-                <a href="index.php" class="btn pulse-animation">Explorar Juegos</a>
-            </div>
-        <?php else: ?>
-            <div class="products-grid">
-                <?php foreach($productos as $producto): ?>
-                    <div class="product-card">
-                        <div class="product-image">
-                            <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" 
-                                alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
-                            <div class="product-overlay">
-                                <a href="producto.php?id=<?php echo $producto['id']; ?>" class="btn-overlay">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                            </div>
-                            <span class="category-badge"><?php echo htmlspecialchars($producto['categoria_nombre']); ?></span>
-                        </div>
-                        <div class="product-card-content">
-                            <h3><?php echo htmlspecialchars($producto['nombre']); ?></h3>
-                            <div class="price-container">
-                                <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
-                                <?php if (isset($producto['precio_anterior']) && $producto['precio_anterior'] > $producto['precio']): ?>
-                                    <p class="old-price">€<?php echo number_format($producto['precio_anterior'], 2); ?></p>
-                                    <?php 
-                                        $discount = round(100 - ($producto['precio'] * 100 / $producto['precio_anterior']));
-                                        echo '<span class="discount-badge">-' . $discount . '%</span>';
-                                    ?>
-                                <?php endif; ?>
-                            </div>
-                            <div class="product-actions">
-                                <a href="producto.php?id=<?php echo $producto['id']; ?>" class="btn btn-primary">
-                                    <i class="fas fa-info-circle"></i> Ver Detalles
-                                </a>
-                                <button class="btn btn-danger remove-from-wishlist" 
-                                        data-product-id="<?php echo $producto['id']; ?>">
-                                    <i class="fas fa-trash"></i> Eliminar
-                                </button>
-                            </div>
-                        </div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $titulo; ?></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="<?php echo $bodyClass; ?>">
+    <?php require_once 'includes/header.php'; ?>
+    
+    <div class="content">
+        <div class="wishlist-container">
+            <h1>Mi Lista de Deseos</h1>
+            
+            <?php if (empty($productos)): ?>
+                <div class="empty-wishlist">
+                    <div class="empty-icon">
+                        <i class="fas fa-heart-broken"></i>
                     </div>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
+                    <p>Tu lista de deseos está vacía</p>
+                    <a href="index.php" class="btn pulse-animation">Explorar Juegos</a>
+                </div>
+            <?php else: ?>
+                <div class="products-grid">
+                    <?php foreach($productos as $producto): ?>
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" 
+                                    alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
+                                <div class="product-overlay">
+                                    <a href="producto.php?id=<?php echo $producto['id']; ?>" class="btn-overlay">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </div>
+                                <span class="category-badge"><?php echo htmlspecialchars($producto['categoria_nombre']); ?></span>
+                            </div>
+                            <div class="product-card-content">
+                                <h3><?php echo htmlspecialchars($producto['nombre']); ?></h3>
+                                <div class="price-container">
+                                    <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
+                                    <?php if (isset($producto['precio_anterior']) && $producto['precio_anterior'] > $producto['precio']): ?>
+                                        <p class="old-price">€<?php echo number_format($producto['precio_anterior'], 2); ?></p>
+                                        <?php 
+                                            $discount = round(100 - ($producto['precio'] * 100 / $producto['precio_anterior']));
+                                            echo '<span class="discount-badge">-' . $discount . '%</span>';
+                                        ?>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="product-actions">
+                                    <a href="producto.php?id=<?php echo $producto['id']; ?>" class="btn btn-primary">
+                                        <i class="fas fa-info-circle"></i> Ver Detalles
+                                    </a>
+                                    <button class="btn btn-danger remove-from-wishlist" 
+                                            data-product-id="<?php echo $producto['id']; ?>">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
     </div>
-</div>
 
 <style>
 :root {
@@ -118,9 +126,269 @@ body.admin {
 body {
     background-color: var(--page-bg);
     color: var(--text-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilos del header */
+.site-header {
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 8px 0;
+    position: relative;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #7e22ce;
+    text-decoration: none;
+}
+
+body.admin .logo span {
+    color: #ff0000;
+}
+
+.main-nav {
+    display: flex;
+    align-items: center;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links li a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links li a:hover {
+    color: #7e22ce;
+}
+
+body.admin .nav-links li a:hover {
+    color: #ff0000;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-icon {
+    color: #333;
+    font-size: 1.2rem;
+    transition: color 0.3s;
+    text-decoration: none;
+    position: relative;
+}
+
+.header-icon:hover {
+    color: #7e22ce;
+}
+
+body.admin .header-icon:hover {
+    color: #ff0000;
+}
+
+.badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #7e22ce;
+    color: white;
+    font-size: 0.75rem;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.admin .badge {
+    background-color: #ff0000;
+}
+
+.balance-indicator {
+    position: absolute;
+    top: -8px;
+    right: -20px;
+    background-color: #10b981;
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 0.25rem;
+    white-space: nowrap;
+}
+
+.profile-dropdown {
+    position: relative;
 }
 
 
+
+
+
+/* Nuevo estilo para el avatar cuadrado */
+.avatar-square {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px; /* Esquinas redondeadas pero cuadrado */
+    background-color: #7e22ce;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.admin-avatar {
+    background-color: #ff0000;
+}
+
+.dropdown-content {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0;
+    z-index: 100;
+    display: none;
+}
+
+.profile-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    color: #1f2937;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.dropdown-content a:hover {
+    background-color: #f3f4f6;
+    color: #7e22ce;
+}
+
+body.admin .dropdown-content a:hover {
+    color: #ff0000;
+}
+
+.dropdown-content a i {
+    width: 20px;
+    text-align: center;
+}
+
+.admin-dropdown {
+    border: 2px solid #ff0000;
+}
+
+.admin-dropdown a.admin-link {
+    background-color: #ff0000;
+    color: white;
+}
+
+.admin-dropdown a.admin-link:hover {
+    background-color: #cc0000;
+    color: white;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.auth-buttons .btn {
+    padding: 6px 20px;
+    border-radius: 4px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    width: auto;
+}
+
+.auth-buttons .btn-primary {
+    background-color: #7e22ce;
+    color: white;
+    border: none;
+}
+
+.auth-buttons .btn-primary:hover {
+    background-color: #6b21a8;
+}
+
+.auth-buttons .btn-outline {
+    background-color: transparent;
+    color: #7e22ce;
+    border: 1px solid #7e22ce;
+}
+
+.auth-buttons .btn-outline:hover {
+    background-color: rgba(126, 34, 206, 0.1);
+}
+
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .mobile-menu-toggle {
+        display: block;
+    }
+    
+    .nav-links {
+        display: none;
+    }
+    
+    .header-actions {
+        gap: 0.5rem;
+    }
+    
+    .auth-buttons {
+        display: none;
+    }
+}
+
+/* Estilos para la lista de deseos */
 @keyframes pulse-red {
     0% {
         box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
@@ -142,6 +410,12 @@ body {
     max-width: 1200px;
     margin: 2rem auto;
     padding: 0 1rem;
+}
+
+.wishlist-container h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--primary-color);
 }
 
 .empty-wishlist {
@@ -376,6 +650,58 @@ body {
     .product-card {
         max-width: 100%;
     }
+}
+
+/* Admin styling for header */
+body.admin .site-header {
+    border-bottom: 3px solid var(--admin-color);
+}
+
+body.admin .logo span {
+    color: var(--admin-color);
+}
+
+.avatar-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+body.admin .nav-links li a:hover {
+    color: var(--admin-color);
+}
+
+body.admin .header-icon:hover {
+    color: var(--admin-color);
+}
+
+body.admin .badge {
+    background-color: var(--admin-color);
+}
+
+body.admin .dropdown-content a:hover {
+    color: var(--admin-color);
+}
+
+body.admin .dropdown-content {
+    border: 2px solid var(--admin-color);
+}
+
+body.admin .admin-link {
+    background-color: var(--admin-color);
+    color: white;
+}
+
+body.admin .admin-link:hover {
+    background-color: var(--admin-dark);
+    color: white;
 }
 </style>
 

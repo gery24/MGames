@@ -45,6 +45,19 @@ body {
     font-size: 1rem;
   }
   
+  .avatar-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+  
   .transaction-form button {
     padding: 0.8rem;
     background-color: #2563eb;

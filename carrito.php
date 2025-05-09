@@ -386,7 +386,6 @@ $titulo = "Carrito - MGames";
     cursor: pointer;
     padding: 0.5rem 0.75rem;
     border-radius: 8px;
-    transition: background-color 0.3s;
 }
 
 .profile-button:hover {
@@ -458,6 +457,7 @@ $titulo = "Carrito - MGames";
     gap: 0.5rem;
 }
 
+/* Estilos para los botones */
 .btn {
     display: inline-block;
     padding: 0.75rem 1.5rem;
@@ -466,8 +466,17 @@ $titulo = "Carrito - MGames";
     text-decoration: none;
     text-align: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background-color 0.3s ease;
     border: none;
+    background-color: #4f46e5;
+    color: white;
+}
+
+/* Corregir el problema del hover en los botones */
+.btn:hover {
+    background-color: #4338ca;
+    color: white;
+    opacity: 1;
 }
 
 .btn-sm {
@@ -482,8 +491,8 @@ $titulo = "Carrito - MGames";
 
 .btn-primary:hover {
     background-color: #4338ca;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    color: white;
+    opacity: 1;
 }
 
 .btn-outline {
@@ -494,7 +503,8 @@ $titulo = "Carrito - MGames";
 
 .btn-outline:hover {
     background-color: rgba(79, 70, 229, 0.1);
-    transform: translateY(-2px);
+    color: #4f46e5;
+    opacity: 1;
 }
 
 /* Estilos para el menú móvil */
@@ -574,6 +584,36 @@ body.admin .admin-link {
 
 body.admin .admin-link:hover {
     background-color: #cc0000;
+}
+
+/* Estilos específicos para los botones del carrito */
+.cart-summary .btn,
+.product-card-content .btn {
+    background-color: #4f46e5;
+    color: white;
+    opacity: 1;
+}
+
+.cart-summary .btn:hover,
+.product-card-content .btn:hover {
+    background-color: #4338ca;
+    color: white;
+    opacity: 1;
+}
+
+/* Para usuarios admin */
+body.admin .cart-summary .btn,
+body.admin .product-card-content .btn {
+    background-color: #ff0000;
+    color: white;
+    opacity: 1;
+}
+
+body.admin .cart-summary .btn:hover,
+body.admin .product-card-content .btn:hover {
+    background-color: #cc0000;
+    color: white;
+    opacity: 1;
 }
 
 /* Responsive styles */
