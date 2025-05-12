@@ -8,6 +8,10 @@ if (!isset($_SESSION['usuario'])) {
     exit;
 }
 
+// Verificar si el usuario es admin para añadir la clase 'admin' al body
+$isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN';
+$bodyClass = $isAdmin ? 'admin' : '';
+
 $error = '';
 $success = '';
 $usuario = $_SESSION['usuario'];
@@ -40,6 +44,11 @@ try {
     $stmt_wishlist->execute([$usuario['id']]);
     $wishlist = $stmt_wishlist->fetchAll(PDO::FETCH_ASSOC);
     
+    // Obtener transacciones del usuario
+    $stmt_transacciones = $pdo->prepare("SELECT * FROM transacciones WHERE usuario_id = ? ORDER BY fecha DESC");
+    $stmt_transacciones->execute([$usuario['id']]);
+    $transacciones = $stmt_transacciones->fetchAll(PDO::FETCH_ASSOC);
+    
 } catch(PDOException $e) {
     $error = 'Error al obtener información del usuario';
 }
@@ -50,7 +59,6 @@ if (isset($_GET['updated']) && $_GET['updated'] == 'true') {
 }
 
 $titulo = "Mi Perfil - MGames";
-require_once 'includes/header.php';
 ?>
 
 <!DOCTYPE html>
@@ -59,576 +67,109 @@ require_once 'includes/header.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $titulo; ?></title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/perfil.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #4a4af4;
-            --secondary-color: #ff6600;
-            --dark-color: #333333;
-            --light-color: #f5f5f5;
-            --danger-color: #e74c3c;
-            --success-color: #2ecc71;
-            --border-radius: 8px;
-            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-        }
-        
-        body {
-            background-color: var(--light-color);
-            color: var(--dark-color);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .profile-container {
-            display: flex;
-            max-width: 1200px;
-            margin: 30px auto;
-            gap: 30px;
-            padding: 0 20px;
-        }
-        
-        /* Sidebar Styles */
-        .sidebar {
-            flex: 0 0 280px;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 25px;
-            height: fit-content;
-            position: sticky;
-            top: 30px;
-        }
-        
-        .sidebar h2 {
-            color: var(--primary-color);
-            font-size: 22px;
-            margin-top: 0;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--light-color);
-        }
-        
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .sidebar li {
-            margin-bottom: 5px;
-        }
-        
-        .sidebar .menu-option {
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            color: var(--dark-color);
-            text-decoration: none;
-            border-radius: var(--border-radius);
-            transition: var(--transition);
-            font-weight: 500;
-        }
-        
-        .sidebar .menu-option:hover {
-            background-color: rgba(74, 74, 244, 0.1);
-            color: var(--primary-color);
-        }
-        
-        .sidebar .menu-option.active {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .sidebar .menu-option i {
-            margin-right: 12px;
-            font-size: 18px;
-            width: 24px;
-            text-align: center;
-        }
-        
-        .sidebar .danger {
-            color: var(--danger-color);
-        }
-        
-        .sidebar .danger:hover {
-            background-color: rgba(231, 76, 60, 0.1);
-            color: var(--danger-color);
-        }
-        
-        /* Main Content Styles */
-        .profile-info {
-            flex: 1;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 30px;
-            min-height: 500px;
-        }
-        
-        .profile-info h1 {
-            color: var(--dark-color);
-            font-size: 28px;
-            margin-top: 0;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--light-color);
-        }
-        
-        .profile-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-        
-        .profile-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            font-weight: bold;
-            margin-right: 20px;
-        }
-        
-        .profile-details h2 {
-            margin: 0 0 5px 0;
-            font-size: 24px;
-        }
-        
-        .profile-details p {
-            margin: 0;
-            color: #666;
-        }
-        
-        .profile-badge {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            margin-top: 8px;
-        }
-        
-        /* Form Styles */
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--dark-color);
-        }
-        
-        .input-container {
-            position: relative;
-        }
-        
-        .input-container input,
-        .input-container select,
-        .input-container textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: var(--border-radius);
-            font-size: 16px;
-            transition: var(--transition);
-        }
-        
-        .input-container input:focus,
-        .input-container select:focus,
-        .input-container textarea:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(74, 74, 244, 0.1);
-            outline: none;
-        }
-        
-        .input-container input[readonly] {
-            background-color: #f9f9f9;
-            cursor: not-allowed;
-        }
-        
-        button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: var(--border-radius);
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        button:hover {
-            background-color: #3939d0;
-        }
-        
-        button.secondary {
-            background-color: #f0f0f0;
-            color: var(--dark-color);
-        }
-        
-        button.secondary:hover {
-            background-color: #e0e0e0;
-        }
-        
-        button.danger {
-            background-color: var(--danger-color);
-        }
-        
-        button.danger:hover {
-            background-color: #c0392b;
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        /* Alert Messages */
-        .alert {
-            padding: 15px;
-            border-radius: var(--border-radius);
-            margin-bottom: 20px;
-            font-weight: 500;
-        }
-        
-        .alert-success {
-            background-color: rgba(46, 204, 113, 0.1);
-            border-left: 4px solid var(--success-color);
-            color: var(--success-color);
-        }
-        
-        .alert-error {
-            background-color: rgba(231, 76, 60, 0.1);
-            border-left: 4px solid var(--danger-color);
-            color: var(--danger-color);
-        }
-        
-        /* Card Styles */
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .card {
-            background-color: white;
-            border-radius: var(--border-radius);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: var(--transition);
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .card-image {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-        }
-        
-        .card-content {
-            padding: 15px;
-        }
-        
-        .card-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin: 0 0 10px 0;
-            color: var(--dark-color);
-        }
-        
-        .card-price {
-            font-size: 20px;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin: 10px 0;
-        }
-        
-        .card-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-        }
-        
-        /* Table Styles */
-        .table-container {
-            overflow-x: auto;
-            margin-top: 20px;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-        
-        th {
-            background-color: #f9f9f9;
-            font-weight: 600;
-            color: var(--dark-color);
-        }
-        
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        
-        .status-badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        
-        .status-completed {
-            background-color: rgba(46, 204, 113, 0.1);
-            color: var(--success-color);
-        }
-        
-        .status-processing {
-            background-color: rgba(241, 196, 15, 0.1);
-            color: #f39c12;
-        }
-        
-        .status-cancelled {
-            background-color: rgba(231, 76, 60, 0.1);
-            color: var(--danger-color);
-        }
-        
-        /* Wallet Section */
-        .wallet-card {
-            background: linear-gradient(135deg, #4a4af4, #3939d0);
-            color: white;
-            border-radius: var(--border-radius);
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(74, 74, 244, 0.3);
-        }
-        
-        .wallet-balance {
-            font-size: 36px;
-            font-weight: bold;
-            margin: 15px 0;
-        }
-        
-        .wallet-label {
-            font-size: 14px;
-            opacity: 0.8;
-        }
-        
-        .transaction-list {
-            margin-top: 30px;
-        }
-        
-        .transaction-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .transaction-info {
-            flex: 1;
-        }
-        
-        .transaction-title {
-            font-weight: 500;
-            margin: 0 0 5px 0;
-        }
-        
-        .transaction-date {
-            font-size: 14px;
-            color: #666;
-        }
-        
-        .transaction-amount {
-            font-weight: bold;
-        }
-        
-        .transaction-amount.positive {
-            color: var(--success-color);
-        }
-        
-        .transaction-amount.negative {
-            color: var(--danger-color);
-        }
-        
-        /* Loading Animation */
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 200px;
-        }
-        
-        .loading-spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-radius: 50%;
-            border-top: 4px solid var(--primary-color);
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Responsive Styles */
-        @media (max-width: 992px) {
-            .profile-container {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                flex: none;
-                width: 100%;
-                position: static;
-                margin-bottom: 20px;
-            }
-            
-            .sidebar ul {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-            
-            .sidebar li {
-                margin-bottom: 0;
-            }
-            
-            .sidebar .menu-option {
-                padding: 10px 15px;
-                font-size: 14px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .profile-header {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .profile-avatar {
-                margin-right: 0;
-                margin-bottom: 15px;
-            }
-            
-            .card-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            }
-            
-            .button-group {
-                flex-direction: column;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .profile-info {
-                padding: 20px;
-            }
-            
-            .sidebar ul {
-                flex-direction: column;
-            }
-            
-            .card-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
 </head>
-<body>
+<body class="<?php echo $bodyClass; ?>">
+    <?php require_once 'includes/header.php'; ?>
+
     <div class="content">
         <div class="profile-container">
             <!-- Sidebar con opciones de menú -->
             <div class="sidebar">
-                <h2>Mi Cuenta</h2>
-                <ul>
-                    <li>
-                        <a href="#" class="menu-option active" data-content="ajustes">
-                            <i class="fas fa-user-cog"></i> Ajustes de Cuenta
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="menu-option" data-content="pedidos">
-                            <i class="fas fa-shopping-bag"></i> Mis Pedidos
-                        </a>
-                    </li>
-                    <?php if ($usuario['rol'] !== 'ADMIN'): ?>
-                    <li>
-                        <a href="#" class="menu-option" data-content="wishlist">
-                            <i class="fas fa-heart"></i> Lista de Deseos
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="menu-option" data-content="segunda_mano">
-                            <i class="fas fa-handshake"></i> Segunda Mano
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="menu-option" data-content="billetera">
-                            <i class="fas fa-wallet"></i> Billetera
-                        </a>
-                    </li>
-                    <?php else: ?>
-                    <li>
-                        <a href="panel_admin.php" class="menu-option">
-                            <i class="fas fa-gamepad"></i> Añadir Juegos
-                        </a>
-                    </li>
-                    <?php endif; ?>
-                    <li>
-                        <a href="#" class="menu-option danger" id="logout">
-                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                        </a>
-                    </li>
-                    <?php if ($usuario['rol'] !== 'ADMIN'): ?>
-                    <li>
-                        <a href="#" class="menu-option danger" id="delete-account">
-                            <i class="fas fa-user-times"></i> Eliminar Cuenta
-                        </a>
-                    </li>
-                    <?php endif; ?>
-                </ul>
+                <div class="user-info">
+                    <div class="profile-avatar">
+                        <?php echo strtoupper(substr($usuario['nombre'], 0, 1)); ?>
+                    </div>
+                    <div class="user-details">
+                        <h3><?php echo htmlspecialchars($usuario['nombre'] . ' ' . $usuario['apellido']); ?></h3>
+                        <span class="user-role <?php echo strtolower($usuario['rol']); ?>">
+                            <?php echo htmlspecialchars($usuario['rol']); ?>
+                        </span>
+                    </div>
+                </div>
+                
+                <nav class="profile-nav">
+                    <ul>
+                        <li>
+                            <a href="#" class="menu-option active" data-content="ajustes">
+                                <i class="fas fa-user-cog"></i> Ajustes de Cuenta
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="menu-option" data-content="pedidos">
+                                <i class="fas fa-shopping-bag"></i> Mis Pedidos
+                            </a>
+                        </li>
+                        <?php if ($usuario['rol'] !== 'ADMIN'): ?>
+                        <li>
+                            <a href="#" class="menu-option" data-content="wishlist">
+                                <i class="fas fa-heart"></i> Lista de Deseos
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="menu-option" data-content="segunda_mano">
+                                <i class="fas fa-handshake"></i> Segunda Mano
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="menu-option" data-content="billetera">
+                                <i class="fas fa-wallet"></i> Billetera
+                            </a>
+                        </li>
+                        <?php else: ?>
+                        <li>
+                            <a href="panel_admin.php" class="menu-option">
+                                <i class="fas fa-gamepad"></i> Añadir Juegos
+                            </a>
+                        </li>
+                        <?php endif; ?>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#" class="menu-option danger" id="logout">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                            </a>
+                        </li>
+                        <?php if ($usuario['rol'] !== 'ADMIN'): ?>
+                        <li>
+                            <a href="#" class="menu-option danger" id="delete-account">
+                                <i class="fas fa-user-times"></i> Eliminar Cuenta
+                            </a>
+                        </li>
+                        <?php endif; ?>
+                    </ul>
+                </nav>
             </div>
 
             <!-- Contenido principal -->
-            <div class="profile-info" id="dynamic-content">
+            <div class="profile-content" id="dynamic-content">
                 <!-- El contenido se cargará dinámicamente con JavaScript -->
                 <div class="loading">
                     <div class="loading-spinner"></div>
+                    <p>Cargando...</p>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Modal para mensajes de éxito o error -->
+    <div id="notification-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="modal-message"></div>
+        </div>
+    </div>
+
+    <?php require_once 'includes/footer.php'; ?>
+
     <script>
         $(document).ready(function() {
+            // Variable para almacenar la sección actual
+            let currentSection = 'ajustes';
+
             // Cargar automáticamente el contenido de "Ajustes de Cuenta" al entrar
             loadContent('ajustes');
 
@@ -644,7 +185,45 @@ require_once 'includes/header.php';
                 $(this).addClass('active');
                 
                 const content = $(this).data('content');
+                currentSection = content; // Actualizar la sección actual
                 loadContent(content);
+            });
+
+            // Verificar si hay un parámetro de error en la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('error')) {
+                const errorMsg = urlParams.get('error');
+                showModal('Error: ' + decodeURIComponent(errorMsg), 'error');
+                // Limpiar la URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+
+            // Función para mostrar el modal con mensajes
+            function showModal(message, type = 'success') {
+                $('#modal-message').html(`
+                    <div class="alert alert-${type}">
+                        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                        ${message}
+                    </div>
+                `);
+                $('#notification-modal').css('display', 'flex');
+                
+                // Cerrar automáticamente después de 3 segundos
+                setTimeout(function() {
+                    $('#notification-modal').css('display', 'none');
+                }, 3000);
+            }
+
+            // Cerrar el modal al hacer clic en la X
+            $('.close-modal').on('click', function() {
+                $('#notification-modal').css('display', 'none');
+            });
+
+            // Cerrar el modal al hacer clic fuera de él
+            $(window).on('click', function(e) {
+                if ($(e.target).is('#notification-modal')) {
+                    $('#notification-modal').css('display', 'none');
+                }
             });
 
             // Función para cargar contenido dinámicamente
@@ -652,282 +231,450 @@ require_once 'includes/header.php';
                 $('#dynamic-content').html(`
                     <div class="loading">
                         <div class="loading-spinner"></div>
+                        <p>Cargando...</p>
                     </div>
                 `);
 
-                // Simulación de carga de contenido (reemplazar con AJAX real si es necesario)
-                setTimeout(() => {
-                    if (content === 'ajustes') {
-                        // Contenido de Ajustes de Cuenta
-                        $('#dynamic-content').html(`
-                            <h1>Ajustes de Cuenta</h1>
-                            
-                            <?php if ($success): ?>
-                            <div class="alert alert-success">
-                                <i class="fas fa-check-circle"></i> <?php echo htmlspecialchars($success); ?>
-                            </div>
-                            <?php endif; ?>
-                            
-                            <?php if ($error): ?>
-                            <div class="alert alert-error">
-                                <i class="fas fa-exclamation-circle"></i> <?php echo htmlspecialchars($error); ?>
-                            </div>
-                            <?php endif; ?>
-                            
-                            <div class="profile-header">
-                                <div class="profile-avatar">
-                                    <?php echo strtoupper(substr($usuario['nombre'], 0, 1)); ?>
+                // Para la billetera, obtenemos los datos actualizados
+                if (content === 'billetera') {
+                    // Obtener los datos más recientes del usuario
+                    $.ajax({
+                        url: 'get_wallet_data.php',
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.error) {
+                                $('#dynamic-content').html(`
+                                    <h1>Mi Billetera</h1>
+                                    <div class="alert alert-error">
+                                        <i class="fas fa-exclamation-circle"></i> ${data.error}
+                                    </div>
+                                `);
+                            } else {
+                                renderBilletera(data.saldo, data.transacciones);
+                            }
+                        },
+                        error: function() {
+                            $('#dynamic-content').html(`
+                                <h1>Mi Billetera</h1>
+                                <div class="alert alert-error">
+                                    <i class="fas fa-exclamation-circle"></i> Error al cargar los datos de la billetera.
                                 </div>
-                                <div class="profile-details">
-                                    <h2><?php echo htmlspecialchars($usuario['nombre'] . ' ' . $usuario['apellido']); ?></h2>
-                                    <p><?php echo htmlspecialchars($usuario['email']); ?></p>
-                                    <div class="profile-badge">
-                                        <?php echo htmlspecialchars($usuario['rol']); ?>
+                            `);
+                        }
+                    });
+                } else {
+                    // Para el resto de contenidos, los renderizamos directamente
+                    setTimeout(function() {
+                        renderContent(content);
+                    }, 300);
+                }
+            }
+
+            // Función para renderizar el contenido de la billetera
+            function renderBilletera(saldo, transacciones) {
+                $('#dynamic-content').html(`
+                    <h1>Mi Billetera</h1>
+                    
+                    <div class="wallet-card">
+                        <div class="wallet-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="wallet-label">Saldo disponible</div>
+                        <div class="wallet-balance">€${parseFloat(saldo).toFixed(2)}</div>
+                        <div class="wallet-label">Última actualización: ${new Date().toLocaleDateString()}</div>
+                    </div>
+
+                    <div class="transaction-forms">
+                        <!-- Formulario para agregar dinero -->
+                        <div class="form-container deposit">
+                            <h3><i class="fas fa-plus-circle"></i> Agregar Dinero</h3>
+                            <form id="deposit-form" class="transaction-form">
+                                <div class="form-group">
+                                    <label for="monto-deposito">Monto:</label>
+                                    <div class="input-container">
+                                        <input type="number" id="monto-deposito" name="monto" placeholder="Monto a agregar" min="1" step="0.01" required>
                                     </div>
                                 </div>
-                            </div>
-                            
-                            <form action="update_profile.php" method="POST">
                                 <div class="form-group">
-                                    <label for="nombre">Nombre:</label>
+                                    <label for="descripcion-deposito">Descripción:</label>
                                     <div class="input-container">
-                                        <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($usuario['nombre']); ?>" required>
+                                        <input type="text" id="descripcion-deposito" name="descripcion" placeholder="Ej: Recarga de saldo" required>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="origen" value="perfil">
+                                <input type="hidden" name="tipo" value="deposito">
+                                <button type="submit" class="btn-deposit">
+                                    <i class="fas fa-plus"></i> Agregar Fondos
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Formulario para retirar dinero -->
+                        <div class="form-container withdraw">
+                            <h3><i class="fas fa-minus-circle"></i> Retirar Dinero</h3>
+                            <form id="withdraw-form" class="transaction-form">
+                                <div class="form-group">
+                                    <label for="monto-retiro">Monto:</label>
+                                    <div class="input-container">
+                                        <input type="number" id="monto-retiro" name="monto" placeholder="Monto a retirar" min="1" max="${saldo}" step="0.01" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="apellido">Apellido:</label>
+                                    <label for="descripcion-retiro">Descripción:</label>
                                     <div class="input-container">
-                                        <input type="text" id="apellido" name="apellido" value="<?php echo htmlspecialchars($usuario['apellido']); ?>" required>
+                                        <input type="text" id="descripcion-retiro" name="descripcion" placeholder="Ej: Retiro a cuenta bancaria" required>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="origen" value="perfil">
+                                <button type="submit" class="btn-withdraw">
+                                    <i class="fas fa-minus"></i> Retirar Fondos
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="transaction-list">
+                        <h2><i class="fas fa-history"></i> Historial de Transacciones</h2>
+                        ${transacciones.length === 0 ? 
+                            '<p class="empty-message">No hay transacciones registradas.</p>' : 
+                            transacciones.map(transaccion => `
+                                <div class="transaction-item ${parseFloat(transaccion.monto) < 0 ? 'withdrawal' : 'deposit'}">
+                                    <div class="transaction-info">
+                                        <p class="transaction-title">
+                                            <i class="fas ${parseFloat(transaccion.monto) < 0 ? 'fa-arrow-down' : 'fa-arrow-up'}"></i> 
+                                            ${transaccion.descripcion}
+                                        </p>
+                                        <p class="transaction-date">${transaccion.fecha || 'Fecha no disponible'}</p>
+                                    </div>
+                                    <p class="transaction-amount ${parseFloat(transaccion.monto) >= 0 ? 'positive' : 'negative'}">
+                                        €${parseFloat(transaccion.monto).toFixed(2)}
+                                    </p>
+                                </div>
+                            `).join('')
+                        }
+                    </div>
+                `);
+
+                // Manejar el envío del formulario de depósito con AJAX
+                $('#deposit-form').on('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const formData = $(this).serialize();
+                    
+                    // Mostrar indicador de carga
+                    $(this).find('button').html('<i class="fas fa-spinner fa-spin"></i> Procesando...');
+                    $(this).find('button').prop('disabled', true);
+                    
+                    $.ajax({
+                        url: 'procesar_transaccion.php',
+                        type: 'POST',
+                        data: formData,
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                showModal('Fondos agregados correctamente', 'success');
+                                // Recargar la sección de billetera para mostrar el saldo actualizado
+                                loadContent('billetera');
+                            } else {
+                                showModal(response.message || 'Error al procesar la transacción', 'error');
+                                // Restaurar el botón
+                                $('#deposit-form').find('button').html('<i class="fas fa-plus"></i> Agregar Fondos');
+                                $('#deposit-form').find('button').prop('disabled', false);
+                            }
+                        },
+                        error: function() {
+                            showModal('Error al procesar la transacción', 'error');
+                            // Restaurar el botón
+                            $('#deposit-form').find('button').html('<i class="fas fa-plus"></i> Agregar Fondos');
+                            $('#deposit-form').find('button').prop('disabled', false);
+                        }
+                    });
+                });
+
+                // Manejar el envío del formulario de retiro con AJAX
+                $('#withdraw-form').on('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const formData = $(this).serialize();
+                    
+                    // Mostrar indicador de carga
+                    $(this).find('button').html('<i class="fas fa-spinner fa-spin"></i> Procesando...');
+                    $(this).find('button').prop('disabled', true);
+                    
+                    $.ajax({
+                        url: 'procesar_retiro.php',
+                        type: 'POST',
+                        data: formData,
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                showModal('Fondos retirados correctamente', 'success');
+                                // Recargar la sección de billetera para mostrar el saldo actualizado
+                                loadContent('billetera');
+                            } else {
+                                showModal(response.message || 'Error al procesar el retiro', 'error');
+                                // Restaurar el botón
+                                $('#withdraw-form').find('button').html('<i class="fas fa-minus"></i> Retirar Fondos');
+                                $('#withdraw-form').find('button').prop('disabled', false);
+                            }
+                        },
+                        error: function() {
+                            showModal('Error al procesar el retiro', 'error');
+                            // Restaurar el botón
+                            $('#withdraw-form').find('button').html('<i class="fas fa-minus"></i> Retirar Fondos');
+                            $('#withdraw-form').find('button').prop('disabled', false);
+                        }
+                    });
+                });
+            }
+
+            // Función para renderizar el resto de contenidos
+            function renderContent(content) {
+                if (content === 'ajustes') {
+                    // Contenido de Ajustes de Cuenta
+                    $('#dynamic-content').html(`
+                        <h1>Ajustes de Cuenta</h1>
+                        
+                        <?php if ($success): ?>
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i> <?php echo htmlspecialchars($success); ?>
+                        </div>
+                        <?php endif; ?>
+                        
+                        <?php if ($error): ?>
+                        <div class="alert alert-error">
+                            <i class="fas fa-exclamation-circle"></i> <?php echo htmlspecialchars($error); ?>
+                        </div>
+                        <?php endif; ?>
+                        
+                        <div class="profile-header">
+                            <div class="profile-avatar large">
+                                <?php echo strtoupper(substr($usuario['nombre'], 0, 1)); ?>
+                            </div>
+                            <div class="profile-details">
+                                <h2><?php echo htmlspecialchars($usuario['nombre'] . ' ' . $usuario['apellido']); ?></h2>
+                                <p class="user-email"><?php echo htmlspecialchars($usuario['email']); ?></p>
+                                <div class="profile-badge <?php echo strtolower($usuario['rol']); ?>">
+                                    <?php echo htmlspecialchars($usuario['rol']); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>Información Personal</h3>
+                            <form action="update_profile.php" method="POST" class="profile-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="nombre">Nombre:</label>
+                                        <div class="input-container">
+                                            <i class="fas fa-user"></i>
+                                            <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($usuario['nombre']); ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="apellido">Apellido:</label>
+                                        <div class="input-container">
+                                            <i class="fas fa-user"></i>
+                                            <input type="text" id="apellido" name="apellido" value="<?php echo htmlspecialchars($usuario['apellido']); ?>" required>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email:</label>
                                     <div class="input-container">
+                                        <i class="fas fa-envelope"></i>
                                         <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="rol">Rol:</label>
                                     <div class="input-container">
+                                        <i class="fas fa-user-tag"></i>
                                         <input type="text" id="rol" name="rol" value="<?php echo htmlspecialchars($usuario['rol']); ?>" readonly>
                                     </div>
                                 </div>
                                 
                                 <div class="button-group">
-                                    <button type="submit">Actualizar Información</button>
-                                    <button type="button" class="secondary" id="change-password">Cambiar Contraseña</button>
+                                    <button type="submit" class="btn-primary">
+                                        <i class="fas fa-save"></i> Actualizar Información
+                                    </button>
+                                    <button type="button" class="btn-secondary" id="change-password">
+                                        <i class="fas fa-key"></i> Cambiar Contraseña
+                                    </button>
                                 </div>
                             </form>
-                        `);
+                        </div>
+                    `);
+                    
+                    // Manejar clic en "Cambiar Contraseña"
+                    $('#change-password').on('click', function() {
+                        // Aquí puedes mostrar un modal o redirigir a una página de cambio de contraseña
+                        alert('Funcionalidad de cambio de contraseña');
+                    });
+                    
+                } else if (content === 'wishlist') {
+                    // Contenido de Lista de Deseos - Ajustado para que sea más amplio
+                    let wishlistHTML = `
+                        <h1>Mi Lista de Deseos</h1>
+                    `;
+                    
+                    <?php if (!empty($wishlist)): ?>
+                        wishlistHTML += `<div class="card-grid">`;
                         
-                        // Manejar clic en "Cambiar Contraseña"
-                        $('#change-password').on('click', function() {
-                            // Aquí puedes mostrar un modal o redirigir a una página de cambio de contraseña
-                            alert('Funcionalidad de cambio de contraseña');
-                        });
-                        
-                    } else if (content === 'pedidos') {
-                        // Contenido de Pedidos
-                        let pedidosHTML = `
-                            <h1>Mis Pedidos</h1>
-                            <div class="table-container">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>ID Pedido</th>
-                                            <th>Fecha</th>
-                                            <th>Total</th>
-                                            <th>Estado</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                        `;
-                        
-                        <?php if (!empty($pedidos)): ?>
-                            <?php foreach ($pedidos as $pedido): ?>
-                                pedidosHTML += `
-                                    <tr>
-                                        <td>#<?php echo $pedido['id']; ?></td>
-                                        <td><?php echo htmlspecialchars($pedido['fecha']); ?></td>
-                                        <td>€<?php echo number_format($pedido['total'], 2); ?></td>
-                                        <td>
-                                            <span class="status-badge status-<?php echo strtolower($pedido['estado']); ?>">
-                                                <?php echo htmlspecialchars($pedido['estado']); ?>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <a href="detalle_pedido.php?id=<?php echo $pedido['id']; ?>" class="btn-link">
-                                                <i class="fas fa-eye"></i> Ver detalles
+                        <?php foreach ($wishlist as $producto): ?>
+                            wishlistHTML += `
+                                <div class="product-card">
+                                    <div class="product-image">
+                                        <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
+                                        <div class="product-actions">
+                                            <a href="producto.php?id=<?php echo $producto['id']; ?>" class="action-btn view">
+                                                <i class="fas fa-eye"></i>
                                             </a>
-                                        </td>
-                                    </tr>
-                                `;
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            pedidosHTML += `
-                                <tr>
-                                    <td colspan="5" style="text-align: center;">No tienes pedidos realizados.</td>
-                                </tr>
-                            `;
-                        <?php endif; ?>
-                        
-                        pedidosHTML += `
-                                    </tbody>
-                                </table>
-                            </div>
-                        `;
-                        
-                        $('#dynamic-content').html(pedidosHTML);
-                        
-                    } else if (content === 'wishlist') {
-                        // Contenido de Lista de Deseos
-                        let wishlistHTML = `
-                            <h1>Mi Lista de Deseos</h1>
-                        `;
-                        
-                        <?php if (!empty($wishlist)): ?>
-                            wishlistHTML += `<div class="card-grid">`;
-                            
-                            <?php foreach ($wishlist as $producto): ?>
-                                wishlistHTML += `
-                                    <div class="card">
-                                        <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" alt="<?php echo htmlspecialchars($producto['nombre']); ?>" class="card-image">
-                                        <div class="card-content">
-                                            <h3 class="card-title"><?php echo htmlspecialchars($producto['nombre']); ?></h3>
-                                            <p class="card-price">€<?php echo number_format($producto['precio'], 2); ?></p>
-                                            <div class="card-actions">
-                                                <a href="producto.php?id=<?php echo $producto['id']; ?>" class="btn-link">
-                                                    <i class="fas fa-eye"></i> Ver
-                                                </a>
-                                                <form method="POST" action="eliminar_deseo.php" style="display: inline;">
-                                                    <input type="hidden" name="producto_id" value="<?php echo $producto['id']; ?>">
-                                                    <button type="submit" class="btn-link danger">
-                                                        <i class="fas fa-trash"></i> Eliminar
-                                                    </button>
-                                                </form>
-                                            </div>
+                                            <form method="POST" action="eliminar_deseo.php" class="action-form">
+                                                <input type="hidden" name="producto_id" value="<?php echo $producto['id']; ?>">
+                                                <button type="submit" class="action-btn remove">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
-                                `;
-                            <?php endforeach; ?>
-                            
-                            wishlistHTML += `</div>`;
-                        <?php else: ?>
-                            wishlistHTML += `
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle"></i> No tienes productos en tu lista de deseos.
+                                    <div class="product-info">
+                                        <h3 class="product-title"><?php echo htmlspecialchars($producto['nombre']); ?></h3>
+                                        <p class="product-price">€<?php echo number_format($producto['precio'], 2); ?></p>
+                                        <a href="producto.php?id=<?php echo $producto['id']; ?>" class="btn-primary btn-sm">
+                                            Ver Detalles
+                                        </a>
+                                    </div>
                                 </div>
+                            `;
+                        <?php endforeach; ?>
+                        
+                        wishlistHTML += `</div>`;
+                    <?php else: ?>
+                        wishlistHTML += `
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <h3>Tu lista de deseos está vacía</h3>
                                 <p>Explora nuestra tienda y añade tus juegos favoritos a la lista de deseos.</p>
-                                <a href="index.php" class="btn-link">
+                                <a href="index.php" class="btn-primary">
                                     <i class="fas fa-shopping-cart"></i> Ir a la tienda
                                 </a>
+                            </div>
+                        `;
+                    <?php endif; ?>
+                    
+                    $('#dynamic-content').html(wishlistHTML);
+                } else if (content === 'pedidos') {
+                    // Contenido de Pedidos
+                    let pedidosHTML = `
+                        <h1>Mis Pedidos</h1>
+                    `;
+                    
+                    <?php if (!empty($pedidos)): ?>
+                        pedidosHTML += `
+                            <div class="card">
+                                <div class="table-container">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID Pedido</th>
+                                                <th>Fecha</th>
+                                                <th>Total</th>
+                                                <th>Estado</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                        `;
+                        
+                        <?php foreach ($pedidos as $pedido): ?>
+                            pedidosHTML += `
+                                <tr>
+                                    <td>#<?php echo $pedido['id']; ?></td>
+                                    <td><?php echo htmlspecialchars($pedido['fecha']); ?></td>
+                                    <td>€<?php echo number_format($pedido['total'], 2); ?></td>
+                                    <td>
+                                        <span class="status-badge status-<?php echo strtolower($pedido['estado']); ?>">
+                                            <?php echo htmlspecialchars($pedido['estado']); ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="detalle_pedido.php?id=<?php echo $pedido['id']; ?>" class="btn-link">
+                                            <i class="fas fa-eye"></i> Ver detalles
+                                        </a>
+                                    </td>
+                                </tr>
                             `;
-                        <?php endif; ?>
+                        <?php endforeach; ?>
                         
-                        $('#dynamic-content').html(wishlistHTML);
-                        
-                    } else if (content === 'segunda_mano') {
-                        // Contenido de Segunda Mano
-                        $('#dynamic-content').html(`
-                            <h1>Mis Productos de Segunda Mano</h1>
-                            
-                            <div class="alert alert-info">
-                                <i class="fas fa-info-circle"></i> Aquí puedes gestionar tus productos de segunda mano.
-                            </div>
-                            
-                            <button id="add-second-hand" class="btn-primary">
-                                <i class="fas fa-plus"></i> Publicar Nuevo Producto
-                            </button>
-                            
-                            <div class="table-container">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Producto</th>
-                                            <th>Precio</th>
-                                            <th>Estado</th>
-                                            <th>Fecha</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="5" style="text-align: center;">No tienes productos de segunda mano publicados.</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        `);
-                        
-                        // Manejar clic en "Publicar Nuevo Producto"
-                        $('#add-second-hand').on('click', function() {
-                            window.location.href = 'publicar_segunda_mano.php';
-                        });
-                        
-                    } else if (content === 'billetera') {
-                        // Contenido de Billetera
-                        $('#dynamic-content').html(`
-                            <h1>Mi Billetera</h1>
-                            
-                            <div class="wallet-card">
-                                <div class="wallet-label">Saldo disponible</div>
-                                <div class="wallet-balance">€50.00</div>
-                                <div class="button-group">
-                                    <button id="add-funds" class="btn-primary">
-                                        <i class="fas fa-plus"></i> Añadir Fondos
-                                    </button>
-                                    <button id="withdraw-funds" class="btn-primary">
-                                        <i class="fas fa-minus"></i> Retirar Fondos
-                                    </button>
+                        pedidosHTML += `
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                            
-                            <div class="transaction-list">
-                                <h2>Historial de Transacciones</h2>
-                                
-                                <div class="transaction-item">
-                                    <div class="transaction-info">
-                                        <h3 class="transaction-title">Compra: The Last of Us Part II</h3>
-                                        <div class="transaction-date">15/04/2023</div>
-                                    </div>
-                                    <div class="transaction-amount negative">-€29.99</div>
+                        `;
+                    <?php else: ?>
+                        pedidosHTML += `
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <i class="fas fa-shopping-bag"></i>
                                 </div>
-                                
-                                <div class="transaction-item">
-                                    <div class="transaction-info">
-                                        <h3 class="transaction-title">Recarga de saldo</h3>
-                                        <div class="transaction-date">10/04/2023</div>
-                                    </div>
-                                    <div class="transaction-amount positive">+€50.00</div>
-                                </div>
-                                
-                                <div class="transaction-item">
-                                    <div class="transaction-info">
-                                        <h3 class="transaction-title">Compra: FIFA 23</h3>
-                                        <div class="transaction-date">01/04/2023</div>
-                                    </div>
-                                    <div class="transaction-amount negative">-€59.99</div>
-                                </div>
+                                <h3>No tienes pedidos realizados</h3>
+                                <p>Cuando realices compras, tus pedidos aparecerán aquí.</p>
+                                <a href="index.php" class="btn-primary">
+                                    <i class="fas fa-shopping-cart"></i> Ir a la tienda
+                                </a>
                             </div>
-                        `);
+                        `;
+                    <?php endif; ?>
+                    
+                    $('#dynamic-content').html(pedidosHTML);
+                    
+                } else if (content === 'segunda_mano') {
+                    // Contenido de Segunda Mano
+                    $('#dynamic-content').html(`
+                        <h1>Mis Productos de Segunda Mano</h1>
                         
-                        // Manejar clics en los botones de la billetera
-                        $('#add-funds').on('click', function() {
-                            alert('Funcionalidad para añadir fondos');
-                        });
-                        
-                        $('#withdraw-funds').on('click', function() {
-                            alert('Funcionalidad para retirar fondos');
-                        });
-                    } else {
-                        // Contenido por defecto o no encontrado
-                        $('#dynamic-content').html(`
-                            <h1>${content.charAt(0).toUpperCase() + content.slice(1).replace(/_/g, ' ')}</h1>
-                            <p>Contenido en desarrollo.</p>
-                        `);
-                    }
-                }, 800); // Tiempo de simulación de carga
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Gestión de Productos</h3>
+                                <button id="add-second-hand" class="btn-primary">
+                                    <i class="fas fa-plus"></i> Publicar Nuevo Producto
+                                </button>
+                            </div>
+                            
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <i class="fas fa-handshake"></i>
+                                </div>
+                                <h3>No tienes productos de segunda mano publicados</h3>
+                                <p>Publica tus juegos usados para venderlos a otros usuarios.</p>
+                            </div>
+                        </div>
+                    `);
+                    
+                    // Manejar clic en "Publicar Nuevo Producto"
+                    $('#add-second-hand').on('click', function() {
+                        window.location.href = 'publicar_segunda_mano.php';
+                    });
+                } else {
+                    // Contenido por defecto o no encontrado
+                    $('#dynamic-content').html(`
+                        <h1>${content.charAt(0).toUpperCase() + content.slice(1).replace(/_/g, ' ')}</h1>
+                        <div class="card">
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <i class="fas fa-tools"></i>
+                                </div>
+                                <h3>Sección en desarrollo</h3>
+                                <p>Esta funcionalidad estará disponible próximamente.</p>
+                            </div>
+                        </div>
+                    `);
+                }
             }
 
             // Manejar clic en "Cerrar Sesión"
@@ -947,8 +694,63 @@ require_once 'includes/header.php';
             });
         });
     </script>
+</style>
+<!-- Botón -->
+<!-- Botón scroll arriba -->
+<button id="scrollToTopBtn" aria-label="Volver arriba">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-up">
+    <polyline points="18 15 12 9 6 15"></polyline>
+  </svg>
+</button>
 
+<!-- Estilos CSS -->
+<style>
+ #scrollToTopBtn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background-color: #0d6efd; /* Azul Bootstrap */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  z-index: 1000;
+}
+
+#scrollToTopBtn:hover {
+  background-color: #0b5ed7;
+  transform: scale(1.1);
+}
+
+#scrollToTopBtn svg {
+  width: 24px;
+  height: 24px;
+}
+</style>
+
+<!-- Script JS -->
+<script>
+ const scrollBtn = document.getElementById('scrollToTopBtn');
+
+window.addEventListener('scroll', () => {
+  scrollBtn.style.display = window.scrollY > 300 ? 'flex' : 'none';
+});
+
+scrollBtn.addEventListener('click', () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+});
+</script>
     <?php require_once 'includes/footer.php'; ?>
 </body>
 </html>
-

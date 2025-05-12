@@ -49,4 +49,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     handleError("Método de solicitud no válido");
 }
+
 ?>

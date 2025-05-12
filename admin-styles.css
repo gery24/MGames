@@ -1,0 +1,118 @@
+/* Estilos específicos para el admin badge */
+.admin-badge {
+    background-color: #ff0000; /* Fondo rojo */
+    color: white !important; /* Texto blanco con !important para asegurar que se aplique */
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    margin-left: 0.5rem;
+    font-weight: bold;
+    display: inline-block; /* Asegura que el badge tenga las dimensiones correctas */
+    line-height: 1; /* Mejora la alineación vertical del texto */
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2); /* Añade un poco de sombra para mejorar la legibilidad */
+  }
+  
+  /* Estilos específicos para administradores */
+  body.admin {
+    background-color: #fff0f0; /* Fondo ligeramente rojizo */
+  }
+  
+  body.admin .sidebar {
+    border-left: 4px solid #ff0000;
+  }
+  
+  body.admin .sidebar h2 {
+    color: #ff0000;
+  }
+  
+  body.admin .profile-info h1 {
+    color: #ff0000;
+  }
+  
+  body.admin .profile-avatar {
+    background-color: #ff0000;
+  }
+  
+  body.admin .profile-badge {
+    background-color: #ff0000;
+  }
+  
+  body.admin .profile-details h2 {
+    color: #ff0000;
+  }
+  
+  body.admin button {
+    background-color: #ff0000;
+  }
+  
+  body.admin button:hover {
+    background-color: #cc0000;
+  }
+  
+  body.admin .form-group label {
+    color: #ff0000;
+  }
+  
+  body.admin .input-container input:focus,
+  body.admin .input-container select:focus,
+  body.admin .input-container textarea:focus {
+    border-color: #ff0000;
+    box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1);
+  }
+  
+  body.admin .wallet-card {
+    background: linear-gradient(135deg, #ff0000, #cc0000);
+    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+  }
+  
+  body.admin .deposit {
+    background-color: rgba(255, 0, 0, 0.03);
+    border-top: 4px solid #ff0000;
+  }
+  
+  body.admin .deposit h3 {
+    color: #ff0000;
+  }
+  
+  body.admin .btn-deposit {
+    background-color: #ff0000;
+  }
+  
+  body.admin .btn-deposit:hover {
+    background-color: #cc0000;
+  }
+  
+  body.admin .loading-spinner {
+    border-top: 4px solid #ff0000;
+  }
+  
+  body.admin th {
+    color: #ff0000;
+    background-color: rgba(255, 0, 0, 0.05);
+  }
+  
+  body.admin tr:hover {
+    background-color: rgba(255, 0, 0, 0.05);
+  }
+  
+  body.admin .sidebar .menu-option:hover {
+    background-color: rgba(255, 0, 0, 0.1);
+    color: #ff0000;
+  }
+  
+  body.admin .sidebar .menu-option.active {
+    background-color: #ff0000;
+    color: white;
+  }
+  
+  body.admin .card {
+    border: 1px solid #ff0000;
+  }
+  
+  body.admin .card-title {
+    color: #ff0000;
+  }
+  
+  body.admin .card-price {
+    color: #ff0000;
+  }  

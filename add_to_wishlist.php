@@ -60,7 +60,6 @@ try {
     $stmt = $pdo->prepare("INSERT INTO lista_deseos (usuario_id, producto_id, fecha_agregado) VALUES (?, ?, NOW())");
     $stmt->execute([$usuario_id, $producto_id]);
 
-    $response['success'] = true;
     $response['message'] = 'Producto añadido a la lista de deseos';
     echo json_encode($response);
 
@@ -69,4 +68,4 @@ try {
     echo json_encode($response);
 }
 ?>
-
+ 

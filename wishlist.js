@@ -201,4 +201,3 @@ document.addEventListener("DOMContentLoaded", () => {
     window.initWishlistButtons = setupWishlistButtons
   })
   
-  

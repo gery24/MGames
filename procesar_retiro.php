@@ -49,20 +49,34 @@ if ($monto <= 0) {
     exit;
 }
 
+// Verificar si el usuario tiene saldo suficiente
+if ($_SESSION['usuario']['cartera'] < $monto) {
+    // Responder con JSON para solicitudes AJAX
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Saldo insuficiente']);
+        exit;
+    }
+    
+    // Redirección normal para solicitudes no-AJAX
+    header('Location: perfil.php?error=' . urlencode('Saldo insuficiente'));
+    exit;
+}
+
 try {
     // Iniciar transacción
     $pdo->beginTransaction();
     
-    // Registrar la transacción
+    // Registrar la transacción (monto negativo para retiros)
     $stmt = $pdo->prepare("INSERT INTO transacciones (usuario_id, monto, descripcion, fecha) VALUES (?, ?, ?, NOW())");
-    $stmt->execute([$usuarioId, $monto, $descripcion]);
+    $stmt->execute([$usuarioId, -$monto, $descripcion]);
     
     // Actualizar el saldo del usuario
-    $stmt = $pdo->prepare("UPDATE usuarios SET cartera = cartera + ? WHERE id = ?");
+    $stmt = $pdo->prepare("UPDATE usuarios SET cartera = cartera - ? WHERE id = ?");
     $stmt->execute([$monto, $usuarioId]);
     
     // Actualizar el saldo en la sesión
-    $_SESSION['usuario']['cartera'] += $monto;
+    $_SESSION['usuario']['cartera'] -= $monto;
     
     // Confirmar transacción
     $pdo->commit();
@@ -70,7 +84,7 @@ try {
     // Responder con JSON para solicitudes AJAX
     if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
         header('Content-Type: application/json');
-        echo json_encode(['success' => true, 'message' => 'Fondos agregados correctamente', 'saldo' => $_SESSION['usuario']['cartera']]);
+        echo json_encode(['success' => true, 'message' => 'Fondos retirados correctamente', 'saldo' => $_SESSION['usuario']['cartera']]);
         exit;
     }
     
@@ -85,12 +99,12 @@ try {
     // Responder con JSON para solicitudes AJAX
     if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
         header('Content-Type: application/json');
-        echo json_encode(['success' => false, 'message' => 'Error al procesar la transacción: ' . $e->getMessage()]);
+        echo json_encode(['success' => false, 'message' => 'Error al procesar el retiro: ' . $e->getMessage()]);
         exit;
     }
     
     // Redirección normal para solicitudes no-AJAX
-    header('Location: ' . ($origen === 'perfil' ? 'perfil.php' : 'cartera.php') . '?error=' . urlencode('Error al procesar la transacción'));
+    header('Location: ' . ($origen === 'perfil' ? 'perfil.php' : 'cartera.php') . '?error=' . urlencode('Error al procesar el retiro'));
     exit;
 }
 ?>

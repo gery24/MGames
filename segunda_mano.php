@@ -80,14 +80,12 @@ require_once 'includes/header.php';
     <link rel="stylesheet" href="css/segunda_mano.css"> <!-- Estilos específicos -->
 </head>
 <body>
-            
-        </div>
-    </nav>
-
     <div class="content">
-
-        <section class="featured-products">
-            <h1>Productos Disponibles</h1>
+        <section class="segunda-mano-section">
+            <div class="section-header">
+                <h1>Juegos de Segunda Mano</h1>
+                <p>Encuentra grandes títulos a precios increíbles</p>
+            </div>
             
             <!-- Filtros -->
             <div class="filters-container">
@@ -142,14 +140,15 @@ require_once 'includes/header.php';
                 <?php else: ?>
                     <?php foreach($productos as $producto): ?>
                         <div class="product-card">
-                            <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" 
-                                 alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
+                            <div class="product-image">
+                                <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" 
+                                     alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
+                            </div>
                             <div class="product-card-content">
-                                <h3><?php echo htmlspecialchars($producto['nombre']); ?></h3>
-                                <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
-                                <p class="category"><?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>
-                                <p class="estado"><?php echo htmlspecialchars($producto['estado'] ?? 'Usado'); ?></p>
-                                <a href="detalle_segunda_mano.php?id=<?php echo $producto['id']; ?>" class="btn">
+                                <h3 class="product-title"><?php echo htmlspecialchars($producto['nombre']); ?></h3>
+                                <p class="product-price"><?php echo number_format($producto['precio'], 2); ?>€</p>
+                                <p class="product-category"><?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>
+                                <a href="detalle_segunda_mano.php?id=<?php echo $producto['id']; ?>" class="btn-details">
                                     Ver Detalles
                                 </a>
                             </div>
@@ -157,10 +156,72 @@ require_once 'includes/header.php';
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
-            <a href="agregar_segunda_mano.php" class="btn">Añadir Juego de Segunda Mano</a>
+            
+            <div class="add-game-container">
+                <a href="agregar_segunda_mano.php" class="btn-add-game">
+                    <span class="add-icon">+</span>
+                    <span class="add-text">Añadir Juego de Segunda Mano</span>
+                </a>
+            </div>
         </section>
     </div>
+    </style>
+<!-- Botón -->
+<!-- Botón scroll arriba -->
+<button id="scrollToTopBtn" aria-label="Volver arriba">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-up">
+    <polyline points="18 15 12 9 6 15"></polyline>
+  </svg>
+</button>
 
+<!-- Estilos CSS -->
+<style>
+ #scrollToTopBtn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background-color: #0d6efd; /* Azul Bootstrap */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  z-index: 1000;
+}
+
+#scrollToTopBtn:hover {
+  background-color: #0b5ed7;
+  transform: scale(1.1);
+}
+
+#scrollToTopBtn svg {
+  width: 24px;
+  height: 24px;
+}
+</style>
+
+<!-- Script JS -->
+<script>
+ const scrollBtn = document.getElementById('scrollToTopBtn');
+
+window.addEventListener('scroll', () => {
+  scrollBtn.style.display = window.scrollY > 300 ? 'flex' : 'none';
+});
+
+scrollBtn.addEventListener('click', () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+});
+</script>
     <?php require_once 'includes/footer.php'; ?>
 </body>
 </html>
