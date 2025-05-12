@@ -229,8 +229,8 @@ $titulo = "MGames - Tu tienda de videojuegos";
 
     <!-- Explora por Categorías -->
     <section class="categories-section">
+    <h2>Explora por Categorías</h2>
         <div class="container">
-            <h2>Explora por Categorías</h2>
             <div class="categories-grid" id="categories-grid">
                 <?php 
                 // Colores para las categorías
@@ -257,12 +257,11 @@ $titulo = "MGames - Tu tienda de videojuegos";
                     </a>
                 <?php endforeach; ?>
             </div>
-
-            <!-- Botón para mostrar todas las categorías -->
-            <div class="button-group" style="margin-top: 20px; text-align: center;">
+        </div>
+        <!-- Botón para mostrar todas las categorías -->
+        <div class="button-group" style="margin-top: 20px; text-align: center;">
                 <button id="toggle-categories" class="btn btn-primary" onclick="toggleCategories()">Mostrar Todas las Categorías</button>
             </div>
-        </div>
     </section>
 
     <!-- Newsletter Section -->
@@ -1061,16 +1060,21 @@ body.admin .category-badge {
 .categories-section {
     padding: 4rem 0;
     background-color: var(--bg-white);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 .categories-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 1.5rem;
 }
 
 .category-card {
-    height: 180px;
+    flex: 1 1 200px;
     border-radius: var(--radius);
     overflow: hidden;
     position: relative;
@@ -1620,46 +1624,8 @@ body.admin .newsletter {
     }
 </script>
 
-<footer class="site-footer <?php echo $isAdmin ? 'admin-footer' : ''; ?>">
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-logo">
-                <img src="FotosWeb/logo.png" alt="MGames Logo">
-                <h3>MGames</h3>
-                <?php if($isAdmin): ?>
-                    <span class="admin-badge">ADMIN</span>
-                <?php endif; ?>
-            </div>
-            <div class="footer-links">
-                <h4>Enlaces rápidos</h4>
-                <ul>
-                    <li><a href="index.php">Inicio</a></li>
-                    <li><a href="tienda.php">Tienda</a></li>
-                    <li><a href="novedades.php">Novedades</a></li>
-                    <li><a href="contacto.php">Contacto</a></li>
-                </ul>
-            </div>
-            <div class="footer-contact">
-                <h4>Contacto</h4>
-                <p><i class="fas fa-map-marker-alt"></i> Calle Principal 123, Ciudad</p>
-                <p><i class="fas fa-phone"></i> +34 123 456 789</p>
-                <p><i class="fas fa-envelope"></i> info@mgames.com</p>
-            </div>
-            <div class="footer-social">
-                <h4>Síguenos</h4>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; <?php echo date('Y'); ?> MGames. Todos los derechos reservados.</p>
-        </div>
-        </div>
-    </footer>
+<?php require_once 'includes/footer.php'; ?>
+
 
 <style>
 /* Estilos para el footer */
