@@ -8,6 +8,10 @@ if (!isset($_SESSION['usuario'])) {
     exit;
 }
 
+// Verificar si el usuario es admin para añadir la clase 'admin' al body
+$isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN';
+$bodyClass = $isAdmin ? 'admin' : '';
+
 $error = '';
 $success = '';
 $usuario = $_SESSION['usuario'];
@@ -55,7 +59,6 @@ if (isset($_GET['updated']) && $_GET['updated'] == 'true') {
 }
 
 $titulo = "Mi Perfil - MGames";
-require_once 'includes/header.php';
 ?>
 
 <!DOCTYPE html>
@@ -64,740 +67,109 @@ require_once 'includes/header.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $titulo; ?></title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/perfil.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #4a4af4;
-            --secondary-color: #ff6600;
-            --dark-color: #333333;
-            --light-color: #f5f5f5;
-            --danger-color: #e74c3c;
-            --success-color: #2ecc71;
-            --border-radius: 8px;
-            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-        }
-        
-        body {
-            background-color: var(--light-color);
-            color: var(--dark-color);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .profile-container {
-            display: flex;
-            max-width: 1200px;
-            margin: 30px auto;
-            gap: 30px;
-            padding: 0 20px;
-        }
-        
-        /* Sidebar Styles */
-        .sidebar {
-            flex: 0 0 280px;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 25px;
-            height: fit-content;
-            position: sticky;
-            top: 30px;
-        }
-        
-        .sidebar h2 {
-            color: var(--primary-color);
-            font-size: 22px;
-            margin-top: 0;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--light-color);
-        }
-        
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .sidebar li {
-            margin-bottom: 5px;
-        }
-        
-        .sidebar .menu-option {
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            color: var(--dark-color);
-            text-decoration: none;
-            border-radius: var(--border-radius);
-            transition: var(--transition);
-            font-weight: 500;
-        }
-        
-        .sidebar .menu-option:hover {
-            background-color: rgba(74, 74, 244, 0.1);
-            color: var(--primary-color);
-        }
-        
-        .sidebar .menu-option.active {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .sidebar .menu-option i {
-            margin-right: 12px;
-            font-size: 18px;
-            width: 24px;
-            text-align: center;
-        }
-        
-        .sidebar .danger {
-            color: var(--danger-color);
-        }
-        
-        .sidebar .danger:hover {
-            background-color: rgba(231, 76, 60, 0.1);
-            color: var(--danger-color);
-        }
-        
-        /* Main Content Styles */
-        .profile-info {
-            flex: 1;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 30px;
-            min-height: 500px;
-        }
-        
-        .profile-info h1 {
-            color: var(--dark-color);
-            font-size: 28px;
-            margin-top: 0;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--light-color);
-        }
-        
-        .profile-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-        
-        .profile-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            font-weight: bold;
-            margin-right: 20px;
-        }
-        
-        .profile-details h2 {
-            margin: 0 0 5px 0;
-            font-size: 24px;
-        }
-        
-        .profile-details p {
-            margin: 0;
-            color: #666;
-        }
-        
-        .profile-badge {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            margin-top: 8px;
-        }
-        
-        /* Form Styles */
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--dark-color);
-        }
-        
-        .input-container {
-            position: relative;
-        }
-        
-        .input-container input,
-        .input-container select,
-        .input-container textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: var(--border-radius);
-            font-size: 16px;
-            transition: var(--transition);
-        }
-        
-        .input-container input:focus,
-        .input-container select:focus,
-        .input-container textarea:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(74, 74, 244, 0.1);
-            outline: none;
-        }
-        
-        .input-container input[readonly] {
-            background-color: #f9f9f9;
-            cursor: not-allowed;
-        }
-        
-        button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: var(--border-radius);
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        button:hover {
-            background-color: #3939d0;
-        }
-        
-        button.secondary {
-            background-color: #f0f0f0;
-            color: var(--dark-color);
-        }
-        
-        button.secondary:hover {
-            background-color: #e0e0e0;
-        }
-        
-        button.danger {
-            background-color: var(--danger-color);
-        }
-        
-        button.danger:hover {
-            background-color: #c0392b;
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        /* Alert Messages */
-        .alert {
-            padding: 15px;
-            border-radius: var(--border-radius);
-            margin-bottom: 20px;
-            font-weight: 500;
-        }
-        
-        .alert-success {
-            background-color: rgba(46, 204, 113, 0.1);
-            border-left: 4px solid var(--success-color);
-            color: var(--success-color);
-        }
-        
-        .alert-error {
-            background-color: rgba(231, 76, 60, 0.1);
-            border-left: 4px solid var(--danger-color);
-            color: var(--danger-color);
-        }
-        
-        /* Card Styles */
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .card {
-            background-color: white;
-            border-radius: var(--border-radius);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: var(--transition);
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .card-image {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-        }
-        
-        .card-content {
-            padding: 15px;
-        }
-        
-        .card-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin: 0 0 10px 0;
-            color: var(--dark-color);
-        }
-        
-        .card-price {
-            font-size: 20px;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin: 10px 0;
-        }
-        
-        .card-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-        }
-        
-        /* Table Styles */
-        .table-container {
-            overflow-x: auto;
-            margin-top: 20px;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-        
-        th {
-            background-color: #f9f9f9;
-            font-weight: 600;
-            color: var(--dark-color);
-        }
-        
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        
-        .status-badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        
-        .status-completed {
-            background-color: rgba(46, 204, 113, 0.1);
-            color: var(--success-color);
-        }
-        
-        .status-processing {
-            background-color: rgba(241, 196, 15, 0.1);
-            color: #f39c12;
-        }
-        
-        .status-cancelled {
-            background-color: rgba(231, 76, 60, 0.1);
-            color: var(--danger-color);
-        }
-        
-        /* Wallet Section */
-        .wallet-card {
-            background: linear-gradient(135deg, #4a4af4, #3939d0);
-            color: white;
-            border-radius: var(--border-radius);
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(74, 74, 244, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .wallet-card::before {
-            content: '';
-            position: absolute;
-            top: -50px;
-            right: -50px;
-            width: 150px;
-            height: 150px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-        }
-        
-        .wallet-card::after {
-            content: '';
-            position: absolute;
-            bottom: -80px;
-            left: -80px;
-            width: 200px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-        }
-        
-        .wallet-balance {
-            font-size: 36px;
-            font-weight: bold;
-            margin: 15px 0;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .wallet-label {
-            font-size: 14px;
-            opacity: 0.8;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .wallet-icon {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 30px;
-            opacity: 0.2;
-            z-index: 1;
-        }
-        
-        .transaction-list {
-            margin-top: 30px;
-        }
-        
-        .transaction-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px;
-            border-radius: var(--border-radius);
-            margin-bottom: 15px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .transaction-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .transaction-item.withdrawal {
-            background-color: rgba(231, 76, 60, 0.05);
-            border-left: 3px solid var(--danger-color);
-        }
-        
-        .transaction-item.deposit {
-            background-color: rgba(46, 204, 113, 0.05);
-            border-left: 3px solid var(--success-color);
-        }
-        
-        .transaction-info {
-            flex: 1;
-        }
-        
-        .transaction-title {
-            font-weight: 500;
-            margin: 0 0 5px 0;
-        }
-        
-        .transaction-date {
-            font-size: 14px;
-            color: #666;
-        }
-        
-        .transaction-amount {
-            font-weight: bold;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .transaction-amount.positive {
-            color: var(--success-color);
-        }
-        
-        .transaction-amount.positive::before {
-            content: '+';
-            margin-right: 2px;
-        }
-        
-        .transaction-amount.negative {
-            color: var(--danger-color);
-        }
-        
-        /* Transaction Forms */
-        .transaction-forms {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .form-container {
-            flex: 1;
-            padding: 25px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .form-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .form-container h3 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-size: 20px;
-            position: relative;
-            padding-left: 30px;
-        }
-        
-        .form-container h3 i {
-            position: absolute;
-            left: 0;
-            top: 3px;
-        }
-        
-        .deposit {
-            background-color: rgba(74, 74, 244, 0.03);
-            border-top: 4px solid var(--primary-color);
-        }
-        
-        .deposit h3 {
-            color: var(--primary-color);
-        }
-        
-        .withdraw {
-            background-color: rgba(231, 76, 60, 0.03);
-            border-top: 4px solid var(--danger-color);
-        }
-        
-        .withdraw h3 {
-            color: var(--danger-color);
-        }
-        
-        .btn-deposit {
-            background-color: var(--primary-color);
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn-deposit:hover {
-            background-color: #3939d0;
-        }
-        
-        .btn-withdraw {
-            background-color: var(--danger-color);
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn-withdraw:hover {
-            background-color: #c0392b;
-        }
-        
-        /* Loading Animation */
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 200px;
-        }
-        
-        .loading-spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-radius: 50%;
-            border-top: 4px solid var(--primary-color);
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Responsive Styles */
-        @media (max-width: 992px) {
-            .profile-container {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                flex: none;
-                width: 100%;
-                position: static;
-                margin-bottom: 20px;
-            }
-            
-            .sidebar ul {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-            
-            .sidebar li {
-                margin-bottom: 0;
-            }
-            
-            .sidebar .menu-option {
-                padding: 10px 15px;
-                font-size: 14px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .profile-header {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .profile-avatar {
-                margin-right: 0;
-                margin-bottom: 15px;
-            }
-            
-            .card-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            }
-            
-            .button-group {
-                flex-direction: column;
-            }
-            
-            .transaction-forms {
-                flex-direction: column;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .profile-info {
-                padding: 20px;
-            }
-            
-            .sidebar ul {
-                flex-direction: column;
-            }
-            
-            .card-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .transaction-item {
-            animation: fadeIn 0.3s ease-out;
-        }
-        
-        .transaction-item:nth-child(2) { animation-delay: 0.1s; }
-        .transaction-item:nth-child(3) { animation-delay: 0.2s; }
-        .transaction-item:nth-child(4) { animation-delay: 0.3s; }
-        .transaction-item:nth-child(5) { animation-delay: 0.4s; }
-    </style>
 </head>
-<body>
+<body class="<?php echo $bodyClass; ?>">
+    <?php require_once 'includes/header.php'; ?>
+
     <div class="content">
         <div class="profile-container">
             <!-- Sidebar con opciones de menú -->
             <div class="sidebar">
-                <h2>Mi Cuenta</h2>
-                <ul>
-                    <li>
-                        <a href="#" class="menu-option active" data-content="ajustes">
-                            <i class="fas fa-user-cog"></i> Ajustes de Cuenta
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="menu-option" data-content="pedidos">
-                            <i class="fas fa-shopping-bag"></i> Mis Pedidos
-                        </a>
-                    </li>
-                    <?php if ($usuario['rol'] !== 'ADMIN'): ?>
-                    <li>
-                        <a href="#" class="menu-option" data-content="wishlist">
-                            <i class="fas fa-heart"></i> Lista de Deseos
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="menu-option" data-content="segunda_mano">
-                            <i class="fas fa-handshake"></i> Segunda Mano
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="menu-option" data-content="billetera">
-                            <i class="fas fa-wallet"></i> Billetera
-                        </a>
-                    </li>
-                    <?php else: ?>
-                    <li>
-                        <a href="panel_admin.php" class="menu-option">
-                            <i class="fas fa-gamepad"></i> Añadir Juegos
-                        </a>
-                    </li>
-                    <?php endif; ?>
-                    <li>
-                        <a href="#" class="menu-option danger" id="logout">
-                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                        </a>
-                    </li>
-                    <?php if ($usuario['rol'] !== 'ADMIN'): ?>
-                    <li>
-                        <a href="#" class="menu-option danger" id="delete-account">
-                            <i class="fas fa-user-times"></i> Eliminar Cuenta
-                        </a>
-                    </li>
-                    <?php endif; ?>
-                </ul>
+                <div class="user-info">
+                    <div class="profile-avatar">
+                        <?php echo strtoupper(substr($usuario['nombre'], 0, 1)); ?>
+                    </div>
+                    <div class="user-details">
+                        <h3><?php echo htmlspecialchars($usuario['nombre'] . ' ' . $usuario['apellido']); ?></h3>
+                        <span class="user-role <?php echo strtolower($usuario['rol']); ?>">
+                            <?php echo htmlspecialchars($usuario['rol']); ?>
+                        </span>
+                    </div>
+                </div>
+                
+                <nav class="profile-nav">
+                    <ul>
+                        <li>
+                            <a href="#" class="menu-option active" data-content="ajustes">
+                                <i class="fas fa-user-cog"></i> Ajustes de Cuenta
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="menu-option" data-content="pedidos">
+                                <i class="fas fa-shopping-bag"></i> Mis Pedidos
+                            </a>
+                        </li>
+                        <?php if ($usuario['rol'] !== 'ADMIN'): ?>
+                        <li>
+                            <a href="#" class="menu-option" data-content="wishlist">
+                                <i class="fas fa-heart"></i> Lista de Deseos
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="menu-option" data-content="segunda_mano">
+                                <i class="fas fa-handshake"></i> Segunda Mano
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="menu-option" data-content="billetera">
+                                <i class="fas fa-wallet"></i> Billetera
+                            </a>
+                        </li>
+                        <?php else: ?>
+                        <li>
+                            <a href="panel_admin.php" class="menu-option">
+                                <i class="fas fa-gamepad"></i> Añadir Juegos
+                            </a>
+                        </li>
+                        <?php endif; ?>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#" class="menu-option danger" id="logout">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                            </a>
+                        </li>
+                        <?php if ($usuario['rol'] !== 'ADMIN'): ?>
+                        <li>
+                            <a href="#" class="menu-option danger" id="delete-account">
+                                <i class="fas fa-user-times"></i> Eliminar Cuenta
+                            </a>
+                        </li>
+                        <?php endif; ?>
+                    </ul>
+                </nav>
             </div>
 
             <!-- Contenido principal -->
-            <div class="profile-info" id="dynamic-content">
+            <div class="profile-content" id="dynamic-content">
                 <!-- El contenido se cargará dinámicamente con JavaScript -->
                 <div class="loading">
                     <div class="loading-spinner"></div>
+                    <p>Cargando...</p>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Modal para mensajes de éxito o error -->
+    <div id="notification-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="modal-message"></div>
+        </div>
+    </div>
+
+    <?php require_once 'includes/footer.php'; ?>
+
     <script>
         $(document).ready(function() {
+            // Variable para almacenar la sección actual
+            let currentSection = 'ajustes';
+
             // Cargar automáticamente el contenido de "Ajustes de Cuenta" al entrar
             loadContent('ajustes');
 
@@ -813,6 +185,7 @@ require_once 'includes/header.php';
                 $(this).addClass('active');
                 
                 const content = $(this).data('content');
+                currentSection = content; // Actualizar la sección actual
                 loadContent(content);
             });
 
@@ -820,16 +193,45 @@ require_once 'includes/header.php';
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('error')) {
                 const errorMsg = urlParams.get('error');
-                alert('Error: ' + decodeURIComponent(errorMsg));
+                showModal('Error: ' + decodeURIComponent(errorMsg), 'error');
                 // Limpiar la URL
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
+
+            // Función para mostrar el modal con mensajes
+            function showModal(message, type = 'success') {
+                $('#modal-message').html(`
+                    <div class="alert alert-${type}">
+                        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                        ${message}
+                    </div>
+                `);
+                $('#notification-modal').css('display', 'flex');
+                
+                // Cerrar automáticamente después de 3 segundos
+                setTimeout(function() {
+                    $('#notification-modal').css('display', 'none');
+                }, 3000);
+            }
+
+            // Cerrar el modal al hacer clic en la X
+            $('.close-modal').on('click', function() {
+                $('#notification-modal').css('display', 'none');
+            });
+
+            // Cerrar el modal al hacer clic fuera de él
+            $(window).on('click', function(e) {
+                if ($(e.target).is('#notification-modal')) {
+                    $('#notification-modal').css('display', 'none');
+                }
+            });
 
             // Función para cargar contenido dinámicamente
             function loadContent(content) {
                 $('#dynamic-content').html(`
                     <div class="loading">
                         <div class="loading-spinner"></div>
+                        <p>Cargando...</p>
                     </div>
                 `);
 
@@ -887,7 +289,7 @@ require_once 'includes/header.php';
                         <!-- Formulario para agregar dinero -->
                         <div class="form-container deposit">
                             <h3><i class="fas fa-plus-circle"></i> Agregar Dinero</h3>
-                            <form class="transaction-form" method="POST" action="procesar_transaccion.php">
+                            <form id="deposit-form" class="transaction-form">
                                 <div class="form-group">
                                     <label for="monto-deposito">Monto:</label>
                                     <div class="input-container">
@@ -911,7 +313,7 @@ require_once 'includes/header.php';
                         <!-- Formulario para retirar dinero -->
                         <div class="form-container withdraw">
                             <h3><i class="fas fa-minus-circle"></i> Retirar Dinero</h3>
-                            <form class="transaction-form" method="POST" action="procesar_retiro.php">
+                            <form id="withdraw-form" class="transaction-form">
                                 <div class="form-group">
                                     <label for="monto-retiro">Monto:</label>
                                     <div class="input-container">
@@ -922,8 +324,6 @@ require_once 'includes/header.php';
                                     <label for="descripcion-retiro">Descripción:</label>
                                     <div class="input-container">
                                         <input type="text" id="descripcion-retiro" name="descripcion" placeholder="Ej: Retiro a cuenta bancaria" required>
-                                    </div>
-                                </div  required>
                                     </div>
                                 </div>
                                 <input type="hidden" name="origen" value="perfil">
@@ -937,7 +337,7 @@ require_once 'includes/header.php';
                     <div class="transaction-list">
                         <h2><i class="fas fa-history"></i> Historial de Transacciones</h2>
                         ${transacciones.length === 0 ? 
-                            '<p>No hay transacciones registradas.</p>' : 
+                            '<p class="empty-message">No hay transacciones registradas.</p>' : 
                             transacciones.map(transaccion => `
                                 <div class="transaction-item ${parseFloat(transaccion.monto) < 0 ? 'withdrawal' : 'deposit'}">
                                     <div class="transaction-info">
@@ -955,6 +355,78 @@ require_once 'includes/header.php';
                         }
                     </div>
                 `);
+
+                // Manejar el envío del formulario de depósito con AJAX
+                $('#deposit-form').on('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const formData = $(this).serialize();
+                    
+                    // Mostrar indicador de carga
+                    $(this).find('button').html('<i class="fas fa-spinner fa-spin"></i> Procesando...');
+                    $(this).find('button').prop('disabled', true);
+                    
+                    $.ajax({
+                        url: 'procesar_transaccion.php',
+                        type: 'POST',
+                        data: formData,
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                showModal('Fondos agregados correctamente', 'success');
+                                // Recargar la sección de billetera para mostrar el saldo actualizado
+                                loadContent('billetera');
+                            } else {
+                                showModal(response.message || 'Error al procesar la transacción', 'error');
+                                // Restaurar el botón
+                                $('#deposit-form').find('button').html('<i class="fas fa-plus"></i> Agregar Fondos');
+                                $('#deposit-form').find('button').prop('disabled', false);
+                            }
+                        },
+                        error: function() {
+                            showModal('Error al procesar la transacción', 'error');
+                            // Restaurar el botón
+                            $('#deposit-form').find('button').html('<i class="fas fa-plus"></i> Agregar Fondos');
+                            $('#deposit-form').find('button').prop('disabled', false);
+                        }
+                    });
+                });
+
+                // Manejar el envío del formulario de retiro con AJAX
+                $('#withdraw-form').on('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const formData = $(this).serialize();
+                    
+                    // Mostrar indicador de carga
+                    $(this).find('button').html('<i class="fas fa-spinner fa-spin"></i> Procesando...');
+                    $(this).find('button').prop('disabled', true);
+                    
+                    $.ajax({
+                        url: 'procesar_retiro.php',
+                        type: 'POST',
+                        data: formData,
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                showModal('Fondos retirados correctamente', 'success');
+                                // Recargar la sección de billetera para mostrar el saldo actualizado
+                                loadContent('billetera');
+                            } else {
+                                showModal(response.message || 'Error al procesar el retiro', 'error');
+                                // Restaurar el botón
+                                $('#withdraw-form').find('button').html('<i class="fas fa-minus"></i> Retirar Fondos');
+                                $('#withdraw-form').find('button').prop('disabled', false);
+                            }
+                        },
+                        error: function() {
+                            showModal('Error al procesar el retiro', 'error');
+                            // Restaurar el botón
+                            $('#withdraw-form').find('button').html('<i class="fas fa-minus"></i> Retirar Fondos');
+                            $('#withdraw-form').find('button').prop('disabled', false);
+                        }
+                    });
+                });
             }
 
             // Función para renderizar el resto de contenidos
@@ -977,49 +449,62 @@ require_once 'includes/header.php';
                         <?php endif; ?>
                         
                         <div class="profile-header">
-                            <div class="profile-avatar">
+                            <div class="profile-avatar large">
                                 <?php echo strtoupper(substr($usuario['nombre'], 0, 1)); ?>
                             </div>
                             <div class="profile-details">
                                 <h2><?php echo htmlspecialchars($usuario['nombre'] . ' ' . $usuario['apellido']); ?></h2>
-                                <p><?php echo htmlspecialchars($usuario['email']); ?></p>
-                                <div class="profile-badge">
+                                <p class="user-email"><?php echo htmlspecialchars($usuario['email']); ?></p>
+                                <div class="profile-badge <?php echo strtolower($usuario['rol']); ?>">
                                     <?php echo htmlspecialchars($usuario['rol']); ?>
                                 </div>
                             </div>
                         </div>
                         
-                        <form action="update_profile.php" method="POST">
-                            <div class="form-group">
-                                <label for="nombre">Nombre:</label>
-                                <div class="input-container">
-                                    <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($usuario['nombre']); ?>" required>
+                        <div class="card">
+                            <h3>Información Personal</h3>
+                            <form action="update_profile.php" method="POST" class="profile-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="nombre">Nombre:</label>
+                                        <div class="input-container">
+                                            <i class="fas fa-user"></i>
+                                            <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($usuario['nombre']); ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="apellido">Apellido:</label>
+                                        <div class="input-container">
+                                            <i class="fas fa-user"></i>
+                                            <input type="text" id="apellido" name="apellido" value="<?php echo htmlspecialchars($usuario['apellido']); ?>" required>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="apellido">Apellido:</label>
-                                <div class="input-container">
-                                    <input type="text" id="apellido" name="apellido" value="<?php echo htmlspecialchars($usuario['apellido']); ?>" required>
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    <div class="input-container">
+                                        <i class="fas fa-envelope"></i>
+                                        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" required>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email:</label>
-                                <div class="input-container">
-                                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" required>
+                                <div class="form-group">
+                                    <label for="rol">Rol:</label>
+                                    <div class="input-container">
+                                        <i class="fas fa-user-tag"></i>
+                                        <input type="text" id="rol" name="rol" value="<?php echo htmlspecialchars($usuario['rol']); ?>" readonly>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="rol">Rol:</label>
-                                <div class="input-container">
-                                    <input type="text" id="rol" name="rol" value="<?php echo htmlspecialchars($usuario['rol']); ?>" readonly>
+                                
+                                <div class="button-group">
+                                    <button type="submit" class="btn-primary">
+                                        <i class="fas fa-save"></i> Actualizar Información
+                                    </button>
+                                    <button type="button" class="btn-secondary" id="change-password">
+                                        <i class="fas fa-key"></i> Cambiar Contraseña
+                                    </button>
                                 </div>
-                            </div>
-                            
-                            <div class="button-group">
-                                <button type="submit">Actualizar Información</button>
-                                <button type="button" class="secondary" id="change-password">Cambiar Contraseña</button>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     `);
                     
                     // Manejar clic en "Cambiar Contraseña"
@@ -1028,25 +513,83 @@ require_once 'includes/header.php';
                         alert('Funcionalidad de cambio de contraseña');
                     });
                     
+                } else if (content === 'wishlist') {
+                    // Contenido de Lista de Deseos - Ajustado para que sea más amplio
+                    let wishlistHTML = `
+                        <h1>Mi Lista de Deseos</h1>
+                    `;
+                    
+                    <?php if (!empty($wishlist)): ?>
+                        wishlistHTML += `<div class="card-grid">`;
+                        
+                        <?php foreach ($wishlist as $producto): ?>
+                            wishlistHTML += `
+                                <div class="product-card">
+                                    <div class="product-image">
+                                        <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
+                                        <div class="product-actions">
+                                            <a href="producto.php?id=<?php echo $producto['id']; ?>" class="action-btn view">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <form method="POST" action="eliminar_deseo.php" class="action-form">
+                                                <input type="hidden" name="producto_id" value="<?php echo $producto['id']; ?>">
+                                                <button type="submit" class="action-btn remove">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-title"><?php echo htmlspecialchars($producto['nombre']); ?></h3>
+                                        <p class="product-price">€<?php echo number_format($producto['precio'], 2); ?></p>
+                                        <a href="producto.php?id=<?php echo $producto['id']; ?>" class="btn-primary btn-sm">
+                                            Ver Detalles
+                                        </a>
+                                    </div>
+                                </div>
+                            `;
+                        <?php endforeach; ?>
+                        
+                        wishlistHTML += `</div>`;
+                    <?php else: ?>
+                        wishlistHTML += `
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <h3>Tu lista de deseos está vacía</h3>
+                                <p>Explora nuestra tienda y añade tus juegos favoritos a la lista de deseos.</p>
+                                <a href="index.php" class="btn-primary">
+                                    <i class="fas fa-shopping-cart"></i> Ir a la tienda
+                                </a>
+                            </div>
+                        `;
+                    <?php endif; ?>
+                    
+                    $('#dynamic-content').html(wishlistHTML);
                 } else if (content === 'pedidos') {
                     // Contenido de Pedidos
                     let pedidosHTML = `
                         <h1>Mis Pedidos</h1>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>ID Pedido</th>
-                                        <th>Fecha</th>
-                                        <th>Total</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
                     `;
                     
                     <?php if (!empty($pedidos)): ?>
+                        pedidosHTML += `
+                            <div class="card">
+                                <div class="table-container">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID Pedido</th>
+                                                <th>Fecha</th>
+                                                <th>Total</th>
+                                                <th>Estado</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                        `;
+                        
                         <?php foreach ($pedidos as $pedido): ?>
                             pedidosHTML += `
                                 <tr>
@@ -1066,99 +609,50 @@ require_once 'includes/header.php';
                                 </tr>
                             `;
                         <?php endforeach; ?>
+                        
+                        pedidosHTML += `
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        `;
                     <?php else: ?>
                         pedidosHTML += `
-                            <tr>
-                                <td colspan="5" style="text-align: center;">No tienes pedidos realizados.</td>
-                            </tr>
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <i class="fas fa-shopping-bag"></i>
+                                </div>
+                                <h3>No tienes pedidos realizados</h3>
+                                <p>Cuando realices compras, tus pedidos aparecerán aquí.</p>
+                                <a href="index.php" class="btn-primary">
+                                    <i class="fas fa-shopping-cart"></i> Ir a la tienda
+                                </a>
+                            </div>
                         `;
                     <?php endif; ?>
-                    
-                    pedidosHTML += `
-                                </tbody>
-                            </table>
-                        </div>
-                    `;
                     
                     $('#dynamic-content').html(pedidosHTML);
-                    
-                } else if (content === 'wishlist') {
-                    // Contenido de Lista de Deseos
-                    let wishlistHTML = `
-                        <h1>Mi Lista de Deseos</h1>
-                    `;
-                    
-                    <?php if (!empty($wishlist)): ?>
-                        wishlistHTML += `<div class="card-grid">`;
-                        
-                        <?php foreach ($wishlist as $producto): ?>
-                            wishlistHTML += `
-                                <div class="card">
-                                    <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" alt="<?php echo htmlspecialchars($producto['nombre']); ?>" class="card-image">
-                                    <div class="card-content">
-                                        <h3 class="card-title"><?php echo htmlspecialchars($producto['nombre']); ?></h3>
-                                        <p class="card-price">€<?php echo number_format($producto['precio'], 2); ?></p>
-                                        <div class="card-actions">
-                                            <a href="producto.php?id=<?php echo $producto['id']; ?>" class="btn-link">
-                                                <i class="fas fa-eye"></i> Ver
-                                            </a>
-                                            <form method="POST" action="eliminar_deseo.php" style="display: inline;">
-                                                <input type="hidden" name="producto_id" value="<?php echo $producto['id']; ?>">
-                                                <button type="submit" class="btn-link danger">
-                                                    <i class="fas fa-trash"></i> Eliminar
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        <?php endforeach; ?>
-                        
-                        wishlistHTML += `</div>`;
-                    <?php else: ?>
-                        wishlistHTML += `
-                            <div class="alert alert-info">
-                                <i class="fas fa-info-circle"></i> No tienes productos en tu lista de deseos.
-                            </div>
-                            <p>Explora nuestra tienda y añade tus juegos favoritos a la lista de deseos.</p>
-                            <a href="index.php" class="btn-link">
-                                <i class="fas fa-shopping-cart"></i> Ir a la tienda
-                            </a>
-                        `;
-                    <?php endif; ?>
-                    
-                    $('#dynamic-content').html(wishlistHTML);
                     
                 } else if (content === 'segunda_mano') {
                     // Contenido de Segunda Mano
                     $('#dynamic-content').html(`
                         <h1>Mis Productos de Segunda Mano</h1>
                         
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle"></i> Aquí puedes gestionar tus productos de segunda mano.
-                        </div>
-                        
-                        <button id="add-second-hand" class="btn-primary">
-                            <i class="fas fa-plus"></i> Publicar Nuevo Producto
-                        </button>
-                        
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Producto</th>
-                                        <th>Precio</th>
-                                        <th>Estado</th>
-                                        <th>Fecha</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td colspan="5" style="text-align: center;">No tienes productos de segunda mano publicados.</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Gestión de Productos</h3>
+                                <button id="add-second-hand" class="btn-primary">
+                                    <i class="fas fa-plus"></i> Publicar Nuevo Producto
+                                </button>
+                            </div>
+                            
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <i class="fas fa-handshake"></i>
+                                </div>
+                                <h3>No tienes productos de segunda mano publicados</h3>
+                                <p>Publica tus juegos usados para venderlos a otros usuarios.</p>
+                            </div>
                         </div>
                     `);
                     
@@ -1170,7 +664,15 @@ require_once 'includes/header.php';
                     // Contenido por defecto o no encontrado
                     $('#dynamic-content').html(`
                         <h1>${content.charAt(0).toUpperCase() + content.slice(1).replace(/_/g, ' ')}</h1>
-                        <p>Contenido en desarrollo.</p>
+                        <div class="card">
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <i class="fas fa-tools"></i>
+                                </div>
+                                <h3>Sección en desarrollo</h3>
+                                <p>Esta funcionalidad estará disponible próximamente.</p>
+                            </div>
+                        </div>
                     `);
                 }
             }
