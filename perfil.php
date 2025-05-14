@@ -72,6 +72,405 @@ $titulo = "Mi Perfil - MGames";
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/perfil.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Actualizando la tipografía para que coincida con index.php */
+        :root {
+            --primary-color: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary-color: #6366f1;
+            --accent-color: #818cf8;
+            --text-color: #1f2937;
+            --text-light: #6b7280;
+            --bg-light: #f9fafb;
+            --bg-white: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 0.5rem;
+            --admin-color: #ff0000;
+            --admin-dark: #cc0000;
+            --admin-bg-light: #fff0f0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 700;
+            color: var(--text-color);
+            line-height: 1.3;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            color: var(--text-color);
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            margin: 0.5rem auto 0;
+            border-radius: 2px;
+        }
+        
+        /* Estilos adicionales para botones consistentes */
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+        
+        /* Ajuste para los textos de las tarjetas */
+        .card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        
+        .card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .avatar-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+        /* Estilos para el avatar del perfil */
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Versión grande del avatar para la sección de perfil */
+        .profile-avatar.large {
+            width: 80px;
+            height: 80px;
+            font-size: 2rem;
+        }
+
+        /* Si el usuario es admin, cambiamos el color del avatar */
+        body.admin .profile-avatar {
+            background-color: var(--admin-color);
+        }
+
+        /* Estilos para el modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--text-color);
+        }
+
+        /* Estilos para el formulario de cambio de contraseña */
+        .password-form h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 15px;
+        }
+
+        .password-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .password-form label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .password-form .input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-form .input-container i {
+            position: absolute;
+            left: 10px;
+            color: var(--text-light);
+        }
+
+        .password-form input[type="password"],
+        .password-form input[type="text"] {
+            width: 100%;
+            padding: 10px 40px 10px 35px;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius);
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .password-form input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .toggle-password:hover {
+            color: var(--text-color);
+        }
+
+        /* Indicador de fuerza de contraseña */
+        .password-strength {
+            margin-top: 10px;
+        }
+
+        .strength-bar {
+            height: 5px;
+            background-color: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .strength-indicator {
+            height: 100%;
+            width: 0;
+            background-color: #ff4d4d;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        #strength-text {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        /* Botones del formulario */
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+
+        .btn-cancel {
+            background-color: #e5e7eb;
+            color: var(--text-color);
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .btn-cancel:hover {
+            background-color: #d1d5db;
+        }
+
+        /* Alertas */
+        .alert {
+            padding: 15px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert i {
+            font-size: 24px;
+            margin-top: 2px;
+        }
+
+        .alert strong {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .alert p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .alert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+        }
+
+        .alert-success {
+            background-color: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #d1fae5;
+        }
+
+        .alert-success::before {
+            background-color: #10b981;
+        }
+
+        .alert-success i {
+            color: #10b981;
+        }
+
+        .alert-error {
+            background-color: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fee2e2;
+        }
+
+        .alert-error::before {
+            background-color: #ef4444;
+        }
+
+        .alert-error i {
+            color: #ef4444;
+        }
+
+        /* Animación del mensaje de éxito */
+        @keyframes alertSuccess {
+            0% { transform: translateY(-10px); opacity: 0; }
+            10% { transform: translateY(0); opacity: 1; }
+            90% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-10px); opacity: 0; }
+        }
+
+        #notification-modal .alert-success {
+            animation: alertSuccess 5s ease-in-out;
+        }
+
+        /* Estilos específicos para el modal de notificación */
+        .notification-content {
+            max-width: 400px;
+            padding: 20px;
+            border-left: 5px solid #10b981;
+        }
+
+        /* Estilos para el botón de confirmar cambio de contraseña */
+        #password-change-form .btn-primary {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        #password-change-form .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        /* Estilos específicos para el modal de notificación */
+        #notification-modal {
+            z-index: 2000; /* Asegurar que esté por encima de otros modales */
+        }
+        
+        #notification-modal .modal-content {
+            max-width: 450px;
+            text-align: left;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        #notification-modal .alert {
+            margin-bottom: 0;
+            padding: 20px;
+            border-radius: 8px;
+            border-width: 0;
+            border-left-width: 5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body class="<?php echo $bodyClass; ?>">
     <?php require_once 'includes/header.php'; ?>
@@ -157,9 +556,61 @@ $titulo = "Mi Perfil - MGames";
 
     <!-- Modal para mensajes de éxito o error -->
     <div id="notification-modal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" style="max-width: 450px; padding: 25px; background-color: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); margin: 0 20px;">
             <span class="close-modal">&times;</span>
             <div id="modal-message"></div>
+        </div>
+    </div>
+
+    <!-- Modal para cambio de contraseña -->
+    <div id="password-modal" class="modal">
+        <div class="modal-content password-form">
+            <span class="close-modal">&times;</span>
+            <h3><i class="fas fa-key"></i> Cambiar Contraseña</h3>
+            <form id="password-change-form">
+                <div class="form-group">
+                    <label for="current-password">Contraseña Actual:</label>
+                    <div class="input-container">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="current-password" name="current_password" required>
+                        <button type="button" class="toggle-password" data-target="current-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="new-password">Nueva Contraseña:</label>
+                    <div class="input-container">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="new-password" name="new_password" required>
+                        <button type="button" class="toggle-password" data-target="new-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-bar">
+                            <div class="strength-indicator" id="strength-indicator"></div>
+                        </div>
+                        <span id="strength-text">Fuerza de la contraseña</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirmar Nueva Contraseña:</label>
+                    <div class="input-container">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="confirm-password" name="confirm_password" required>
+                        <button type="button" class="toggle-password" data-target="confirm-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Guardar Cambios
+                    </button>
+                    <button type="button" class="btn-cancel close-modal">Cancelar</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -200,30 +651,229 @@ $titulo = "Mi Perfil - MGames";
 
             // Función para mostrar el modal con mensajes
             function showModal(message, type = 'success') {
-                $('#modal-message').html(`
-                    <div class="alert alert-${type}">
-                        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-                        ${message}
-                    </div>
-                `);
+                // Crear el contenido HTML del mensaje
+                let iconClass = type === 'success' ? 'check-circle' : 'exclamation-circle';
+                let alertClass = 'alert-' + type;
+                let alertContent = '';
+                
+                if (typeof message === 'string') {
+                    // Si el mensaje es una cadena simple
+                    alertContent = `
+                        <div class="alert ${alertClass}">
+                            <i class="fas fa-${iconClass}"></i>
+                            <div>${message}</div>
+                        </div>
+                    `;
+                } else if (typeof message === 'object') {
+                    // Si el mensaje es un objeto con título y texto
+                    alertContent = `
+                        <div class="alert ${alertClass}">
+                            <i class="fas fa-${iconClass}"></i>
+                            <div>
+                                <strong>${message.title || ''}</strong>
+                                <p>${message.text || ''}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Actualizar el contenido del modal
+                $('#modal-message').html(alertContent);
+                
+                // Mostrar el modal
                 $('#notification-modal').css('display', 'flex');
                 
-                // Cerrar automáticamente después de 3 segundos
-                setTimeout(function() {
+                // Cerrar automáticamente después de un tiempo
+                const timeout = type === 'success' ? 5000 : 7000; // Más tiempo para errores
+                
+                clearTimeout(window.modalTimeout); // Limpiar timeout previo si existe
+                window.modalTimeout = setTimeout(function() {
                     $('#notification-modal').css('display', 'none');
-                }, 3000);
+                }, timeout);
+                
+                // Registrar en la consola para depuración
+                console.log('Mostrando modal:', type, message);
             }
 
-            // Cerrar el modal al hacer clic en la X
+            // Cerrar modal al hacer clic en la X o fuera de él
             $('.close-modal').on('click', function() {
                 $('#notification-modal').css('display', 'none');
+                $('#password-modal').css('display', 'none');
             });
 
-            // Cerrar el modal al hacer clic fuera de él
             $(window).on('click', function(e) {
-                if ($(e.target).is('#notification-modal')) {
-                    $('#notification-modal').css('display', 'none');
+                if ($(e.target).is('.modal')) {
+                    $('.modal').css('display', 'none');
                 }
+            });
+
+            // Mostrar/ocultar contraseña
+            $('.toggle-password').on('click', function() {
+                const targetId = $(this).data('target');
+                const passwordInput = $('#' + targetId);
+                const icon = $(this).find('i');
+                
+                if (passwordInput.attr('type') === 'password') {
+                    passwordInput.attr('type', 'text');
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    passwordInput.attr('type', 'password');
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+
+            // Validación de fuerza de contraseña
+            $('#new-password').on('input', function() {
+                const password = $(this).val();
+                let strength = 0;
+                let strengthText = '';
+                let color = '';
+
+                // Verificar longitud
+                if (password.length >= 8) strength += 1;
+
+                // Verificar letras mayúsculas y minúsculas
+                if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength += 1;
+
+                // Verificar números
+                if (password.match(/\d/)) strength += 1;
+
+                // Verificar caracteres especiales
+                if (password.match(/[^a-zA-Z0-9]/)) strength += 1;
+
+                // Establecer mensaje y color según la fuerza
+                switch(strength) {
+                    case 0:
+                        strengthText = 'Muy débil';
+                        color = '#ff4d4d';
+                        break;
+                    case 1:
+                        strengthText = 'Débil';
+                        color = '#ffa64d';
+                        break;
+                    case 2:
+                        strengthText = 'Media';
+                        color = '#ffff4d';
+                        break;
+                    case 3:
+                        strengthText = 'Fuerte';
+                        color = '#4dff4d';
+                        break;
+                    case 4:
+                        strengthText = 'Muy fuerte';
+                        color = '#4d4dff';
+                        break;
+                }
+
+                // Actualizar indicador visual
+                $('#strength-indicator').css({
+                    'width': (strength * 25) + '%',
+                    'background-color': color
+                });
+                $('#strength-text').text(strengthText).css('color', color);
+            });
+
+            // Manejar envío del formulario de cambio de contraseña
+            $('#password-change-form').on('submit', function(e) {
+                e.preventDefault();
+                
+                const currentPassword = $('#current-password').val();
+                const newPassword = $('#new-password').val();
+                const confirmPassword = $('#confirm-password').val();
+                
+                // Validar que las contraseñas coincidan
+                if (newPassword !== confirmPassword) {
+                    showModal('Las contraseñas nuevas no coinciden', 'error');
+                    return;
+                }
+                
+                // Deshabilitar el botón durante el proceso
+                const submitBtn = $(this).find('button[type="submit"]');
+                const originalBtnText = submitBtn.html();
+                submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Procesando...').prop('disabled', true);
+                
+                // Enviar datos al servidor
+                $.ajax({
+                    url: 'cambiar_password.php',
+                    type: 'POST',
+                    data: {
+                        current_password: currentPassword,
+                        new_password: newPassword,
+                        confirm_password: confirmPassword
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log('Respuesta recibida:', response); // Depuración
+                        
+                        if (response.success) {
+                            // Cerrar el modal de contraseña
+                            $('#password-modal').css('display', 'none');
+                            
+                            // Mostrar notificación directamente
+                            const notificationModal = $('#notification-modal');
+                            
+                            // Preparar el mensaje de éxito con icono más grande
+                            const successMessage = `
+                                <div class="alert alert-success" style="display: flex; align-items: center; border-left: 5px solid #10b981;">
+                                    <i class="fas fa-check-circle" style="font-size: 2rem; margin-right: 15px; color: #10b981;"></i>
+                                    <div>
+                                        <strong style="font-size: 1.2rem; display: block; margin-bottom: 5px;">¡Contraseña actualizada correctamente!</strong>
+                                        <p>Tu nueva contraseña ha sido guardada de forma segura.</p>
+                                    </div>
+                                </div>
+                            `;
+                            
+                            // Actualizar el contenido y mostrar el modal
+                            $('#modal-message').html(successMessage);
+                            notificationModal.css({
+                                'display': 'flex',
+                                'align-items': 'center',
+                                'justify-content': 'center'
+                            });
+                            
+                            // Registrar en la consola para depuración
+                            console.log('Modal mostrado - Contraseña actualizada:', response);
+                            
+                            // Mantener el modal visible por 5 segundos
+                            setTimeout(function() {
+                                notificationModal.css('display', 'none');
+                            }, 5000);
+                            
+                            // Limpiar el formulario
+                            $('#password-change-form')[0].reset();
+                        } else {
+                            // Mostrar mensaje de error
+                            const errorMessage = `
+                                <div class="alert alert-error" style="display: flex; align-items: center; border-left: 5px solid #ef4444;">
+                                    <i class="fas fa-exclamation-circle" style="font-size: 2rem; margin-right: 15px; color: #ef4444;"></i>
+                                    <div>
+                                        <strong style="font-size: 1.2rem; display: block; margin-bottom: 5px;">Error</strong>
+                                        <p>${response.message || 'Error al cambiar la contraseña'}</p>
+                                    </div>
+                                </div>
+                            `;
+                            
+                            $('#modal-message').html(errorMessage);
+                            $('#notification-modal').css({
+                                'display': 'flex',
+                                'align-items': 'center',
+                                'justify-content': 'center'
+                            });
+                            
+                            // Mantener el modal visible por 7 segundos para mensajes de error
+                            setTimeout(function() {
+                                $('#notification-modal').css('display', 'none');
+                            }, 7000);
+                        }
+                        
+                        // Restaurar el botón
+                        submitBtn.html(originalBtnText).prop('disabled', false);
+                    },
+                    error: function() {
+                        showModal('Error al procesar la solicitud', 'error');
+                        submitBtn.html(originalBtnText).prop('disabled', false);
+                    }
+                });
             });
 
             // Función para cargar contenido dinámicamente
@@ -509,8 +1159,8 @@ $titulo = "Mi Perfil - MGames";
                     
                     // Manejar clic en "Cambiar Contraseña"
                     $('#change-password').on('click', function() {
-                        // Aquí puedes mostrar un modal o redirigir a una página de cambio de contraseña
-                        alert('Funcionalidad de cambio de contraseña');
+                        // Mostrar el modal de cambio de contraseña
+                        $('#password-modal').css('display', 'flex');
                     });
                     
                 } else if (content === 'wishlist') {

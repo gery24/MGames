@@ -1,4 +1,6 @@
 <?php
+// Iniciar sesión para mantener el estado del usuario entre páginas
+session_start();
 
 // Incluir archivo de configuración de la base de datos
 require_once 'config/database.php';
@@ -73,6 +75,7 @@ try {
     <title>MGames - Tienda de Videojuegos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
+    <!-- No añadir estilos que afecten al header aquí -->
 </head>
 
 <!-- Header Mejorado -->
@@ -416,13 +419,28 @@ try {
             --transition: all 0.3s ease;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-
+        /* Eliminados todos los estilos relacionados con el header, incluyendo:
+           - .site-header
+           - .header-container
+           - .logo
+           - .nav-links
+           - .header-actions
+           - .header-icon
+           - .badge
+           - .balance-indicator
+           - .search-container
+           - .search-button
+           - .search-form
+           - .user-profile
+           - .profile-button
+           - .avatar-circle
+           - .username
+           - .dropdown-content
+           - .profile-dropdown
+           - .dropdown-content a
+           - .auth-buttons
+           - .mobile-menu-toggle
+        */
 
         .video-container {
             position: relative;
@@ -445,7 +463,6 @@ try {
             left: 0;
             width: 100%;
             height: 100%;
-            /*background: linear-gradient(to right, rgba(79, 70, 229, 0.8), rgba(99, 102, 241, 0.7));*/
         }
 
         .hero-content {
@@ -623,244 +640,8 @@ try {
             transform: translateX(4px);
         }
 
-        /* ===== HEADER ===== */
-        .site-header {
-            background-color: white;
-            box-shadow: var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem 0;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-        }
-
-        .logo span {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-fill-color: transparent;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-        }
-
-        .nav-links a {
-            font-weight: 600;
-            color: var(--dark);
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: "";
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--primary);
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover::after,
-        .nav-links a.active::after {
-            width: 100%;
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .header-icon {
-            position: relative;
-            font-size: 1.25rem;
-            color: var(--dark);
-            padding: 0.5rem;
-            border-radius: 50%;
-            transition: var(--transition);
-        }
-
-        .header-icon:hover {
-            color: var(--primary);
-            background-color: rgba(126, 34, 206, 0.1);
-        }
-
-        .badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background-color: var(--danger);
-            color: white;
-            font-size: 0.625rem;
-            font-weight: 700;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .balance-indicator {
-            background-color: var(--success);
-            color: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        .search-container {
-            position: relative;
-        }
-
-        .search-button {
-            background: none;
-            border: none;
-            font-size: 1.25rem;
-            color: var(--dark);
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 50%;
-            transition: var(--transition);
-        }
-
-        .search-button:hover {
-            color: var(--primary);
-            background-color: rgba(126, 34, 206, 0.1);
-        }
-
-        .search-form {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            width: 300px;
-            background-color: white;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            box-shadow: var(--shadow-lg);
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            z-index: 10;
-        }
-
-        .search-form input,
-        .search-form select {
-            padding: 0.5rem;
-            border: 1px solid var(--gray-light);
-            border-radius: 0.25rem;
-            font-size: 0.875rem;
-        }
-
-        .search-form button {
-            margin-top: 0.5rem;
-        }
-
-        .user-profile {
-            position: relative;
-        }
-
-        .profile-button {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 0.375rem;
-            transition: var(--transition);
-        }
-
-        .profile-button:hover {
-            background-color: rgba(126, 34, 206, 0.1);
-        }
-
-        .avatar-circle {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background-color: var(--primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-        }
-
-        .username {
-            font-weight: 600;
-            font-size: 0.875rem;
-        }
-
-        .dropdown-content {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            width: 200px;
-            background-color: white;
-            border-radius: 0.5rem;
-            box-shadow: var(--shadow-lg);
-            padding: 0.5rem 0;
-            z-index: 10;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(10px);
-            transition: var(--transition);
-        }
-
-        .profile-dropdown:hover .dropdown-content {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .dropdown-content a {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1rem;
-            font-size: 0.875rem;
-            color: var(--dark);
-            transition: var(--transition);
-        }
-
-        .dropdown-content a:hover {
-            background-color: rgba(126, 34, 206, 0.1);
-            color: var(--primary);
-        }
-
-        .auth-buttons {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .mobile-menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--dark);
-            cursor: pointer;
-        }
+        /* ===== ELIMINO ESTILOS DEL HEADER QUE ENTRAN EN CONFLICTO ===== */
+        /* Se han eliminado los estilos que afectaban al header y causaban conflictos */
 
         /* ===== TIENDA HERO ===== */
         .tienda-hero {
