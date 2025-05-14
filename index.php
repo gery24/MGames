@@ -1379,6 +1379,13 @@ body.admin .newsletter {
     opacity: 1;
     visibility: visible;
 }
+
+/* Añadir estilos para la clase 'initial-four' */
+.categories-grid.initial-four {
+    max-width: 900px; /* Limitar el ancho del contenedor flex */
+    margin: 0 auto; /* Centrar el contenedor flex dentro de su padre */
+    justify-content: center; /* Asegurar que los elementos se centren dentro del flex container */
+}
 </style>
 
 <script>
@@ -1605,6 +1612,13 @@ body.admin .newsletter {
         // Actualizar el texto del botón
         button.innerText = mostrandoTodas ? "Ocultar Categorías" : "Mostrar Todas las Categorías";
         
+        // Añadir/Quitar clase para estilos condicionales
+        if (mostrandoTodas) {
+            categoriesGrid.classList.remove('initial-four');
+        } else {
+            categoriesGrid.classList.add('initial-four');
+        }
+
         // Crear y añadir las tarjetas de categoría
         categoriasAMostrar.forEach(function(cat) {
             const categoryCard = document.createElement('a');
@@ -1625,7 +1639,6 @@ body.admin .newsletter {
 </script>
 
 <?php require_once 'includes/footer.php'; ?>
-
 
 <style>
 /* Estilos para el footer */
@@ -1764,7 +1777,7 @@ body.admin .social-icons a:hover {
     }
 }
 </style>
-</style>
+
 <!-- Botón -->
 <!-- Botón scroll arriba -->
 <button id="scrollToTopBtn" aria-label="Volver arriba">
