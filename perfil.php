@@ -72,6 +72,95 @@ $titulo = "Mi Perfil - MGames";
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/perfil.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Actualizando la tipografía para que coincida con index.php */
+        :root {
+            --primary-color: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary-color: #6366f1;
+            --accent-color: #818cf8;
+            --text-color: #1f2937;
+            --text-light: #6b7280;
+            --bg-light: #f9fafb;
+            --bg-white: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 0.5rem;
+            --admin-color: #ff0000;
+            --admin-dark: #cc0000;
+            --admin-bg-light: #fff0f0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 700;
+            color: var(--text-color);
+            line-height: 1.3;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            color: var(--text-color);
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            margin: 0.5rem auto 0;
+            border-radius: 2px;
+        }
+        
+        /* Estilos adicionales para botones consistentes */
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+        
+        /* Ajuste para los textos de las tarjetas */
+        .card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        
+        .card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .avatar-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+    </style>
 </head>
 <body class="<?php echo $bodyClass; ?>">
     <?php require_once 'includes/header.php'; ?>
