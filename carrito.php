@@ -78,11 +78,20 @@ $titulo = "Carrito - MGames";
                     <div class="products-list">
                         <?php foreach ($productos_en_carrito as $producto): ?>
                             <div class="product-card">
-                                <img src="<?php echo !empty($producto['imagen']) ? htmlspecialchars($producto['imagen']) : 'images/default.jpg'; ?>" 
-                                     alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
+                                <!-- Envuelve la imagen en un contenedor -->
+                                <div class="product-image-container">
+                                    <img src="<?php echo !empty($producto['imagen']) ? htmlspecialchars($producto['imagen']) : 'images/default.jpg'; ?>" 
+                                         alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
+                                    <?php if (isset($producto['descuento']) && $producto['descuento'] > 0): ?>
+                                        <div class="discount-badge">-<?php echo htmlspecialchars($producto['descuento']); ?>%</div>
+                                    <?php endif; ?>
+                                </div>
                                 <div class="product-card-content">
-                                    <h3><?php echo htmlspecialchars($producto['nombre']); ?></h3>
-                                    <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
+                                    <!-- Contenedor para nombre y precio -->
+                                    <div class="product-header">
+                                        <h3><?php echo htmlspecialchars($producto['nombre']); ?></h3>
+                                        <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
+                                    </div>
                                     <div class="quantity">
                                         <label for="quantity-<?php echo $producto['id']; ?>">Cantidad:</label>
                                         <select id="quantity-<?php echo $producto['id']; ?>" 
@@ -729,6 +738,28 @@ body.admin .product-card-content .btn:hover {
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         z-index: 50;
     }
+}
+
+/* Estilos para la etiqueta de descuento */
+.discount-badge {
+    position: absolute;
+    top: 10px; /* Ajusta según sea necesario */
+    left: 10px; /* Ajusta según sea necesario */
+    background-color: #ff0000; /* Color rojo llamativo para descuentos */
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: bold;
+    z-index: 10; /* Asegura que esté sobre la imagen */
+    /* Estilo adicional para mejor visibilidad */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Asegura que el contenedor de la imagen sea relativo para posicionar el badge */
+.product-image-container {
+    position: relative;
+    /* Otros estilos como altura fija y object-fit ya deberían estar definidos */
 }
 </style>
 </body>
