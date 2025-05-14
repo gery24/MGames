@@ -1,5 +1,36 @@
+<?php
 
+// Incluir archivo de configuración de la base de datos
+require_once 'config/database.php';
 
+try {
+    // Verificar la conexión
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    // Obtener categorías con la columna foto
+    $stmt = $pdo->query("SELECT id, nombre, foto FROM categorias");
+    $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Contar el número de productos por categoría
+    $stmt = $pdo->query("SELECT c.id, c.nombre, COUNT(p.id) as count 
+                        FROM categorias c 
+                        LEFT JOIN productos p ON c.id = p.categoria_id 
+                        GROUP BY c.id");
+    $categorias_count = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+} catch(PDOException $e) {
+    // Mostrar información detallada del error en un entorno de desarrollo
+    // En producción, se debería registrar el error y mostrar un mensaje genérico al usuario.
+    echo "Error en la base de datos: " . $e->getMessage();
+    // Opcional: mostrar detalles adicionales solo si es un entorno de desarrollo
+    if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] == '127.0.0.1') { // Ejemplo simple de verificación de entorno local
+         echo "<br>SQL State: " . $e->getCode();
+         // echo "<br>Query: " . $query; // Si $query estuviera definida antes del prepare/execute
+    }
+    die();
+}
+
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -114,57 +145,57 @@
             <div class="container">
                 <h2 class="section-title">Categorías de Juegos</h2>
                 <div class="categorias-grid">
-                <a href="todos_productos.php?categoria=1" class="categoria-card"
-                    style="background-image: url('FotosWeb/categoria-accion.jpg');">
+                <?php 
+                // Colores para las categorías (reutilizamos si es necesario, o definimos aquí si no existen)
+                $colors = [
+                    'from-red-500 to-orange-500',
+                    'from-blue-500 to-indigo-500',
+                    'from-green-500 to-emerald-500',
+                    'from-yellow-500 to-amber-500',
+                    'from-purple-500 to-pink-500',
+                    'from-indigo-500 to-purple-500'
+                ];
+                $i = 0;
+
+                // Generar tarjetas de categoría dinámicamente
+                // Mostrar solo las primeras 3 categorías inicialmente
+                $first_four_categories = array_slice($categorias, 0, 3);
+                foreach($first_four_categories as $cat): 
+                    // Encontrar el conteo para esta categoría desde $categorias_count
+                    $current_cat_count = 0;
+                     if (isset($cat['id'])) { // Asegurarse de que el ID existe antes de buscar el conteo
+                        foreach($categorias_count as $cat_count_data) {
+                            if (isset($cat_count_data['id']) && $cat_count_data['id'] == $cat['id']) {
+                                $current_cat_count = $cat_count_data['count'];
+                                break;
+                            }
+                        }
+                    }
+                    
+                    $color_class = $colors[$i % count($colors)];
+                    $i++;
+                ?>
+                    <a href="todos_productos.php?categoria=<?php echo htmlspecialchars($cat['id'] ?? ''); ?>" 
+                       class="categoria-card <?php echo htmlspecialchars($color_class); ?>"
+                       style="background-image: url('<?php echo htmlspecialchars($cat['foto'] ?? ''); ?>'); background-size: cover; background-position: center;">
                         <div class="categoria-overlay"></div>
                         <div class="categoria-content">
-                            <h3>Acción</h3>
-                            <p>Adrenalina pura</p>
+                             <?php 
+                                // Mostrar el nombre de la categoría solo si no es una de las tarjetas
+                                if (!in_array($cat['nombre'] ?? '', ['Tarjeta Play', 'Tarjeta XBOX', 'Tarjeta Nintendo'])) {
+                                    echo '<h3>' . htmlspecialchars($cat['nombre'] ?? '') . '</h3>';
+                                }
+                            ?>
+                            <p><?php echo $current_cat_count; ?> juegos</p>
                         </div>
                     </a>
-                <a href="todos_productos.php?categoria=2" class="categoria-card"
-                    style="background-image: url('FotosWeb/categoria-aventura.jpg');">
-                        <div class="categoria-overlay"></div>
-                        <div class="categoria-content">
-                            <h3>Aventura</h3>
-                            <p>Explora nuevos mundos</p>
-                        </div>
-                    </a>
-                <a href="todos_productos.php?categoria=3" class="categoria-card"
-                    style="background-image: url('FotosWeb/categoria-rol.jpg');">
-                        <div class="categoria-overlay"></div>
-                        <div class="categoria-content">
-                        <h3>Rol</h3>
-                            <p>Vive tu propia historia</p>
-                        </div>
-                    </a>
-                <a href="todos_productos.php?categoria=4" class="categoria-card"
-                    style="background-image: url('FotosWeb/categoria-deportes.jpg');">
-                        <div class="categoria-overlay"></div>
-                        <div class="categoria-content">
-                            <h3>Deportes</h3>
-                            <p>Compite al máximo nivel</p>
-                        </div>
-                    </a>
-                <a href="todos_productos.php?categoria=5" class="categoria-card"
-                    style="background-image: url('FotosWeb/categoria-estrategia.jpg');">
-                        <div class="categoria-overlay"></div>
-                        <div class="categoria-content">
-                            <h3>Estrategia</h3>
-                            <p>Planifica tu victoria</p>
-                        </div>
-                    </a>
-                <a href="todos_productos.php?categoria=6" class="categoria-card"
-                    style="background-image: url('FotosWeb/categoria-simulacion.jpg');">
-                        <div class="categoria-overlay"></div>
-                        <div class="categoria-content">
-                            <h3>Simulación</h3>
-                            <p>Experiencias realistas</p>
-                        </div>
-                    </a>
+                <?php endforeach; ?>
+                <?php 
+                // Las demás categorías se añadirán vía JavaScript por toggleCategories()
+                ?>
                 </div>
                 <div class="text-center mt-6">
-                    <a href="todos_productos.php" class="btn btn-outline">Ver Todas las Categorías</a>
+                    <a href="#" id="toggle-categories" class="btn btn-outline" onclick="toggleCategories(); return false;">Mostrar Todas las Categorías</a>
                 </div>
             </div>
         </section>
@@ -1866,6 +1897,155 @@
     </footer>
 
     <script>
+        // Guardar todas las categorías en variables JavaScript
+        var todasLasCategorias = <?php echo json_encode($categorias); ?>;
+        var categoriasCount = <?php echo json_encode($categorias_count); ?>;
+        var colors = <?php echo json_encode($colors); ?>; // Pasamos también los colores si no están definidos en JS
+
+        // Variable para controlar el estado
+        var mostrandoTodas = false;
+
+        // Función para alternar la visualización de categorías
+        function toggleCategories() {
+            const categoriesGrid = document.querySelector('.categorias-grid'); // Usamos el selector CSS
+            const button = document.getElementById('toggle-categories');
+
+            // Cambiar el estado
+            mostrandoTodas = !mostrandoTodas;
+
+            // Limpiar el grid actual
+            categoriesGrid.innerHTML = '';
+
+            // Determinar qué categorías mostrar
+            var categoriasAMostrar = mostrandoTodas ? todasLasCategorias : todasLasCategorias.slice(0, 3);
+
+            // Actualizar el texto del botón
+            button.innerText = mostrandoTodas ? "Ocultar Categorías" : "Mostrar Todas las Categorías";
+
+            // Añadir/Quitar clase para estilos condicionales (si es necesario, adaptar estilos CSS)
+            if (mostrandoTodas) {
+                 // categoriesGrid.classList.remove('initial-four'); // Si usaste esta clase en index.php
+            } else {
+                 // categoriesGrid.classList.add('initial-four'); // Si usaste esta clase en index.php
+            }
+
+            // Crear y añadir las tarjetas de categoría
+            categoriasAMostrar.forEach(function(cat) {
+                const categoryCard = document.createElement('a');
+                categoryCard.href = "todos_productos.php?categoria=" + cat.id;
+                // Buscamos el conteo de juegos para esta categoría
+                 let current_cat_count = 0;
+                 const count_data = categoriasCount.find(item => item.id === cat.id);
+                 if (count_data) {
+                     current_cat_count = count_data.count;
+                 }
+
+                // Asignamos la clase de color. Aquí podrías necesitar lógica más avanzada si los colores se asignan por índice en PHP
+                // Por simplicidad, si los colores se corresponden 1 a 1 con el orden de las categorías, podrías hacer algo así:
+                // let color_class = colors[categoriasAMostrar.indexOf(cat) % colors.length];
+                // O si el color ya viene en el objeto cat desde PHP (como en index.php):
+                 let color_class = ''// Aquí deberías obtener la clase de color si no viene en el objeto cat
+                 // Si la clase de color ya está en el objeto cat (como en index.php después de la edición):
+                 if(cat.color) { // Asegúrate de que la columna color se obtenga en la consulta PHP si la necesitas aquí
+                     color_class = cat.color;
+                 } else { // Si no se obtiene la clase de color, puedes asignarla basado en el índice o id si tienes un mapeo
+                     // Lógica para asignar color si no viene en el objeto cat
+                     // Ejemplo simple basado en índice (puede no coincidir con PHP si el orden cambia)
+                     let index = todasLasCategorias.findIndex(item => item.id === cat.id);
+                     if(index !== -1) {
+                         color_class = colors[index % colors.length];
+                     }
+                 }
+
+                categoryCard.className = "categoria-card " + color_class;
+
+                // Añadir estilo de fondo para la imagen y centrarlo
+                categoryCard.style.backgroundImage = "url('" + (cat.foto || '') + "')"; // Usar cat.foto y manejar si es nulo/vacío
+                categoryCard.style.backgroundSize = "cover";
+                categoryCard.style.backgroundPosition = "center";
+                categoryCard.style.minHeight = "150px"; // Asegurar una altura mínima como en el CSS
+
+                let cardContentHTML = `
+                    <div class="categoria-content">
+                `;
+
+                // Mostrar el nombre de la categoría solo si no es una de las tarjetas
+                if (cat.nombre !== 'Tarjeta Play' && cat.nombre !== 'Tarjeta XBOX' && cat.nombre !== 'Tarjeta Nintendo') {
+                     cardContentHTML += `<h3>${cat.nombre}</h3>`;
+                }
+
+                cardContentHTML += `
+                        <p>${current_cat_count} juegos</p>
+                    </div>
+                `;
+
+                categoryCard.innerHTML = cardContentHTML;
+                categoriesGrid.appendChild(categoryCard);
+            });
+
+            // Prevenir que la página se desplace
+            return false;
+        }
+
+        // Ejecutar al cargar la página para mostrar solo las 3 primeras inicialmente
+        document.addEventListener('DOMContentLoaded', function() {
+            // Si quieres que al cargar la página ya se genere la vista de 3 con el script JS:
+            const categoriesGrid = document.querySelector('.categorias-grid');
+            categoriesGrid.innerHTML = ''; // Limpiar el contenido generado por PHP
+            todasLasCategorias.slice(0, 3).forEach(function(cat) { // Usar slice(0, 3) aquí
+                const categoryCard = document.createElement('a');
+                categoryCard.href = "todos_productos.php?categoria=" + cat.id;
+                
+                // Buscamos el conteo de juegos para esta categoría
+                let current_cat_count = 0;
+                const count_data = categoriasCount.find(item => item.id === cat.id);
+                if (count_data) {
+                    current_cat_count = count_data.count;
+                }
+
+                // Asignamos la clase de color (adaptar según cómo obtengas el color en PHP)
+                let color_class = '';
+                if(cat.color) { // Si la clase de color ya está en el objeto cat (como en index.php después de la edición)
+                    color_class = cat.color;
+                } else { // Si no se obtiene la clase de color, puedes asignarla basado en el índice o id si tienes un mapeo
+                    let index = todasLasCategorias.findIndex(item => item.id === cat.id);
+                     if(index !== -1) {
+                         color_class = colors[index % colors.length];
+                     }
+                }
+                categoryCard.className = "categoria-card " + color_class;
+
+                // Añadir estilo de fondo para la imagen y centrarlo
+                categoryCard.style.backgroundImage = "url('" + (cat.foto || '') + "')";
+                categoryCard.style.backgroundSize = "cover";
+                categoryCard.style.backgroundPosition = "center";
+                categoryCard.style.minHeight = "150px";
+
+                let cardContentHTML = `
+                    <div class="categoria-content">
+                `;
+
+                // Mostrar el nombre de la categoría solo si no es una de las tarjetas
+                if (cat.nombre !== 'Tarjeta Play' && cat.nombre !== 'Tarjeta XBOX' && cat.nombre !== 'Tarjeta Nintendo') {
+                    cardContentHTML += `<h3>${cat.nombre}</h3>`;
+                }
+
+                cardContentHTML += `
+                        <p>${current_cat_count} juegos</p>
+                    </div>
+                `;
+
+                categoryCard.innerHTML = cardContentHTML;
+                categoriesGrid.appendChild(categoryCard);
+            });
+            // Asegurarse de que el estado inicial sea false (mostrando solo 3)
+            mostrandoTodas = false;
+            const button = document.getElementById('toggle-categories');
+            if(button) { // Asegurarse de que el botón exista
+                button.innerText = "Mostrar Todas las Categorías";
+            }
+
+        });
 
     </script>
 

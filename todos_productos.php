@@ -7,7 +7,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
     // Obtener categorías
-    $stmt = $pdo->query("SELECT id, nombre FROM categorias");
+    $stmt = $pdo->query("SELECT id, nombre, foto FROM categorias");
     $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Obtener filtros
@@ -315,15 +315,36 @@ $titulo = "MGames - Tu tienda de videojuegos";
                 ];
                 $i = 0;
 
-                // Mostrar solo las primeras 4 categorías inicialmente
-                foreach(array_slice($categorias_count, 0, 4) as $cat): 
+                // Mostrar solo las primeras 4 categorías inicialmente usando el array $categorias
+                // y obteniendo el conteo de $categorias_count
+                $first_four_categories = array_slice($categorias, 0, 4);
+                foreach($first_four_categories as $cat): 
+                    // Encontrar el conteo para esta categoría desde $categorias_count
+                    $current_cat_count = 0;
+                    // Asegurarse de que el ID existe antes de buscar el conteo
+                    if (isset($cat['id'])) {
+                         foreach($categorias_count as $cat_count_data) {
+                            if (isset($cat_count_data['id']) && $cat_count_data['id'] == $cat['id']) {
+                                $current_cat_count = $cat_count_data['count'];
+                                break;
+                            }
+                        }
+                    }
+
                     $color = $colors[$i % count($colors)];
                     $i++;
                 ?>
-                    <a href="todos_productos.php?categoria=<?php echo $cat['id']; ?>" class="category-card <?php echo $color; ?>">
+                    <a href="todos_productos.php?categoria=<?php echo htmlspecialchars($cat['id'] ?? ''); ?>"
+                       class="category-card <?php echo htmlspecialchars($color); ?>"
+                       style="background-image: url('<?php echo htmlspecialchars($cat['foto'] ?? ''); ?>'); background-size: cover; background-position: center;">
                         <div class="category-content">
-                            <h3><?php echo htmlspecialchars($cat['nombre']); ?></h3>
-                            <p><?php echo $cat['count']; ?> juegos</p>
+                             <?php 
+                                // Mostrar el nombre de la categoría solo si no es una de las tarjetas
+                                if (!in_array($cat['nombre'] ?? '', ['Tarjeta Play', 'Tarjeta XBOX', 'Tarjeta Nintendo'])) {
+                                    echo '<h3>' . htmlspecialchars($cat['nombre'] ?? '') . '</h3>';
+                                }
+                            ?>
+                            <p><?php echo $current_cat_count; ?> juegos</p>
                         </div>
                     </a>
                 <?php endforeach; ?>
@@ -1500,12 +1521,24 @@ body {
     var todasLasCategorias = [
         <?php 
         $i = 0;
-        foreach($categorias_count as $cat): 
+        // Iterar sobre $categorias para obtener la foto y nombre, y buscar el conteo en $categorias_count
+        foreach($categorias as $cat): 
+            // Encontrar el conteo para esta categoría desde $categorias_count
+            $current_cat_count = 0;
+            if (isset($cat['id'])) { // Asegurarse de que el ID existe antes de buscar el conteo
+                 foreach($categorias_count as $cat_count_data) {
+                    if (isset($cat_count_data['id']) && $cat_count_data['id'] == $cat['id']) {
+                        $current_cat_count = $cat_count_data['count'];
+                        break;
+                    }
+                }
+            }
         ?>
         {
-            id: <?php echo $cat['id']; ?>,
-            nombre: "<?php echo addslashes(htmlspecialchars($cat['nombre'])); ?>",
-            count: <?php echo $cat['count']; ?>,
+            id: <?php echo $cat['id']; ?>, 
+            nombre: "<?php echo addslashes(htmlspecialchars($cat['nombre'] ?? '')); ?>",
+            count: <?php echo $current_cat_count; ?>, 
+            foto: "<?php echo htmlspecialchars($cat['foto'] ?? ''); ?>",
             color: "<?php echo $colors[$i % count($colors)]; ?>"
         },
         <?php $i++; endforeach; ?>
@@ -1528,22 +1561,45 @@ body {
         categoriesGrid.innerHTML = '';
         
         // Determinar qué categorías mostrar
-        var categoriasAMostrar = mostrandoTodas ? todasLasCategorias : primerasCategorias;
+        var categoriasAMostrar = mostrandoTodas ? todasLasCategorias : todasLasCategorias.slice(0, 4); // Asegurar que la lógica de mostrar 4 o todas sea correcta aquí también
         
         // Actualizar el texto del botón
         button.innerText = mostrandoTodas ? "Ocultar Categorías" : "Mostrar Todas las Categorías";
+
+        // Añadir/Quitar clase para estilos condicionales (opcional, si quieres el centrado de 4 como en index.php)
+        if (mostrandoTodas) {
+            categoriesGrid.classList.remove('initial-four');
+        } else {
+            categoriesGrid.classList.add('initial-four');
+        }
         
         // Crear y añadir las tarjetas de categoría
         categoriasAMostrar.forEach(function(cat) {
             const categoryCard = document.createElement('a');
             categoryCard.href = "todos_productos.php?categoria=" + cat.id;
             categoryCard.className = "category-card " + cat.color;
-            categoryCard.innerHTML = `
+            
+            // Añadir estilo de fondo para la imagen y centrarlo
+            categoryCard.style.backgroundImage = "url('" + (cat.foto || '') + "')"; // Usar cat.foto y manejar si es nulo/vacío
+            categoryCard.style.backgroundSize = "cover";
+            categoryCard.style.backgroundPosition = "center";
+            categoryCard.style.minHeight = "150px"; // Asegurar una altura mínima como en el CSS
+
+            let cardContentHTML = `
                 <div class="category-content">
-                    <h3>${cat.nombre}</h3>
+            `;
+
+            // Mostrar el nombre de la categoría solo si no es una de las tarjetas
+            if (cat.nombre !== 'Tarjeta Play' && cat.nombre !== 'Tarjeta XBOX' && cat.nombre !== 'Tarjeta Nintendo') {
+                 cardContentHTML += `<h3>${cat.nombre}</h3>`;
+            }
+
+            cardContentHTML += `
                     <p>${cat.count} juegos</p>
                 </div>
             `;
+
+            categoryCard.innerHTML = cardContentHTML;
             categoriesGrid.appendChild(categoryCard);
         });
         
