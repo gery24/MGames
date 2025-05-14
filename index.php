@@ -267,7 +267,12 @@ $titulo = "MGames - Tu tienda de videojuegos";
                        class="category-card <?php echo htmlspecialchars($color); ?> <?php echo $isAdmin ? 'admin-category' : ''; ?>"
                        style="background-image: url('<?php echo htmlspecialchars($cat['foto'] ?? ''); ?>'); background-size: cover; background-position: center;">
                         <div class="category-content">
-                            <h3><?php echo htmlspecialchars($cat['nombre'] ?? ''); ?></h3>
+                            <?php 
+                                // Mostrar el nombre de la categoría solo si no es una de las tarjetas
+                                if (!in_array($cat['nombre'] ?? '', ['Tarjeta Play', 'Tarjeta XBOX', 'Tarjeta Nintendo'])) {
+                                    echo '<h3>' . htmlspecialchars($cat['nombre'] ?? '') . '</h3>';
+                                }
+                            ?>
                             <p><?php echo $current_cat_count; ?> juegos</p>
                         </div>
                     </a>
@@ -1627,12 +1632,21 @@ body.admin .newsletter {
             categoryCard.style.backgroundSize = "cover";
             categoryCard.style.backgroundPosition = "center";
 
-            categoryCard.innerHTML = `
+            let cardContentHTML = `
                 <div class="category-content">
-                    <h3>${cat.nombre}</h3>
+            `;
+
+            // Mostrar el nombre de la categoría solo si no es una de las tarjetas
+            if (cat.nombre !== 'Tarjeta Play' && cat.nombre !== 'Tarjeta XBOX' && cat.nombre !== 'Tarjeta Nintendo') {
+                 cardContentHTML += `<h3>${cat.nombre}</h3>`;
+            }
+
+            cardContentHTML += `
                     <p>${cat.count} juegos</p>
                 </div>
             `;
+
+            categoryCard.innerHTML = cardContentHTML;
             categoriesGrid.appendChild(categoryCard);
         });
         
