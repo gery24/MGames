@@ -117,7 +117,7 @@ $titulo = "Carrito - MGames";
                         $productos_db = [];
                         if (!empty($productos_ids_en_carrito)) {
                             $placeholders = implode(',', array_fill(0, count($productos_ids_en_carrito), '?'));
-                            $query_productos_db = "SELECT id, precio, descuento FROM productos WHERE id IN ({$placeholders})";
+                            $query_productos_db = "SELECT id, nombre, precio, descuento FROM productos WHERE id IN ({$placeholders})"; // Añadimos nombre a la consulta
                             $stmt_productos_db = $pdo->prepare($query_productos_db);
                             $stmt_productos_db->execute($productos_ids_en_carrito);
                             // Mapear resultados por ID para fácil acceso
@@ -126,37 +126,69 @@ $titulo = "Carrito - MGames";
                             }
                         }
 
+                        // --- Mostrar resumen por producto ---
                         foreach ($productos_en_carrito as $producto_id => $producto_en_sesion) {
                             $cantidad = isset($producto_en_sesion['cantidad']) ? $producto_en_sesion['cantidad'] : 1;
                             
-                            // Usar precio y descuento de la base de datos si están disponibles
+                            // Usar información de la base de datos si está disponible
                             if (isset($productos_db[$producto_id])) {
                                 $prod_info_db = $productos_db[$producto_id];
+                                $nombre_producto = htmlspecialchars($prod_info_db['nombre']);
                                 $precio_unitario = $prod_info_db['precio'];
                                 $descuento_porcentaje = $prod_info_db['descuento'] ?? 0;
                                 $precio_con_descuento_unitario = $precio_unitario * (1 - ($descuento_porcentaje / 100));
-                                
-                                $subtotal += $precio_con_descuento_unitario * $cantidad;
-                                // Calcular la parte del descuento aplicado en esta línea
-                                $total_descuento_aplicado += ($precio_unitario - $precio_con_descuento_unitario) * $cantidad;
+                                $precio_linea_total = $precio_con_descuento_unitario * $cantidad; // Precio con descuento por cantidad
+
+                                // Acumular subtotal y descuento total aplicado
+                                $subtotal += $precio_linea_total;
+                                $total_descuento_aplicado += ($precio_unitario * $cantidad) - $precio_linea_total; // Descuento total aplicado en esta línea
+
+                                ?>
+                                <div class="summary-item">
+                                    <p><strong><?php echo $nombre_producto; ?></strong> (x<?php echo $cantidad; ?>)</p>
+                                    <p>Precio unitario: €<?php echo number_format($precio_unitario, 2); ?></p>
+                                    <p>Descuento: <?php echo $descuento_porcentaje > 0 ? $descuento_porcentaje . '%' : '0%'; ?></p>
+                                    <?php if ($descuento_porcentaje > 0): ?>
+                                        <p>Precio con descuento: €<?php echo number_format($precio_con_descuento_unitario, 2); ?></p>
+                                    <?php endif; ?>
+                                    <p>Subtotal línea: €<?php echo number_format($precio_linea_total, 2); ?></p>
+                                </div>
+                                <hr> <!-- Separador entre productos -->
+                                <?php
 
                             } else {
-                                // Si por alguna razón no se encuentra en DB, usar el precio de la sesión (menos ideal)
-                                $subtotal += $producto_en_sesion['precio'] * $cantidad;
-                                // Aquí no podemos calcular el descuento si no lo tenemos de la DB o sesión
+                                // Si por alguna razón no se encuentra en DB, mostrar información básica de la sesión
+                                $nombre_producto = htmlspecialchars($producto_en_sesion['nombre'] ?? 'Producto desconocido');
+                                $precio_unitario = $producto_en_sesion['precio'] ?? 0;
+                                $cantidad = $producto_en_sesion['cantidad'] ?? 1;
+                                $precio_linea_total = $precio_unitario * $cantidad;
+                                $subtotal += $precio_linea_total;
+                                // Aquí no podemos calcular el descuento individual si no lo tenemos de la DB o sesión
+                                ?>
+                                <div class="summary-item">
+                                    <p><strong><?php echo $nombre_producto; ?></strong> (x<?php echo $cantidad; ?>)</p>
+                                    <p>Precio unitario: €<?php echo number_format($precio_unitario, 2); ?></p>
+                                    <p>Descuento: N/A</p>
+                                     <p>Subtotal línea: €<?php echo number_format($precio_linea_total, 2); ?></p>
+                                </div>
+                                <hr> <!-- Separador entre productos -->
+                                <?php
                             }
                         }
                         
-                        // Asegurarnos de que el descuento se muestre como un valor absoluto positivo
+                        // Asegurarnos de que el descuento total se muestre como un valor absoluto positivo
                         $total_descuento_aplicado = abs($total_descuento_aplicado);
 
                         $total = $subtotal; // El subtotal ya incluye los precios con descuento
                         ?>
-                        <p><span>Subtotal (con descuentos):</span> <span>€<?php echo number_format($subtotal, 2); ?></span></p>
-                        <?php if ($total_descuento_aplicado > 0): ?>
-                            <p><span>Descuento total aplicado:</span> <span style="color: #10b981;">-€<?php echo number_format($total_descuento_aplicado, 2); ?></span></p>
-                        <?php endif; ?>
-                        <p><span>Total a pagar:</span> <span>€<?php echo number_format($total, 2); ?></span></p>
+                        
+                        <!-- --- Mostrar Totales Finales --- -->
+                        <div class="final-summary">
+                            <?php
+                            echo "<p><strong>Total a pagar: €" . number_format($total, 2) . "</strong></p>";
+                            ?>
+                        </div>
+
                         <button class="btn" onclick="window.location.href='pago.php'">
                             <i class="fas fa-credit-card"></i> Proceder al pago
                         </button>
