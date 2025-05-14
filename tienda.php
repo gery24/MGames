@@ -3,6 +3,9 @@
 // Incluir archivo de configuración de la base de datos
 require_once 'config/database.php';
 
+// Inicializar $ofertas como un array vacío por defecto para evitar warnings
+$ofertas = [];
+
 try {
     // Verificar la conexión
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -17,6 +20,37 @@ try {
                         LEFT JOIN productos p ON c.id = p.categoria_id 
                         GROUP BY c.id");
     $categorias_count = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Obtener productos específicos para la sección de ofertas (IDs 20, 13, 5)
+    $oferta_ids_especificos = [20, 13, 5];
+    // Crear placeholders para la consulta IN()
+    $placeholders_especificos = implode(',', array_fill(0, count($oferta_ids_especificos), '?'));
+    
+    $query_ofertas_especificos = "SELECT p.*, c.nombre as categoria_nombre 
+                                   FROM productos p 
+                                   LEFT JOIN categorias c ON p.categoria_id = c.id
+                                   WHERE p.id IN ({$placeholders_especificos})";
+                      
+    $stmt_ofertas_especificos = $pdo->prepare($query_ofertas_especificos);
+    $stmt_ofertas_especificos->execute($oferta_ids_especificos);
+    $ofertas_especificas = $stmt_ofertas_especificos->fetchAll(PDO::FETCH_ASSOC);
+
+    // Obtener un producto adicional al azar que no esté en la lista específica
+    $query_oferta_random = "SELECT p.*, c.nombre as categoria_nombre 
+                             FROM productos p 
+                             LEFT JOIN categorias c ON p.categoria_id = c.id
+                             WHERE p.id NOT IN ({$placeholders_especificos})
+                             ORDER BY RAND() LIMIT 1";
+                             
+    $stmt_oferta_random = $pdo->prepare($query_oferta_random);
+    $stmt_oferta_random->execute($oferta_ids_especificos); // Pasamos los IDs específicos para el NOT IN
+    $oferta_random = $stmt_oferta_random->fetch(PDO::FETCH_ASSOC);
+
+    // Combinar los resultados
+    $ofertas = $ofertas_especificas;
+    if ($oferta_random) {
+        $ofertas[] = $oferta_random;
+    }
 
 } catch(PDOException $e) {
     // Mostrar información detallada del error en un entorno de desarrollo
@@ -205,10 +239,30 @@ try {
             <div class="container">
                 <h2 class="section-title">Ofertas Imperdibles</h2>
                 <div class="ofertas-grid">
-                <br />
-<b>Warning</b>:  Undefined variable $ofertas in <b>C:\xampp\htdocs\MGames\tienda.php</b> on line <b>226</b><br />
-<br />
-<b>Warning</b>:  foreach() argument must be of type array|object, null given in <b>C:\xampp\htdocs\MGames\tienda.php</b> on line <b>226</b><br />
+                <?php 
+                    $descuento_porcentaje = 10;
+                    foreach($ofertas as $oferta): 
+                        $precio_original = $oferta['precio'];
+                        $precio_descuento = $precio_original * (1 - ($descuento_porcentaje / 100));
+                ?>
+                    <div class="oferta-card">
+                        <div class="oferta-discount-badge">-<?php echo $descuento_porcentaje; ?>%</div>
+                        <div class="oferta-image">
+                            <img src="<?php echo htmlspecialchars($oferta['imagen'] ?? ''); ?>" alt="<?php echo htmlspecialchars($oferta['nombre'] ?? ''); ?>">
+                        </div>
+                        <div class="oferta-content">
+                            <h3><?php echo htmlspecialchars($oferta['nombre'] ?? ''); ?></h3>
+                            <div class="oferta-prices">
+                                <span class="original-price">€<?php echo number_format($precio_original, 2); ?></span>
+                                <span class="discount-price">€<?php echo number_format($precio_descuento, 2); ?></span>
+                            </div>
+                            <div class="oferta-actions">
+                                <a href="producto.php?id=<?php echo htmlspecialchars($oferta['id'] ?? ''); ?>" class="btn btn-primary btn-sm">Ver Detalles</a>
+                                <!-- Aquí podrías añadir un botón de "Añadir al Carrito" si tienes esa funcionalidad -->
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
                 </div>
                 <div class="text-center mt-6">
                     <a href="todos_productos.php?oferta=1" class="btn btn-outline">Ver Todas las Ofertas</a>
