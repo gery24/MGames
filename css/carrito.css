@@ -100,7 +100,7 @@ header h1 {
 /* Contenido del carrito */
 .cart-content {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 3fr 1fr;
   gap: 2rem;
 }
 
