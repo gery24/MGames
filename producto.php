@@ -480,17 +480,17 @@ if (isset($_GET['review_error'])) {
     }
 
     .avatar-circle {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background-color: var(--primary-color);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 1.2rem;
-}
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background-color: var(--primary-color);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
 
 </style>
 
@@ -528,40 +528,6 @@ if (isset($_GET['review_error'])) {
                     if (!empty($plataformas)) {
                         foreach ($plataformas as $plataforma) {
                             echo '<img src="' . htmlspecialchars($plataforma) . '" alt="Plataforma" class="platform-img">';
-        .platform img {
-            width: 20px;
-            height: auto;
-            margin-right: 10px; /* Espacio entre las imágenes */
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <!-- Tarjeta principal del producto -->
-        <div class="card">
-            <div class="product-header">
-                <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" alt="<?php echo htmlspecialchars($producto['nombre']); ?>" class="product-image">
-                <div class="product-info">
-                    <h1 class="product-title"><?php echo htmlspecialchars($producto['nombre']); ?></h1>
-                    <p class="price">
-                        <?php if (isset($producto['descuento']) && $producto['descuento'] > 0): ?>
-                            <span style="text-decoration: line-through; color: #888; font-size: 0.8em; margin-right: 5px;">€<?php echo number_format($producto['precio'], 2); ?></span>
-                            €<?php echo number_format($producto['precio'] * (1 - ($producto['descuento'] / 100)), 2); ?>
-                        <?php else: ?>
-                            €<?php echo number_format($producto['precio'], 2); ?>
-                        <?php endif; ?>
-                    </p>
-                    <div class="category">
-                        <?php echo isset($producto['categoria_nombre']) ? htmlspecialchars($producto['categoria_nombre']) : 'Categoría no disponible'; ?>
-                    </div>
-
-                    <!-- Mostrar plataformas justo debajo de la imagen del juego seleccionado -->
-                    <div class="platform">
-                        <?php
-                        // Mostrar las plataformas
-                        $plataformas = [];
-                        if (!empty($producto['plataforma1'])) {
-                            $plataformas[] = htmlspecialchars($producto['plataforma1']);
                         }
                     } else {
                         echo '<p>No hay plataformas disponibles.</p>'; // Mensaje opcional si no hay plataformas
