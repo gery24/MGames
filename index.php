@@ -1071,6 +1071,9 @@ body.admin .category-badge {
     flex-wrap: wrap;
     justify-content: center;
     gap: 1.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1200px;
 }
 
 .category-card {
