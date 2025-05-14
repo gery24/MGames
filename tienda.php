@@ -381,8 +381,8 @@ try {
             position: absolute;
             top: 0;
             left: 0;
-            width: 2100px;
-            height: 500px;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
         }
 
