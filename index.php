@@ -11,7 +11,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
     // Obtener categorías
-    $stmt = $pdo->query("SELECT id, nombre FROM categorias");
+    $stmt = $pdo->query("SELECT id, nombre, foto FROM categorias");
     $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Obtener filtros
@@ -244,15 +244,30 @@ $titulo = "MGames - Tu tienda de videojuegos";
                 ];
                 $i = 0;
 
-                // Mostrar solo las primeras 4 categorías inicialmente
-                foreach(array_slice($categorias_count, 0, 4) as $cat): 
+                // Mostrar solo las primeras 4 categorías inicialmente usando el array $categorias
+                // y obteniendo el conteo de $categorias_count
+                $first_four_categories = array_slice($categorias, 0, 4);
+                foreach($first_four_categories as $cat): 
+                    // Encontrar el conteo para esta categoría desde $categorias_count
+                    $current_cat_count = 0;
+                    if (isset($cat['id'])) { // Asegurarse de que el ID existe antes de buscar el conteo
+                         foreach($categorias_count as $cat_count_data) {
+                            if (isset($cat_count_data['id']) && $cat_count_data['id'] == $cat['id']) {
+                                $current_cat_count = $cat_count_data['count'];
+                                break;
+                            }
+                        }
+                    }
+
                     $color = $colors[$i % count($colors)];
                     $i++;
                 ?>
-                    <a href="index.php?categoria=<?php echo $cat['id']; ?>" class="category-card <?php echo $color; ?> <?php echo $isAdmin ? 'admin-category' : ''; ?>">
+                    <a href="index.php?categoria=<?php echo htmlspecialchars($cat['id'] ?? ''); ?>"
+                       class="category-card <?php echo htmlspecialchars($color); ?> <?php echo $isAdmin ? 'admin-category' : ''; ?>"
+                       style="background-image: url('<?php echo htmlspecialchars($cat['foto'] ?? ''); ?>'); background-size: cover; background-position: center;">
                         <div class="category-content">
-                            <h3><?php echo htmlspecialchars($cat['nombre']); ?></h3>
-                            <p><?php echo $cat['count']; ?> juegos</p>
+                            <h3><?php echo htmlspecialchars($cat['nombre'] ?? ''); ?></h3>
+                            <p><?php echo $current_cat_count; ?> juegos</p>
                         </div>
                     </a>
                 <?php endforeach; ?>
@@ -1085,8 +1100,10 @@ body.admin .category-badge {
     align-items: flex-end;
     text-decoration: none;
     color: white;
-    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    background-size: cover;
+    background-position: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-height: 150px;
 }
 
 .category-card:hover {
@@ -1268,35 +1285,6 @@ body.admin .newsletter {
 }
 
 /* Video Controls */
-.video-controls {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    display: flex;
-    gap: 10px;
-    z-index: 10;
-}
-
-.video-controls button {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(5px);
-    border: none;
-    color: white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s;
-}
-
-.video-controls button:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-/* Mobile Menu */
 .video-controls {
     position: absolute;
     bottom: 20px;
@@ -1582,20 +1570,26 @@ body.admin .newsletter {
     var todasLasCategorias = [
         <?php 
         $i = 0;
-        foreach($categorias_count as $cat): 
+        foreach($categorias as $cat): 
+            // Encontrar el conteo para esta categoría desde $categorias_count
+            $current_cat_count = 0;
+            foreach($categorias_count as $cat_count_data) {
+                if (isset($cat_count_data['id']) && $cat_count_data['id'] == $cat['id']) {
+                    $current_cat_count = $cat_count_data['count'];
+                    break;
+                }
+            }
         ?>
         {
             id: <?php echo $cat['id']; ?>,
             nombre: "<?php echo addslashes(htmlspecialchars($cat['nombre'])); ?>",
-            count: <?php echo $cat['count']; ?>,
+            count: <?php echo $current_cat_count; ?>,
+            foto: "<?php echo htmlspecialchars($cat['foto']); ?>",
             color: "<?php echo $colors[$i % count($colors)]; ?>"
         },
         <?php $i++; endforeach; ?>
     ];
 
-    // Guardar las 4 primeras categorías
-    var primerasCategorias = todasLasCategorias.slice(0, 4);
-    
     // Variable para controlar el estado
     var mostrandoTodas = false;
 
@@ -1610,7 +1604,7 @@ body.admin .newsletter {
         categoriesGrid.innerHTML = '';
         
         // Determinar qué categorías mostrar
-        var categoriasAMostrar = mostrandoTodas ? todasLasCategorias : primerasCategorias;
+        var categoriasAMostrar = mostrandoTodas ? todasLasCategorias : todasLasCategorias.slice(0, 4);
         
         // Actualizar el texto del botón
         button.innerText = mostrandoTodas ? "Ocultar Categorías" : "Mostrar Todas las Categorías";
@@ -1627,6 +1621,11 @@ body.admin .newsletter {
             const categoryCard = document.createElement('a');
             categoryCard.href = "index.php?categoria=" + cat.id;
             categoryCard.className = "category-card " + cat.color;
+            // Añadir estilo de fondo para la imagen
+            categoryCard.style.backgroundImage = "url('" + cat.foto + "')";
+            categoryCard.style.backgroundSize = "cover";
+            categoryCard.style.backgroundPosition = "center";
+
             categoryCard.innerHTML = `
                 <div class="category-content">
                     <h3>${cat.nombre}</h3>
