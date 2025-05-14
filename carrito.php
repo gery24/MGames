@@ -11,8 +11,8 @@ $productos_en_carrito = $_SESSION['carrito'] ?? [];
 
 // Obtener productos recomendados
 try {
-    // Consulta ajustada a la estructura de la tabla productos
-    $stmt = $pdo->query("SELECT id, nombre, descripcion, precio, imagen, estado, segunda_mano FROM productos ORDER BY RAND() LIMIT 4");
+    // Consulta ajustada a la estructura de la tabla productos (asegurando que incluya descuento)
+    $stmt = $pdo->query("SELECT id, nombre, descripcion, precio, imagen, estado, segunda_mano, descuento FROM productos ORDER BY RAND() LIMIT 4");
     $productos_recomendados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $productos_recomendados = [];
@@ -110,16 +110,53 @@ $titulo = "Carrito - MGames";
                         <h2>Resumen del Pedido</h2>
                         <?php 
                         $subtotal = 0;
-                        foreach ($productos_en_carrito as $producto) {
-                            $cantidad = isset($producto['cantidad']) ? $producto['cantidad'] : 1;
-                            $subtotal += $producto['precio'] * $cantidad;
+                        $total_descuento_aplicado = 0;
+
+                        // Obtener información completa de los productos en el carrito, incluyendo descuento
+                        $productos_ids_en_carrito = array_keys($productos_en_carrito);
+                        $productos_db = [];
+                        if (!empty($productos_ids_en_carrito)) {
+                            $placeholders = implode(',', array_fill(0, count($productos_ids_en_carrito), '?'));
+                            $query_productos_db = "SELECT id, precio, descuento FROM productos WHERE id IN ({$placeholders})";
+                            $stmt_productos_db = $pdo->prepare($query_productos_db);
+                            $stmt_productos_db->execute($productos_ids_en_carrito);
+                            // Mapear resultados por ID para fácil acceso
+                            foreach($stmt_productos_db->fetchAll(PDO::FETCH_ASSOC) as $prod_db) {
+                                $productos_db[$prod_db['id']] = $prod_db;
+                            }
                         }
-                        $descuento = 13.93;
-                        $total = $subtotal - $descuento;
+
+                        foreach ($productos_en_carrito as $producto_id => $producto_en_sesion) {
+                            $cantidad = isset($producto_en_sesion['cantidad']) ? $producto_en_sesion['cantidad'] : 1;
+                            
+                            // Usar precio y descuento de la base de datos si están disponibles
+                            if (isset($productos_db[$producto_id])) {
+                                $prod_info_db = $productos_db[$producto_id];
+                                $precio_unitario = $prod_info_db['precio'];
+                                $descuento_porcentaje = $prod_info_db['descuento'] ?? 0;
+                                $precio_con_descuento_unitario = $precio_unitario * (1 - ($descuento_porcentaje / 100));
+                                
+                                $subtotal += $precio_con_descuento_unitario * $cantidad;
+                                // Calcular la parte del descuento aplicado en esta línea
+                                $total_descuento_aplicado += ($precio_unitario - $precio_con_descuento_unitario) * $cantidad;
+
+                            } else {
+                                // Si por alguna razón no se encuentra en DB, usar el precio de la sesión (menos ideal)
+                                $subtotal += $producto_en_sesion['precio'] * $cantidad;
+                                // Aquí no podemos calcular el descuento si no lo tenemos de la DB o sesión
+                            }
+                        }
+                        
+                        // Asegurarnos de que el descuento se muestre como un valor absoluto positivo
+                        $total_descuento_aplicado = abs($total_descuento_aplicado);
+
+                        $total = $subtotal; // El subtotal ya incluye los precios con descuento
                         ?>
-                        <p><span>Precio oficial:</span> <span>€<?php echo number_format($subtotal, 2); ?></span></p>
-                        <p><span>Descuento:</span> <span>-€<?php echo number_format($descuento, 2); ?></span></p>
-                        <p><span>Total:</span> <span>€<?php echo number_format($total, 2); ?></span></p>
+                        <p><span>Subtotal (con descuentos):</span> <span>€<?php echo number_format($subtotal, 2); ?></span></p>
+                        <?php if ($total_descuento_aplicado > 0): ?>
+                            <p><span>Descuento total aplicado:</span> <span style="color: #10b981;">-€<?php echo number_format($total_descuento_aplicado, 2); ?></span></p>
+                        <?php endif; ?>
+                        <p><span>Total a pagar:</span> <span>€<?php echo number_format($total, 2); ?></span></p>
                         <button class="btn" onclick="window.location.href='pago.php'">
                             <i class="fas fa-credit-card"></i> Proceder al pago
                         </button>

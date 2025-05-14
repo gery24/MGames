@@ -9,7 +9,7 @@ $ofertas = [];
 try {
     // Verificar la conexión
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
+
     // Obtener categorías con la columna foto
     $stmt = $pdo->query("SELECT id, nombre, foto FROM categorias");
     $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -21,45 +21,44 @@ try {
                         GROUP BY c.id");
     $categorias_count = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Obtener productos específicos para la sección de ofertas (IDs 20, 13, 5)
-    $oferta_ids_especificos = [20, 13, 5];
+    // Definir los IDs de los productos específicos que SIEMPRE deben estar en ofertas
+    // Incluimos los IDs 20, 13, 5 y el nuevo ID 16
+    // $oferta_ids_especificos = [20, 13, 5, 16]; // Ya no necesitamos IDs específicos para obtener la lista completa
+
     // Crear placeholders para la consulta IN()
-    $placeholders_especificos = implode(',', array_fill(0, count($oferta_ids_especificos), '?'));
-    
-    $query_ofertas_especificos = "SELECT p.*, c.nombre as categoria_nombre 
-                                   FROM productos p 
-                                   LEFT JOIN categorias c ON p.categoria_id = c.id
-                                   WHERE p.id IN ({$placeholders_especificos})";
-                      
-    $stmt_ofertas_especificos = $pdo->prepare($query_ofertas_especificos);
-    $stmt_ofertas_especificos->execute($oferta_ids_especificos);
-    $ofertas_especificas = $stmt_ofertas_especificos->fetchAll(PDO::FETCH_ASSOC);
+    // $placeholders_especificos = implode(',', array_fill(0, count($oferta_ids_especificos), '?')); // Ya no necesitamos placeholders para IDs específicos
 
-    // Obtener un producto adicional al azar que no esté en la lista específica
-    $query_oferta_random = "SELECT p.*, c.nombre as categoria_nombre 
-                             FROM productos p 
-                             LEFT JOIN categorias c ON p.categoria_id = c.id
-                             WHERE p.id NOT IN ({$placeholders_especificos})
-                             ORDER BY RAND() LIMIT 1";
-                             
-    $stmt_oferta_random = $pdo->prepare($query_oferta_random);
-    $stmt_oferta_random->execute($oferta_ids_especificos); // Pasamos los IDs específicos para el NOT IN
-    $oferta_random = $stmt_oferta_random->fetch(PDO::FETCH_ASSOC);
+    // Obtener productos para la sección de ofertas (TODOS los productos con descuento > 0)
+    $query_ofertas = "SELECT p.*, c.nombre as categoria_nombre 
+                      FROM productos p 
+                      LEFT JOIN categorias c ON p.categoria_id = c.id
+                      WHERE p.descuento > 0"; // Filtrar por productos con descuento > 0
 
-    // Combinar los resultados
-    $ofertas = $ofertas_especificas;
-    if ($oferta_random) {
-        $ofertas[] = $oferta_random;
-    }
+    $stmt_ofertas = $pdo->prepare($query_ofertas);
+    // Ya no pasamos IDs específicos a la ejecución
+    $stmt_ofertas->execute();
+    $ofertas = $stmt_ofertas->fetchAll(PDO::FETCH_ASSOC);
 
-} catch(PDOException $e) {
+    // --- Lógica para añadir un producto aleatorio (ELIMINADA) ---
+
+    // Aplicar descuento fijo del 30% al producto con ID 16 manualmente (siempre que exista en la lista de ofertas) (ELIMINADO)
+    // Esta lógica la mantenemos por si quieres que el ID 16 SIEMPRE tenga 30% en esta sección, independientemente de su valor en la DB (ELIMINADO)
+    // foreach ($ofertas as &$oferta) { // Usar & para modificar el array por referencia (ELIMINADO)
+    //     if (isset($oferta['id']) && $oferta['id'] == 16) { // ELIMINADO
+    //         $oferta['descuento'] = 30; // Aplicar 30% de descuento fijo (ELIMINADO)
+    // No usamos break aquí porque puede que el ID 16 no sea el primero, y queremos aplicar el descuento si aparece. Aunque solo debería aparecer una vez. Si aparece más de una vez, el descuento se aplicará a cada aparición. Si solo quieres que se aplique una vez a la primera aparición, puedes añadir break. Lo dejo sin break por si acaso la consulta trae duplicados (aunque no debería). (ELIMINADO)
+    //     } // ELIMINADO
+    // } // ELIMINADO
+    // unset($oferta); // Romper la referencia del último elemento (ELIMINADO)
+
+} catch (PDOException $e) {
     // Mostrar información detallada del error en un entorno de desarrollo
     // En producción, se debería registrar el error y mostrar un mensaje genérico al usuario.
     echo "Error en la base de datos: " . $e->getMessage();
     // Opcional: mostrar detalles adicionales solo si es un entorno de desarrollo
     if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] == '127.0.0.1') { // Ejemplo simple de verificación de entorno local
-         echo "<br>SQL State: " . $e->getCode();
-         // echo "<br>Query: " . $query; // Si $query estuviera definida antes del prepare/execute
+        echo "<br>SQL State: " . $e->getCode();
+        // echo "<br>Query: " . $query; // Si $query estuviera definida antes del prepare/execute
     }
     die();
 }
@@ -76,81 +75,81 @@ try {
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
-    <!-- Header Mejorado -->
-    <header class="site-header">
-        <div class="container header-container">
-            <a href="index.php" class="logo">
-                <span>MGames</span>
-            </a>
-            
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="index.php">Inicio</a></li>
-                    <li><a href="tienda.php">Tienda</a></li>
-                    <li><a href="contacto.php">Contacto</a></li>
-                </ul>
-            </nav>
-            
-            <div class="header-actions">
-                <div class="search-container">
-                    <button class="search-button" id="search-toggle">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    <form class="search-form" method="GET" action="index.php" id="search-form" style="display: none;">
-                        <select name="categoria" class="filter-select">
-                            <option value="">Todas las categorías</option>
-                                                            <option value="1">
-                                    Acción                                </option>
-                                                            <option value="2">
-                                    Aventura                                </option>
-                                                            <option value="5">
-                                    Carreras                                </option>
-                                                            <option value="4">
-                                    Deportes                                </option>
-                                                            <option value="6">
-                                    Estrategia                                </option>
-                                                            <option value="9">
-                                    Lucha                                </option>
-                                                            <option value="3">
-                                    Rol                                </option>
-                                                            <option value="8">
-                                    Shooter                                </option>
-                                                            <option value="7">
-                                    Simulación                                </option>
-                                                            <option value="13">
-                                    Tarjeta Nintendo                                </option>
-                                                            <option value="11">
-                                    Tarjeta Play                                </option>
-                                                            <option value="12">
-                                    Tarjeta XBOX                                </option>
-                                                            <option value="10">
-                                    Terror                                </option>
-                                                    </select>
-                    </form>
-                </div>
-                <a href="lista_deseos.php" class="header-icon">
-                    <i class="fas fa-heart"></i>
-                                    </a>
-                <a href="carrito.php" class="header-icon">
-                    <i class="fas fa-shopping-cart"></i>
-                                    </a>
-                <a href="cartera.php" class="header-icon">
-                    <i class="fas fa-wallet"></i>
-                                    </a>
-                <div class="user-profile">
-                                            <div class="auth-buttons">
-                            <a href="login.php" class="btn btn-sm btn-outline">Iniciar Sesión</a>
-                            <a href="register.php" class="btn btn-sm btn-primary">Registrarse</a>
-                        </div>
-                                    </div>
-                <button id="menuToggle" class="mobile-menu-toggle">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-        </div>
-    </header>
+<!-- Header Mejorado -->
+<header class="site-header">
+    <div class="container header-container">
+        <a href="index.php" class="logo">
+            <span>MGames</span>
+        </a>
 
-    <div class="content">
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.php">Inicio</a></li>
+                <li><a href="tienda.php">Tienda</a></li>
+                <li><a href="contacto.php">Contacto</a></li>
+            </ul>
+        </nav>
+
+        <div class="header-actions">
+            <div class="search-container">
+                <button class="search-button" id="search-toggle">
+                    <i class="fas fa-search"></i>
+                </button>
+                <form class="search-form" method="GET" action="index.php" id="search-form" style="display: none;">
+                    <select name="categoria" class="filter-select">
+                        <option value="">Todas las categorías</option>
+                        <option value="1">
+                            Acción </option>
+                        <option value="2">
+                            Aventura </option>
+                        <option value="5">
+                            Carreras </option>
+                        <option value="4">
+                            Deportes </option>
+                        <option value="6">
+                            Estrategia </option>
+                        <option value="9">
+                            Lucha </option>
+                        <option value="3">
+                            Rol </option>
+                        <option value="8">
+                            Shooter </option>
+                        <option value="7">
+                            Simulación </option>
+                        <option value="13">
+                            Tarjeta Nintendo </option>
+                        <option value="11">
+                            Tarjeta Play </option>
+                        <option value="12">
+                            Tarjeta XBOX </option>
+                        <option value="10">
+                            Terror </option>
+                    </select>
+                </form>
+            </div>
+            <a href="lista_deseos.php" class="header-icon">
+                <i class="fas fa-heart"></i>
+            </a>
+            <a href="carrito.php" class="header-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </a>
+            <a href="cartera.php" class="header-icon">
+                <i class="fas fa-wallet"></i>
+            </a>
+            <div class="user-profile">
+                <div class="auth-buttons">
+                    <a href="login.php" class="btn btn-sm btn-outline">Iniciar Sesión</a>
+                    <a href="register.php" class="btn btn-sm btn-primary">Registrarse</a>
+                </div>
+            </div>
+            <button id="menuToggle" class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="content">
     <!-- Hero Section con Video de Fondo -->
     <header class="hero">
         <div class="video-container">
@@ -163,23 +162,23 @@ try {
             <br>
             <div class="video-overlay"></div>
             <div class="hero-content">
-                    <h1>Explora Nuestro Universo Gaming</h1>
-                    <p>Descubre los mejores títulos, ofertas exclusivas y contenido premium para todos los gamers</p>
+                <h1>Explora Nuestro Universo Gaming</h1>
+                <p>Descubre los mejores títulos, ofertas exclusivas y contenido premium para todos los gamers</p>
                 <br>
                 <div class="hero-buttons">
-                        <a href="#categorias" class="btn btn-primary">Explorar Categorías</a>
+                    <a href="#categorias" class="btn btn-primary">Explorar Categorías</a>
                     <a href="#ofertas" class="btn btn-transparent">Ver Ofertas</a>
-                    </div>
                 </div>
             </div>
+        </div>
     </header>
 
-        <!-- Categorías Visuales -->
-        <section id="categorias" class="categorias-visuales">
-            <div class="container">
-                <h2 class="section-title">Categorías de Juegos</h2>
-                <div class="categorias-grid">
-                <?php 
+    <!-- Categorías Visuales -->
+    <section id="categorias" class="categorias-visuales">
+        <div class="container">
+            <h2 class="section-title">Categorías de Juegos</h2>
+            <div class="categorias-grid">
+                <?php
                 // Colores para las categorías (reutilizamos si es necesario, o definimos aquí si no existen)
                 $colors = [
                     'from-red-500 to-orange-500',
@@ -194,61 +193,72 @@ try {
                 // Generar tarjetas de categoría dinámicamente
                 // Mostrar solo las primeras 3 categorías inicialmente
                 $first_four_categories = array_slice($categorias, 0, 3);
-                foreach($first_four_categories as $cat): 
+                foreach ($first_four_categories as $cat):
                     // Encontrar el conteo para esta categoría desde $categorias_count
                     $current_cat_count = 0;
-                     if (isset($cat['id'])) { // Asegurarse de que el ID existe antes de buscar el conteo
-                        foreach($categorias_count as $cat_count_data) {
+                    if (isset($cat['id'])) { // Asegurarse de que el ID existe antes de buscar el conteo
+                        foreach ($categorias_count as $cat_count_data) {
                             if (isset($cat_count_data['id']) && $cat_count_data['id'] == $cat['id']) {
                                 $current_cat_count = $cat_count_data['count'];
                                 break;
                             }
                         }
                     }
-                    
+
                     $color_class = $colors[$i % count($colors)];
                     $i++;
-                ?>
-                    <a href="todos_productos.php?categoria=<?php echo htmlspecialchars($cat['id'] ?? ''); ?>" 
-                       class="categoria-card <?php echo htmlspecialchars($color_class); ?>"
-                       style="background-image: url('<?php echo htmlspecialchars($cat['foto'] ?? ''); ?>'); background-size: cover; background-position: center;">
+                    ?>
+                    <a href="todos_productos.php?categoria=<?php echo htmlspecialchars($cat['id'] ?? ''); ?>"
+                        class="categoria-card <?php echo htmlspecialchars($color_class); ?>"
+                        style="background-image: url('<?php echo htmlspecialchars($cat['foto'] ?? ''); ?>'); background-size: cover; background-position: center;">
                         <div class="categoria-overlay"></div>
                         <div class="categoria-content">
-                             <?php 
-                                // Mostrar el nombre de la categoría solo si no es una de las tarjetas
-                                if (!in_array($cat['nombre'] ?? '', ['Tarjeta Play', 'Tarjeta XBOX', 'Tarjeta Nintendo'])) {
-                                    echo '<h3>' . htmlspecialchars($cat['nombre'] ?? '') . '</h3>';
-                                }
+                            <?php
+                            // Mostrar el nombre de la categoría solo si no es una de las tarjetas
+                            if (!in_array($cat['nombre'] ?? '', ['Tarjeta Play', 'Tarjeta XBOX', 'Tarjeta Nintendo'])) {
+                                echo '<h3>' . htmlspecialchars($cat['nombre'] ?? '') . '</h3>';
+                            }
                             ?>
                             <p><?php echo $current_cat_count; ?> juegos</p>
                         </div>
                     </a>
                 <?php endforeach; ?>
-                <?php 
+                <?php
                 // Las demás categorías se añadirán vía JavaScript por toggleCategories()
                 ?>
-                </div>
-                <div class="text-center mt-6">
-                    <a href="#" id="toggle-categories" class="btn btn-outline" onclick="toggleCategories(); return false;">Mostrar Todas las Categorías</a>
-                </div>
             </div>
-        </section>
+            <div class="text-center mt-6">
+                <a href="#" id="toggle-categories" class="btn btn-outline"
+                    onclick="toggleCategories(); return false;">Mostrar Todas las Categorías</a>
+            </div>
+        </div>
+    </section>
 
-        <!-- Sección de Ofertas -->
-        <section id="ofertas" class="ofertas">
-            <div class="container">
-                <h2 class="section-title">Ofertas Imperdibles</h2>
-                <div class="ofertas-grid">
-                <?php 
-                    $descuento_porcentaje = 10;
-                    foreach($ofertas as $oferta): 
-                        $precio_original = $oferta['precio'];
-                        $precio_descuento = $precio_original * (1 - ($descuento_porcentaje / 100));
-                ?>
+    <!-- Sección de Ofertas -->
+    <section id="ofertas" class="ofertas">
+        <div class="container">
+            <h2 class="section-title">Ofertas Imperdibles</h2>
+            <div class="ofertas-grid" id="ofertas-grid">
+                <?php
+                // lo obtenemos del campo 'descuento' de cada oferta.
+                // $descuento_porcentaje = 10;
+                // $initial_offers_to_show = 4; // Ya no limitamos la visualización inicial
+                // $i = 0; // Ya no necesitamos contador para ocultar
+                foreach ($ofertas as $oferta):
+                    $precio_original = $oferta['precio'];
+                    $descuento_porcentaje = $oferta['descuento'] ?? 0; // Obtener el descuento del campo
+                    $precio_descuento = $precio_original * (1 - ($descuento_porcentaje / 100));
+
+                    // Añadir clase para ocultar si no está entre los primeros $initial_offers_to_show (ELIMINADO)
+                    // $hidden_class = ($i >= $initial_offers_to_show) ? 'hidden-offer-item' : '';
+                    ?>
                     <div class="oferta-card">
-                        <div class="oferta-discount-badge">-<?php echo $descuento_porcentaje; ?>%</div>
+                        <?php if ($descuento_porcentaje > 0): ?>
+                            <div class="oferta-discount-badge">-<?php echo $descuento_porcentaje; ?>%</div>
+                        <?php endif; ?>
                         <div class="oferta-image">
-                            <img src="<?php echo htmlspecialchars($oferta['imagen'] ?? ''); ?>" alt="<?php echo htmlspecialchars($oferta['nombre'] ?? ''); ?>">
+                            <img src="<?php echo htmlspecialchars($oferta['imagen'] ?? ''); ?>"
+                                alt="<?php echo htmlspecialchars($oferta['nombre'] ?? ''); ?>">
                         </div>
                         <div class="oferta-content">
                             <h3><?php echo htmlspecialchars($oferta['nombre'] ?? ''); ?></h3>
@@ -257,143 +267,132 @@ try {
                                 <span class="discount-price">€<?php echo number_format($precio_descuento, 2); ?></span>
                             </div>
                             <div class="oferta-actions">
-                                <a href="producto.php?id=<?php echo htmlspecialchars($oferta['id'] ?? ''); ?>" class="btn btn-primary btn-sm">Ver Detalles</a>
+                                <a href="producto.php?id=<?php echo htmlspecialchars($oferta['id'] ?? ''); ?>"
+                                    class="btn btn-primary btn-sm">Ver Detalles</a>
                                 <!-- Aquí podrías añadir un botón de "Añadir al Carrito" si tienes esa funcionalidad -->
                             </div>
                         </div>
                     </div>
+                    <?php // $i++; // Contador eliminado ?>
                 <?php endforeach; ?>
-                </div>
-                <div class="text-center mt-6">
-                    <a href="todos_productos.php?oferta=1" class="btn btn-outline">Ver Todas las Ofertas</a>
-                </div>
             </div>
-        </section>
+            <?php // if (count($ofertas) > $initial_offers_to_show): // Mostrar el botón solo si hay más de $initial_offers_to_show ofertas (ELIMINADO) ?>
+            <?php // Botón "Mostrar Todas las Ofertas" (ELIMINADO) ?>
+            <?php // endif; // Fin de la condición PHP (ELIMINADO) ?>
+        </div>
+    </section>
 
-        <!-- Próximos Lanzamientos -->
-        <section class="proximos-lanzamientos">
-            <div class="container">
-                <h2 class="section-title">Próximos Lanzamientos</h2>
-                <div class="lanzamientos-grid">
-                                        <div class="lanzamiento-card">
-                            <div class="lanzamiento-image">
-                            <img src="fotosWeb/Grand Theft Auto V.png"
-                                alt="Grand Theft Auto V">
-                                <div class="lanzamiento-fecha">
-                                    <i class="far fa-calendar-alt"></i>
-                                </div>
-                            </div>
-                            <div class="lanzamiento-content">
-                                <h3>Grand Theft Auto V</h3>
-                                <p>Juego de mundo abierto con una gran historia....</p>
-                                <div class="lanzamiento-actions">
-                                <span
-                                    class="lanzamiento-price">€29.99</span>
-                                <a href="producto.php?id=1"
-                                    class="btn btn-secondary btn-sm">Pre-ordenar</a>
-                                </div>
-                            </div>
+    <!-- Próximos Lanzamientos -->
+    <section class="proximos-lanzamientos">
+        <div class="container">
+            <h2 class="section-title">Próximos Lanzamientos</h2>
+            <div class="lanzamientos-grid">
+                <div class="lanzamiento-card">
+                    <div class="lanzamiento-image">
+                        <img src="fotosWeb/Grand Theft Auto V.png" alt="Grand Theft Auto V">
+                        <div class="lanzamiento-fecha">
+                            <i class="far fa-calendar-alt"></i>
                         </div>
-                                            <div class="lanzamiento-card">
-                            <div class="lanzamiento-image">
-                            <img src="fotosWeb/Red Dead Redemption 2.png"
-                                alt="Red Dead Redemption 2">
-                                <div class="lanzamiento-fecha">
-                                    <i class="far fa-calendar-alt"></i>
-                                </div>
-                            </div>
-                            <div class="lanzamiento-content">
-                                <h3>Red Dead Redemption 2</h3>
-                                <p>Aventura en el Salvaje Oeste con gráficos impresionantes....</p>
-                                <div class="lanzamiento-actions">
-                                <span
-                                    class="lanzamiento-price">€49.99</span>
-                                <a href="producto.php?id=2"
-                                    class="btn btn-secondary btn-sm">Pre-ordenar</a>
-                                </div>
-                            </div>
+                    </div>
+                    <div class="lanzamiento-content">
+                        <h3>Grand Theft Auto V</h3>
+                        <p>Juego de mundo abierto con una gran historia....</p>
+                        <div class="lanzamiento-actions">
+                            <span class="lanzamiento-price">€29.99</span>
+                            <a href="producto.php?id=1" class="btn btn-secondary btn-sm">Pre-ordenar</a>
                         </div>
-                                            <div class="lanzamiento-card">
-                            <div class="lanzamiento-image">
-                            <img src="fotosWeb/Cyberpunk 2077.png"
-                                alt="Cyberpunk 2077">
-                                <div class="lanzamiento-fecha">
-                                    <i class="far fa-calendar-alt"></i>
-                                </div>
-                            </div>
-                            <div class="lanzamiento-content">
-                                <h3>Cyberpunk 2077</h3>
-                                <p>Futurista y con mecánicas RPG....</p>
-                                <div class="lanzamiento-actions">
-                                <span
-                                    class="lanzamiento-price">€39.99</span>
-                                <a href="producto.php?id=3"
-                                    class="btn btn-secondary btn-sm">Pre-ordenar</a>
-                                </div>
-                            </div>
+                    </div>
+                </div>
+                <div class="lanzamiento-card">
+                    <div class="lanzamiento-image">
+                        <img src="fotosWeb/Red Dead Redemption 2.png" alt="Red Dead Redemption 2">
+                        <div class="lanzamiento-fecha">
+                            <i class="far fa-calendar-alt"></i>
                         </div>
-                                    </div>
+                    </div>
+                    <div class="lanzamiento-content">
+                        <h3>Red Dead Redemption 2</h3>
+                        <p>Aventura en el Salvaje Oeste con gráficos impresionantes....</p>
+                        <div class="lanzamiento-actions">
+                            <span class="lanzamiento-price">€49.99</span>
+                            <a href="producto.php?id=2" class="btn btn-secondary btn-sm">Pre-ordenar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="lanzamiento-card">
+                    <div class="lanzamiento-image">
+                        <img src="fotosWeb/Cyberpunk 2077.png" alt="Cyberpunk 2077">
+                        <div class="lanzamiento-fecha">
+                            <i class="far fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                    <div class="lanzamiento-content">
+                        <h3>Cyberpunk 2077</h3>
+                        <p>Futurista y con mecánicas RPG....</p>
+                        <div class="lanzamiento-actions">
+                            <span class="lanzamiento-price">€39.99</span>
+                            <a href="producto.php?id=3" class="btn btn-secondary btn-sm">Pre-ordenar</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Mejor Valorados -->
-        <section class="mejor-valorados">
-            <div class="container">
-                <h2 class="section-title">Los Mejor Valorados</h2>
-                <div class="valorados-grid">
-                                        <div class="valorado-card">
-                            <div class="valorado-rating">
-                            <span
-                                class="rating-number">5.0</span>
-                                <div class="stars">
-                                                                                <i class="fas fa-star"></i>
-                                                                                <i class="fas fa-star"></i>
-                                                                                <i class="fas fa-star"></i>
-                                                                                <i class="fas fa-star"></i>
-                                                                                <i class="fas fa-star"></i>
-                                                                    </div>
-                            </div>
-                            <div class="valorado-image">
-                            <img src="fotosWeb/God of War.png"
-                                alt="God of War">
-                            </div>
-                            <div class="valorado-content">
-                                <h3>God of War</h3>
-                            <span
-                                class="valorado-category">Aventura</span>
-                                <div class="valorado-price">€49.99</div>
-                            <a href="producto.php?id=7" class="btn btn-primary btn-sm">Ver
-                                Detalles</a>
-                            </div>
+    <!-- Mejor Valorados -->
+    <section class="mejor-valorados">
+        <div class="container">
+            <h2 class="section-title">Los Mejor Valorados</h2>
+            <div class="valorados-grid">
+                <div class="valorado-card">
+                    <div class="valorado-rating">
+                        <span class="rating-number">5.0</span>
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
                         </div>
-                                            <div class="valorado-card">
-                            <div class="valorado-rating">
-                            <span
-                                class="rating-number">4.0</span>
-                                <div class="stars">
-                                                                                <i class="fas fa-star"></i>
-                                                                                <i class="fas fa-star"></i>
-                                                                                <i class="fas fa-star"></i>
-                                                                                <i class="fas fa-star"></i>
-                                                                                <i class="far fa-star"></i>
-                                                                        </div>
-                            </div>
-                            <div class="valorado-image">
-                            <img src="fotosWeb/tarjeta_xbox_10.jpg"
-                                alt="Tarjeta Xbox 10€">
-                            </div>
-                            <div class="valorado-content">
-                                <h3>Tarjeta Xbox 10€</h3>
-                            <span
-                                class="valorado-category">Tarjeta XBOX</span>
-                                <div class="valorado-price">€10.00</div>
-                            <a href="producto.php?id=30" class="btn btn-primary btn-sm">Ver
-                                Detalles</a>
-                            </div>
+                    </div>
+                    <div class="valorado-image">
+                        <img src="fotosWeb/God of War.png" alt="God of War">
+                    </div>
+                    <div class="valorado-content">
+                        <h3>God of War</h3>
+                        <span class="valorado-category">Aventura</span>
+                        <div class="valorado-price">€49.99</div>
+                        <a href="producto.php?id=7" class="btn btn-primary btn-sm">Ver
+                            Detalles</a>
+                    </div>
+                </div>
+                <div class="valorado-card">
+                    <div class="valorado-rating">
+                        <span class="rating-number">4.0</span>
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
                         </div>
-                                    </div>
+                    </div>
+                    <div class="valorado-image">
+                        <img src="fotosWeb/tarjeta_xbox_10.jpg" alt="Tarjeta Xbox 10€">
+                    </div>
+                    <div class="valorado-content">
+                        <h3>Tarjeta Xbox 10€</h3>
+                        <span class="valorado-category">Tarjeta XBOX</span>
+                        <div class="valorado-price">€10.00</div>
+                        <a href="producto.php?id=30" class="btn btn-primary btn-sm">Ver Detalles</a>
+                    </div>
+                </div>
             </div>
-        </section>
+        </div>
+
+    </section>
+
+
     <style>
         /* ===== GLOBAL STYLES ===== */
         :root {
@@ -488,9 +487,10 @@ try {
         }
 
         .categorias-visuales {
-            padding: 17rem 0;
+            padding: 4rem 0 2rem 0; /* Reducido padding-bottom */
             position: relative;
             z-index: 20;
+            margin-top: 10rem; /* Duplicado el margen superior */
         }
 
         body {
@@ -930,7 +930,7 @@ try {
         .categorias-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
+            gap: 2.5rem; /* Aumentado el espacio entre tarjetas */
         }
 
         .categoria-card {
@@ -983,6 +983,10 @@ try {
         }
 
         /* ===== OFERTAS ===== */
+        .ofertas {
+            padding-top: 2rem; /* Reducido padding-top */
+        }
+
         .ofertas-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -1597,7 +1601,7 @@ try {
 
         /* ===== RESPONSIVE STYLES ===== */
         @media (max-width: 1024px) {
-            
+
             .comunidad-content {
                 grid-template-columns: 1fr;
             }
@@ -1614,7 +1618,7 @@ try {
 
         @media (max-width: 768px) {
 
-            
+
             .tienda-hero h1 {
                 font-size: 2.5rem;
             }
@@ -1737,371 +1741,487 @@ try {
         ::-webkit-scrollbar-thumb:hover {
             background: var(--primary-dark);
         }
-    </style>
-        <!-- Eventos de Gaming -->
-        <section class="eventos-gaming">
-            <div class="container">
-                <h2 class="section-title">Eventos de Gaming</h2>
-                <div class="eventos-grid">
-                    <div class="evento-card">
-                        <div class="evento-image">
-                            <img src="FotosWeb/evento-torneo.jpg" alt="Torneo MGames">
-                            <div class="evento-fecha">
-                                <span class="evento-dia">15</span>
-                                <span class="evento-mes">JUN</span>
-                            </div>
-                        </div>
-                        <div class="evento-content">
-                            <h3>Torneo MGames 2023</h3>
-                            <div class="evento-info">
-                                <p><i class="fas fa-map-marker-alt"></i> Centro de Convenciones, Madrid</p>
-                                <p><i class="far fa-clock"></i> 10:00 AM - 8:00 PM</p>
-                            </div>
-                        <p class="evento-descripcion">Participa en el mayor torneo de gaming del año con premios de
-                            hasta 10.000€.</p>
-                            <a href="eventos.php?id=1" class="btn btn-secondary btn-sm">Más Información</a>
-                        </div>
-                    </div>
-                    <div class="evento-card">
-                        <div class="evento-image">
-                            <img src="FotosWeb/evento-lanzamiento.jpg" alt="Lanzamiento Exclusivo">
-                            <div class="evento-fecha">
-                                <span class="evento-dia">22</span>
-                                <span class="evento-mes">JUL</span>
-                            </div>
-                        </div>
-                        <div class="evento-content">
-                            <h3>Lanzamiento Exclusivo</h3>
-                            <div class="evento-info">
-                                <p><i class="fas fa-map-marker-alt"></i> Tienda MGames, Barcelona</p>
-                                <p><i class="far fa-clock"></i> 8:00 PM - 12:00 AM</p>
-                            </div>
-                        <p class="evento-descripcion">Sé el primero en probar el nuevo título de la saga más
-                            esperada del año.</p>
-                            <a href="eventos.php?id=2" class="btn btn-secondary btn-sm">Más Información</a>
-                        </div>
-                    </div>
-                    <div class="evento-card">
-                        <div class="evento-image">
-                            <img src="FotosWeb/evento-convencion.jpg" alt="Convención Gamer">
-                            <div class="evento-fecha">
-                                <span class="evento-dia">10</span>
-                                <span class="evento-mes">AGO</span>
-                            </div>
-                        </div>
-                        <div class="evento-content">
-                            <h3>Convención Gamer 2023</h3>
-                            <div class="evento-info">
-                                <p><i class="fas fa-map-marker-alt"></i> IFEMA, Madrid</p>
-                                <p><i class="far fa-clock"></i> 9:00 AM - 7:00 PM</p>
-                            </div>
-                        <p class="evento-descripcion">La mayor convención de videojuegos con stands, charlas y
-                            actividades para toda la familia.</p>
-                            <a href="eventos.php?id=3" class="btn btn-secondary btn-sm">Más Información</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-center mt-6">
-                    <a href="eventos.php" class="btn btn-outline">Ver Todos los Eventos</a>
-                </div>
-            </div>
-        </section>
 
-        <!-- Blog y Guías -->
-        <section class="blog-guias">
-            <div class="container">
-                <h2 class="section-title">Blog y Guías de Juegos</h2>
-                <div class="blog-grid">
-                    <article class="blog-card">
-                        <div class="blog-image">
-                            <img src="FotosWeb/blog-1.jpg" alt="Guía para principiantes">
-                            <div class="blog-category">Guía</div>
-                        </div>
-                        <div class="blog-content">
-                            <div class="blog-meta">
-                                <span><i class="far fa-calendar"></i> 10 Mayo, 2023</span>
-                                <span><i class="far fa-user"></i> Admin</span>
-                            </div>
-                            <h3>Guía para principiantes: Cómo mejorar en juegos competitivos</h3>
-                        <p>Aprende las estrategias básicas para mejorar tu rendimiento en los juegos competitivos
-                            más populares.</p>
-                            <a href="blog.php?id=1" class="btn btn-link">Leer más <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </article>
-                    <article class="blog-card">
-                        <div class="blog-image">
-                            <img src="FotosWeb/blog-2.jpg" alt="Análisis de juego">
-                            <div class="blog-category">Análisis</div>
-                        </div>
-                        <div class="blog-content">
-                            <div class="blog-meta">
-                                <span><i class="far fa-calendar"></i> 5 Mayo, 2023</span>
-                                <span><i class="far fa-user"></i> GameExpert</span>
-                            </div>
-                            <h3>Análisis en profundidad: El último RPG que está revolucionando el género</h3>
-                            <p>Un análisis detallado del juego que está cambiando las reglas de los RPG modernos.</p>
-                            <a href="blog.php?id=2" class="btn btn-link">Leer más <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </article>
-                    <article class="blog-card">
-                        <div class="blog-image">
-                            <img src="FotosWeb/blog-3.jpg" alt="Noticias de la industria">
-                            <div class="blog-category">Noticias</div>
-                        </div>
-                        <div class="blog-content">
-                            <div class="blog-meta">
-                                <span><i class="far fa-calendar"></i> 1 Mayo, 2023</span>
-                                <span><i class="far fa-user"></i> NewsGamer</span>
-                            </div>
-                            <h3>Las tendencias que definirán el futuro de los videojuegos en 2023</h3>
-                        <p>Descubre las tecnologías y tendencias que marcarán el rumbo de la industria de los
-                            videojuegos este año.</p>
-                            <a href="blog.php?id=3" class="btn btn-link">Leer más <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </article>
-                </div>
-                <div class="text-center mt-6">
-                    <a href="blog.php" class="btn btn-outline">Ver Todos los Artículos</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Comunidad de Gamers -->
-        <section class="comunidad-gamers">
-            <div class="container">
-                <h2 class="section-title">Únete a Nuestra Comunidad</h2>
-                <div class="comunidad-content">
-                    <div class="comunidad-info">
-                        <p>Forma parte de la comunidad de MGames y disfruta de beneficios exclusivos:</p>
-                        <ul class="comunidad-beneficios">
-                            <li><i class="fas fa-check-circle"></i> Acceso anticipado a nuevos lanzamientos</li>
-                            <li><i class="fas fa-check-circle"></i> Descuentos exclusivos para miembros</li>
-                            <li><i class="fas fa-check-circle"></i> Participación en torneos y eventos especiales</li>
-                            <li><i class="fas fa-check-circle"></i> Foros de discusión con otros gamers</li>
-                            <li><i class="fas fa-check-circle"></i> Guías y tutoriales exclusivos</li>
-                        </ul>
-                        <div class="comunidad-cta">
-                            <a href="registro_comunidad.php" class="btn btn-primary">Unirse Ahora</a>
-                            <a href="comunidad.php" class="btn btn-outline">Más Información</a>
-                        </div>
-                    </div>
-                    <div class="comunidad-imagen">
-                        <img src="FotosWeb/comunidad-gamers.jpg" alt="Comunidad de Gamers">
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Suscripción a Newsletter -->
-        <section class="newsletter">
-            <div class="container">
-                <div class="newsletter-content">
-                    <div class="newsletter-info">
-                        <h2>Mantente Informado</h2>
-                    <p>Suscríbete a nuestro boletín para recibir las últimas noticias, ofertas exclusivas y
-                        lanzamientos de juegos.</p>
-                    </div>
-                    <form class="newsletter-form" action="suscribir.php" method="post">
-                        <div class="form-group">
-                            <input type="email" name="email" placeholder="Tu correo electrónico" required>
-                            <button type="submit" class="btn btn-primary">Suscribirse</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <footer class="site-footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <img src="FotosWeb/logo.png" alt="MGames Logo">
-                    <h3>MGames</h3>
-                </div>
-                <div class="footer-links">
-                    <h4>Enlaces rápidos</h4>
-                    <ul>
-                        <li><a href="index.php">Inicio</a></li>
-                        <li><a href="tienda.php">Tienda</a></li>
-                        <li><a href="todos_productos.php">Todos los Productos</a></li>
-                        <li><a href="contacto.php">Contacto</a></li>
-                    </ul>
-                </div>
-                <div class="footer-contact">
-                    <h4>Contacto</h4>
-                    <p><i class="fas fa-map-marker-alt"></i> Calle Principal 123, Ciudad</p>
-                    <p><i class="fas fa-phone"></i> +34 123 456 789</p>
-                    <p><i class="fas fa-envelope"></i> info@mgames.com</p>
-                </div>
-                <div class="footer-social">
-                    <h4>Síguenos</h4>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 MGames. Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        // Guardar todas las categorías en variables JavaScript
-        var todasLasCategorias = <?php echo json_encode($categorias); ?>;
-        var categoriasCount = <?php echo json_encode($categorias_count); ?>;
-        var colors = <?php echo json_encode($colors); ?>; // Pasamos también los colores si no están definidos en JS
-
-        // Variable para controlar el estado
-        var mostrandoTodas = false;
-
-        // Función para alternar la visualización de categorías
-        function toggleCategories() {
-            const categoriesGrid = document.querySelector('.categorias-grid'); // Usamos el selector CSS
-            const button = document.getElementById('toggle-categories');
-
-            // Cambiar el estado
-            mostrandoTodas = !mostrandoTodas;
-
-            // Limpiar el grid actual
-            categoriesGrid.innerHTML = '';
-
-            // Determinar qué categorías mostrar
-            var categoriasAMostrar = mostrandoTodas ? todasLasCategorias : todasLasCategorias.slice(0, 3);
-
-            // Actualizar el texto del botón
-            button.innerText = mostrandoTodas ? "Ocultar Categorías" : "Mostrar Todas las Categorías";
-
-            // Añadir/Quitar clase para estilos condicionales (si es necesario, adaptar estilos CSS)
-            if (mostrandoTodas) {
-                 // categoriesGrid.classList.remove('initial-four'); // Si usaste esta clase en index.php
-            } else {
-                 // categoriesGrid.classList.add('initial-four'); // Si usaste esta clase en index.php
-            }
-
-            // Crear y añadir las tarjetas de categoría
-            categoriasAMostrar.forEach(function(cat) {
-                const categoryCard = document.createElement('a');
-                categoryCard.href = "todos_productos.php?categoria=" + cat.id;
-                // Buscamos el conteo de juegos para esta categoría
-                 let current_cat_count = 0;
-                 const count_data = categoriasCount.find(item => item.id === cat.id);
-                 if (count_data) {
-                     current_cat_count = count_data.count;
-                 }
-
-                // Asignamos la clase de color. Aquí podrías necesitar lógica más avanzada si los colores se asignan por índice en PHP
-                // Por simplicidad, si los colores se corresponden 1 a 1 con el orden de las categorías, podrías hacer algo así:
-                // let color_class = colors[categoriasAMostrar.indexOf(cat) % colors.length];
-                // O si el color ya viene en el objeto cat desde PHP (como en index.php):
-                 let color_class = ''// Aquí deberías obtener la clase de color si no viene en el objeto cat
-                 // Si la clase de color ya está en el objeto cat (como en index.php después de la edición):
-                 if(cat.color) { // Asegúrate de que la columna color se obtenga en la consulta PHP si la necesitas aquí
-                     color_class = cat.color;
-                 } else { // Si no se obtiene la clase de color, puedes asignarla basado en el índice o id si tienes un mapeo
-                     // Lógica para asignar color si no viene en el objeto cat
-                     // Ejemplo simple basado en índice (puede no coincidir con PHP si el orden cambia)
-                     let index = todasLasCategorias.findIndex(item => item.id === cat.id);
-                     if(index !== -1) {
-                         color_class = colors[index % colors.length];
-                     }
-                 }
-
-                categoryCard.className = "categoria-card " + color_class;
-
-                // Añadir estilo de fondo para la imagen y centrarlo
-                categoryCard.style.backgroundImage = "url('" + (cat.foto || '') + "')"; // Usar cat.foto y manejar si es nulo/vacío
-                categoryCard.style.backgroundSize = "cover";
-                categoryCard.style.backgroundPosition = "center";
-                categoryCard.style.minHeight = "150px"; // Asegurar una altura mínima como en el CSS
-
-                let cardContentHTML = `
-                    <div class="categoria-content">
-                `;
-
-                // Mostrar el nombre de la categoría solo si no es una de las tarjetas
-                if (cat.nombre !== 'Tarjeta Play' && cat.nombre !== 'Tarjeta XBOX' && cat.nombre !== 'Tarjeta Nintendo') {
-                     cardContentHTML += `<h3>${cat.nombre}</h3>`;
-                }
-
-                cardContentHTML += `
-                        <p>${current_cat_count} juegos</p>
-                    </div>
-                `;
-
-                categoryCard.innerHTML = cardContentHTML;
-                categoriesGrid.appendChild(categoryCard);
-            });
-
-            // Prevenir que la página se desplace
-            return false;
+        /* Clase para ocultar ofertas */
+        .hidden-offer-item {
+            display: none;
+            /* Ocultar elementos por defecto */
         }
 
-        // Ejecutar al cargar la página para mostrar solo las 3 primeras inicialmente
-        document.addEventListener('DOMContentLoaded', function() {
-            // Si quieres que al cargar la página ya se genere la vista de 3 con el script JS:
-            const categoriesGrid = document.querySelector('.categorias-grid');
-            categoriesGrid.innerHTML = ''; // Limpiar el contenido generado por PHP
-            todasLasCategorias.slice(0, 3).forEach(function(cat) { // Usar slice(0, 3) aquí
-                const categoryCard = document.createElement('a');
-                categoryCard.href = "todos_productos.php?categoria=" + cat.id;
-                
-                // Buscamos el conteo de juegos para esta categoría
-                let current_cat_count = 0;
-                const count_data = categoriasCount.find(item => item.id === cat.id);
-                if (count_data) {
-                    current_cat_count = count_data.count;
+        /* Estilos CSS para el botón scroll arriba */
+        #scrollToTopBtn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: #0d6efd; /* Azul Bootstrap */
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            z-index: 1000;
+        }
+
+        #scrollToTopBtn:hover {
+            background-color: #0b5ed7;
+            transform: scale(1.1);
+        }
+
+        #scrollToTopBtn svg {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+        <!-- Eventos de Gaming -->
+    <section class="eventos-gaming">
+        <div class="container">
+            <h2 class="section-title">Eventos de Gaming</h2>
+            <div class="eventos-grid">
+                <div class="evento-card">
+                    <div class="evento-image">
+                        <img src="FotosWeb/evento-torneo.jpg" alt="Torneo MGames">
+                        <div class="evento-fecha">
+                            <span class="evento-dia">15</span>
+                            <span class="evento-mes">JUN</span>
+                        </div>
+                    </div>
+                    <div class="evento-content">
+                        <h3>Torneo MGames 2023</h3>
+                        <div class="evento-info">
+                            <p><i class="fas fa-map-marker-alt"></i> Centro de Convenciones, Madrid</p>
+                            <p><i class="far fa-clock"></i> 10:00 AM - 8:00 PM</p>
+                        </div>
+                        <p class="evento-descripcion">Participa en el mayor torneo de gaming del año con premios de
+                            hasta 10.000€.</p>
+                        <a href="eventos.php?id=1" class="btn btn-secondary btn-sm">Más Información</a>
+                    </div>
+                </div>
+                <div class="evento-card">
+                    <div class="evento-image">
+                        <img src="FotosWeb/evento-lanzamiento.jpg" alt="Lanzamiento Exclusivo">
+                        <div class="evento-fecha">
+                            <span class="evento-dia">22</span>
+                            <span class="evento-mes">JUL</span>
+                        </div>
+                    </div>
+                    <div class="evento-content">
+                        <h3>Lanzamiento Exclusivo</h3>
+                        <div class="evento-info">
+                            <p><i class="fas fa-map-marker-alt"></i> Tienda MGames, Barcelona</p>
+                            <p><i class="far fa-clock"></i> 8:00 PM - 12:00 AM</p>
+                        </div>
+                        <p class="evento-descripcion">Sé el primero en probar el nuevo título de la saga más
+                            esperada del año.</p>
+                        <a href="eventos.php?id=2" class="btn btn-secondary btn-sm">Más Información</a>
+                    </div>
+                </div>
+                <div class="evento-card">
+                    <div class="evento-image">
+                        <img src="FotosWeb/evento-convencion.jpg" alt="Convención Gamer">
+                        <div class="evento-fecha">
+                            <span class="evento-dia">10</span>
+                            <span class="evento-mes">AGO</span>
+                        </div>
+                    </div>
+                    <div class="evento-content">
+                        <h3>Convención Gamer 2023</h3>
+                        <div class="evento-info">
+                            <p><i class="fas fa-map-marker-alt"></i> IFEMA, Madrid</p>
+                            <p><i class="far fa-clock"></i> 9:00 AM - 7:00 PM</p>
+                        </div>
+                        <p class="evento-descripcion">La mayor convención de videojuegos con stands, charlas y
+                            actividades para toda la familia.</p>
+                        <a href="eventos.php?id=3" class="btn btn-secondary btn-sm">Más Información</a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-6">
+                <a href="eventos.php" class="btn btn-outline">Ver Todos los Eventos</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog y Guías -->
+    <section class="blog-guias">
+        <div class="container">
+            <h2 class="section-title">Blog y Guías de Juegos</h2>
+            <div class="blog-grid">
+                <article class="blog-card">
+                    <div class="blog-image">
+                        <img src="FotosWeb/blog-1.jpg" alt="Guía para principiantes">
+                        <div class="blog-category">Guía</div>
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span><i class="far fa-calendar"></i> 10 Mayo, 2023</span>
+                            <span><i class="far fa-user"></i> Admin</span>
+                        </div>
+                        <h3>Guía para principiantes: Cómo mejorar en juegos competitivos</h3>
+                        <p>Aprende las estrategias básicas para mejorar tu rendimiento en los juegos competitivos
+                            más populares.</p>
+                        <a href="blog.php?id=1" class="btn btn-link">Leer más <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+                <article class="blog-card">
+                    <div class="blog-image">
+                        <img src="FotosWeb/blog-2.jpg" alt="Análisis de juego">
+                        <div class="blog-category">Análisis</div>
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span><i class="far fa-calendar"></i> 5 Mayo, 2023</span>
+                            <span><i class="far fa-user"></i> GameExpert</span>
+                        </div>
+                        <h3>Análisis en profundidad: El último RPG que está revolucionando el género</h3>
+                        <p>Un análisis detallado del juego que está cambiando las reglas de los RPG modernos.</p>
+                        <a href="blog.php?id=2" class="btn btn-link">Leer más <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+                <article class="blog-card">
+                    <div class="blog-image">
+                        <img src="FotosWeb/blog-3.jpg" alt="Noticias de la industria">
+                        <div class="blog-category">Noticias</div>
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span><i class="far fa-calendar"></i> 1 Mayo, 2023</span>
+                            <span><i class="far fa-user"></i> NewsGamer</span>
+                        </div>
+                        <h3>Las tendencias que definirán el futuro de los videojuegos en 2023</h3>
+                        <p>Descubre las tecnologías y tendencias que marcarán el rumbo de la industria de los
+                            videojuegos este año.</p>
+                        <a href="blog.php?id=3" class="btn btn-link">Leer más <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+            </div>
+            <div class="text-center mt-6">
+                <a href="blog.php" class="btn btn-outline">Ver Todos los Artículos</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comunidad de Gamers -->
+    <section class="comunidad-gamers">
+        <div class="container">
+            <h2 class="section-title">Únete a Nuestra Comunidad</h2>
+            <div class="comunidad-content">
+                <div class="comunidad-info">
+                    <p>Forma parte de la comunidad de MGames y disfruta de beneficios exclusivos:</p>
+                    <ul class="comunidad-beneficios">
+                        <li><i class="fas fa-check-circle"></i> Acceso anticipado a nuevos lanzamientos</li>
+                        <li><i class="fas fa-check-circle"></i> Descuentos exclusivos para miembros</li>
+                        <li><i class="fas fa-check-circle"></i> Participación en torneos y eventos especiales</li>
+                        <li><i class="fas fa-check-circle"></i> Foros de discusión con otros gamers</li>
+                        <li><i class="fas fa-check-circle"></i> Guías y tutoriales exclusivos</li>
+                    </ul>
+                    <div class="comunidad-cta">
+                        <a href="registro_comunidad.php" class="btn btn-primary">Unirse Ahora</a>
+                        <a href="comunidad.php" class="btn btn-outline">Más Información</a>
+                    </div>
+                </div>
+                <div class="comunidad-imagen">
+                    <img src="FotosWeb/comunidad-gamers.jpg" alt="Comunidad de Gamers">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Suscripción a Newsletter -->
+    <section class="newsletter">
+        <div class="container">
+            <div class="newsletter-content">
+                <div class="newsletter-info">
+                    <h2>Mantente Informado</h2>
+                    <p>Suscríbete a nuestro boletín para recibir las últimas noticias, ofertas exclusivas y
+                        lanzamientos de juegos.</p>
+                </div>
+                <form class="newsletter-form" action="suscribir.php" method="post">
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="Tu correo electrónico" required>
+                        <button type="submit" class="btn btn-primary">Suscribirse</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="FotosWeb/logo.png" alt="MGames Logo">
+                <h3>MGames</h3>
+            </div>
+            <div class="footer-links">
+                <h4>Enlaces rápidos</h4>
+                <ul>
+                    <li><a href="index.php">Inicio</a></li>
+                    <li><a href="tienda.php">Tienda</a></li>
+                    <li><a href="todos_productos.php">Todos los Productos</a></li>
+                    <li><a href="contacto.php">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Contacto</h4>
+                <p><i class="fas fa-map-marker-alt"></i> Calle Principal 123, Ciudad</p>
+                <p><i class="fas fa-phone"></i> +34 123 456 789</p>
+                <p><i class="fas fa-envelope"></i> info@mgames.com</p>
+            </div>
+            <div class="footer-social">
+                <h4>Síguenos</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 MGames. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Botón scroll arriba -->
+<button id="scrollToTopBtn" aria-label="Volver arriba">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-up">
+    <polyline points="18 15 12 9 6 15"></polyline>
+  </svg>
+</button>
+
+<script>
+    // Guardar todas las categorías en variables JavaScript
+    var todasLasCategorias = <?php echo json_encode($categorias); ?>;
+    var categoriasCount = <?php echo json_encode($categorias_count); ?>;
+    var colors = <?php echo json_encode($colors); ?>; // Pasamos también los colores si no están definidos en JS
+
+    // Variable para controlar el estado
+    var mostrandoTodas = false;
+
+    // Función para alternar la visualización de categorías
+    function toggleCategories() {
+        const categoriesGrid = document.querySelector('.categorias-grid'); // Usamos el selector CSS
+        const button = document.getElementById('toggle-categories');
+
+        // Cambiar el estado
+        mostrandoTodas = !mostrandoTodas;
+
+        // Limpiar el grid actual
+        categoriesGrid.innerHTML = '';
+
+        // Determinar qué categorías mostrar
+        var categoriasAMostrar = mostrandoTodas ? todasLasCategorias : todasLasCategorias.slice(0, 3);
+
+        // Actualizar el texto del botón
+        button.innerText = mostrandoTodas ? "Ocultar Categorías" : "Mostrar Todas las Categorías";
+
+        // Añadir/Quitar clase para estilos condicionales (si es necesario, adaptar estilos CSS)
+        if (mostrandoTodas) {
+            // categoriesGrid.classList.remove('initial-four'); // Si usaste esta clase en index.php
+        } else {
+            // categoriesGrid.classList.add('initial-four'); // Si usaste esta clase en index.php
+        }
+
+        // Crear y añadir las tarjetas de categoría
+        categoriasAMostrar.forEach(function (cat) {
+            const categoryCard = document.createElement('a');
+            categoryCard.href = "todos_productos.php?categoria=" + cat.id;
+            // Buscamos el conteo de juegos para esta categoría
+            let current_cat_count = 0;
+            const count_data = categoriasCount.find(item => item.id === cat.id);
+            if (count_data) {
+                current_cat_count = count_data.count;
+            }
+
+            // Asignamos la clase de color. Aquí podrías necesitar lógica más avanzada si los colores se asignan por índice en PHP
+            // Por simplicidad, si los colores se corresponden 1 a 1 con el orden de las categorías, podrías hacer algo así:
+            // let color_class = colors[categoriasAMostrar.indexOf(cat) % colors.length];
+            // O si el color ya viene en el objeto cat desde PHP (como en index.php):
+            let color_class = ''// Aquí deberías obtener la clase de color si no viene en el objeto cat
+            // Si la clase de color ya está en el objeto cat (como en index.php después de la edición):
+            if (cat.color) { // Asegúrate de que la columna color se obtenga en la consulta PHP si la necesitas aquí
+                color_class = cat.color;
+            } else { // Si no se obtiene la clase de color, puedes asignarla basado en el índice o id si tienes un mapeo
+                // Lógica para asignar color si no viene en el objeto cat
+                // Ejemplo simple basado en índice (puede no coincidir con PHP si el orden cambia)
+                let index = todasLasCategorias.findIndex(item => item.id === cat.id);
+                if (index !== -1) {
+                    color_class = colors[index % colors.length];
                 }
+            }
 
-                // Asignamos la clase de color (adaptar según cómo obtengas el color en PHP)
-                let color_class = '';
-                if(cat.color) { // Si la clase de color ya está en el objeto cat (como en index.php después de la edición)
-                    color_class = cat.color;
-                } else { // Si no se obtiene la clase de color, puedes asignarla basado en el índice o id si tienes un mapeo
-                    let index = todasLasCategorias.findIndex(item => item.id === cat.id);
-                     if(index !== -1) {
-                         color_class = colors[index % colors.length];
-                     }
-                }
-                categoryCard.className = "categoria-card " + color_class;
+            categoryCard.className = "categoria-card " + color_class;
 
-                // Añadir estilo de fondo para la imagen y centrarlo
-                categoryCard.style.backgroundImage = "url('" + (cat.foto || '') + "')";
-                categoryCard.style.backgroundSize = "cover";
-                categoryCard.style.backgroundPosition = "center";
-                categoryCard.style.minHeight = "150px";
+            // Añadir estilo de fondo para la imagen y centrarlo
+            categoryCard.style.backgroundImage = "url('" + (cat.foto || '') + "')"; // Usar cat.foto y manejar si es nulo/vacío
+            categoryCard.style.backgroundSize = "cover";
+            categoryCard.style.backgroundPosition = "center";
+            categoryCard.style.minHeight = "150px"; // Asegurar una altura mínima como en el CSS
 
-                let cardContentHTML = `
+            let cardContentHTML = `
                     <div class="categoria-content">
                 `;
 
-                // Mostrar el nombre de la categoría solo si no es una de las tarjetas
-                if (cat.nombre !== 'Tarjeta Play' && cat.nombre !== 'Tarjeta XBOX' && cat.nombre !== 'Tarjeta Nintendo') {
-                    cardContentHTML += `<h3>${cat.nombre}</h3>`;
-                }
+            // Mostrar el nombre de la categoría solo si no es una de las tarjetas
+            if (cat.nombre !== 'Tarjeta Play' && cat.nombre !== 'Tarjeta XBOX' && cat.nombre !== 'Tarjeta Nintendo') {
+                cardContentHTML += `<h3>${cat.nombre}</h3>`;
+            }
 
-                cardContentHTML += `
+            cardContentHTML += `
                         <p>${current_cat_count} juegos</p>
                     </div>
                 `;
 
-                categoryCard.innerHTML = cardContentHTML;
-                categoriesGrid.appendChild(categoryCard);
-            });
-            // Asegurarse de que el estado inicial sea false (mostrando solo 3)
-            mostrandoTodas = false;
-            const button = document.getElementById('toggle-categories');
-            if(button) { // Asegurarse de que el botón exista
-                button.innerText = "Mostrar Todas las Categorías";
-            }
-
+            categoryCard.innerHTML = cardContentHTML;
+            categoriesGrid.appendChild(categoryCard);
         });
 
-    </script>
+        // Prevenir que la página se desplace
+        return false;
+    }
+
+    // --- Nueva función para alternar la visualización de ofertas ---
+    function toggleOffers() {
+        const offersGrid = document.getElementById('ofertas-grid'); // Asegúrate de que el div tenga este ID
+        const button = document.getElementById('toggle-offers'); // Asegúrate de que el botón tenga este ID
+        const offerItems = offersGrid.querySelectorAll('.oferta-card'); // Seleccionar todas las tarjetas de oferta
+
+        const initialOffersToShow = 4; // Coincidir con la variable PHP
+
+        let showingAll = button.innerText.includes("Ocultar"); // Verificar el estado actual del botón
+
+        if (!showingAll) {
+            // Si no está mostrando todas, mostrar todos los elementos ocultos
+            offerItems.forEach(item => {
+                item.classList.remove('hidden-offer-item');
+            });
+            button.innerText = "Ocultar Ofertas"; // Cambiar texto del botón
+        } else {
+            // Si está mostrando todas, ocultar los elementos más allá de los iniciales
+            offerItems.forEach((item, index) => {
+                if (index >= initialOffersToShow) {
+                    item.classList.add('hidden-offer-item');
+                }
+            });
+            button.innerText = "Mostrar Todas las Ofertas"; // Cambiar texto del botón
+        }
+
+        // Prevenir el comportamiento predeterminado del enlace
+        return false;
+    }
+
+    // Ejecutar al cargar la página para mostrar solo las 3 primeras inicialmente (para categorías)
+    document.addEventListener('DOMContentLoaded', function () {
+        // Si quieres que al cargar la página ya se genere la vista de 3 con el script JS:
+        const categoriesGrid = document.querySelector('.categorias-grid');
+        categoriesGrid.innerHTML = ''; // Limpiar el contenido generado por PHP
+        todasLasCategorias.slice(0, 3).forEach(function (cat) { // Usar slice(0, 3) aquí
+            const categoryCard = document.createElement('a');
+            categoryCard.href = "todos_productos.php?categoria=" + cat.id;
+
+            // Buscamos el conteo de juegos para esta categoría
+            let current_cat_count = 0;
+            const count_data = categoriasCount.find(item => item.id === cat.id);
+            if (count_data) {
+                current_cat_count = count_data.count;
+            }
+
+            // Asignamos la clase de color (adaptar según cómo obtengas el color en PHP)
+            let color_class = '';
+            if (cat.color) { // Si la clase de color ya está en el objeto cat (como en index.php después de la edición)
+                color_class = cat.color;
+            } else { // Si no se obtiene la clase de color, puedes asignarla basado en el índice o id si tienes un mapeo
+                let index = todasLasCategorias.findIndex(item => item.id === cat.id);
+                if (index !== -1) {
+                    color_class = colors[index % colors.length];
+                }
+            }
+            categoryCard.className = "categoria-card " + color_class;
+
+            // Añadir estilo de fondo para la imagen y centrarlo
+            categoryCard.style.backgroundImage = "url('" + (cat.foto || '') + "')";
+            categoryCard.style.backgroundSize = "cover";
+            categoryCard.style.backgroundPosition = "center";
+            categoryCard.style.minHeight = "150px";
+
+            let cardContentHTML = `
+                    <div class="categoria-content">
+                `;
+
+            // Mostrar el nombre de la categoría solo si no es una de las tarjetas
+            if (cat.nombre !== 'Tarjeta Play' && cat.nombre !== 'Tarjeta XBOX' && cat.nombre !== 'Tarjeta Nintendo') {
+                cardContentHTML += `<h3>${cat.nombre}</h3>`;
+            }
+
+            cardContentHTML += `
+                        <p>${current_cat_count} juegos</p>
+                    </div>
+                `;
+
+            categoryCard.innerHTML = cardContentHTML;
+            categoriesGrid.appendChild(categoryCard);
+        });
+        // Asegurarse de que el estado inicial sea false (mostrando solo 3)
+        mostrandoTodas = false;
+        const button = document.getElementById('toggle-categories');
+        if (button) { // Asegurarse de que el botón exista
+            button.innerText = "Mostrar Todas las Categorías";
+        }
+
+        // --- Código para manejar la carga inicial de Ofertas (si quieres que JS controle la visibilidad inicial) ---
+        // Si PHP ya está ocultando los elementos con la clase hidden-offer-item, este paso no es estrictamente necesario
+        // pero asegura que JS tenga el control y que el texto del botón sea correcto si hay más de 4 ofertas.
+        const initialOffersButton = document.getElementById('toggle-offers');
+        if (initialOffersButton) { // Asegurarse de que el botón de ofertas exista
+            const offersGrid = document.getElementById('ofertas-grid');
+            const offerItems = offersGrid.querySelectorAll('.oferta-card');
+            const initialOffersToShow = 4; // Coincidir con la variable PHP
+
+            // Ocultar los elementos que deben estar ocultos inicialmente si JavaScript toma el control
+            // Si PHP ya añade la clase 'hidden-offer-item', esta parte solo asegura que la clase se aplica si JS es el que controla la visibilidad.
+            offerItems.forEach((item, index) => {
+                if (index >= initialOffersToShow) {
+                    item.classList.add('hidden-offer-item');
+                }
+            });
+
+            // Asegurarse de que el texto del botón sea correcto al cargar si hay más ofertas de las iniciales
+            if (offerItems.length > initialOffersToShow) {
+                initialOffersButton.innerText = "Mostrar Todas las Ofertas";
+            } else {
+                // Si no hay más ofertas de las iniciales, ocultar el botón (PHP ya lo hace, esto es una doble verificación JS)
+                initialOffersButton.style.display = 'none';
+            }
+        }
+
+    });
+
+</script>
+
+<script>
+ // Script JS para el botón scroll arriba
+ const scrollBtn = document.getElementById('scrollToTopBtn');
+
+ window.addEventListener('scroll', () => {
+  scrollBtn.style.display = window.scrollY > 300 ? 'flex' : 'none';
+ });
+
+ scrollBtn.addEventListener('click', () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+ });
+</script>
 
 </body>
 

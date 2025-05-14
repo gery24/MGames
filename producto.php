@@ -429,7 +429,14 @@ if (isset($_GET['review_error'])) {
                 <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" alt="<?php echo htmlspecialchars($producto['nombre']); ?>" class="product-image">
                 <div class="product-info">
                     <h1 class="product-title"><?php echo htmlspecialchars($producto['nombre']); ?></h1>
-                    <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
+                    <p class="price">
+                        <?php if (isset($producto['descuento']) && $producto['descuento'] > 0): ?>
+                            <span style="text-decoration: line-through; color: #888; font-size: 0.8em; margin-right: 5px;">€<?php echo number_format($producto['precio'], 2); ?></span>
+                            €<?php echo number_format($producto['precio'] * (1 - ($producto['descuento'] / 100)), 2); ?>
+                        <?php else: ?>
+                            €<?php echo number_format($producto['precio'], 2); ?>
+                        <?php endif; ?>
+                    </p>
                     <div class="category">
                         <?php echo isset($producto['categoria_nombre']) ? htmlspecialchars($producto['categoria_nombre']) : 'Categoría no disponible'; ?>
                     </div>
