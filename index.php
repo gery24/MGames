@@ -250,7 +250,8 @@ $titulo = "MGames - Tu tienda de videojuegos";
                 foreach($first_four_categories as $cat): 
                     // Encontrar el conteo para esta categoría desde $categorias_count
                     $current_cat_count = 0;
-                    if (isset($cat['id'])) { // Asegurarse de que el ID existe antes de buscar el conteo
+                    // Asegurarse de que el ID existe antes de buscar el conteo
+                    if (isset($cat['id'])) {
                          foreach($categorias_count as $cat_count_data) {
                             if (isset($cat_count_data['id']) && $cat_count_data['id'] == $cat['id']) {
                                 $current_cat_count = $cat_count_data['count'];
