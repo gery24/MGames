@@ -173,6 +173,7 @@ body {
                     <li><a href="novedades.php">Novedades</a></li>
                     <li><a href="contacto.php">Contacto</a></li>
                     <li><a href="SobreNosotros.php">Sobre Nosotros</a></li>
+                    <li><a href="Faqs.php">Preguntas Frecuentes</a></li>
                 </ul>
             </div>
             
