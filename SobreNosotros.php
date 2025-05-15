@@ -149,53 +149,29 @@ $titulo = "Nosotros - MGames";
                 <div class="timeline">
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
-                        <div class="timeline-date">2013</div>
-                        <div class="timeline-content">
-                            <h3>Los inicios</h3>
-                            <p>Fundación de MGames como una pequeña tienda local de videojuegos en Madrid, con apenas 50 títulos en stock pero con una gran ilusión.</p>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-dot"></div>
-                        <div class="timeline-date">2015</div>
-                        <div class="timeline-content">
-                            <h3>Expansión online</h3>
-                            <p>Lanzamiento de nuestra tienda online, permitiéndonos llegar a gamers de toda España y ampliar nuestro catálogo a más de 500 títulos.</p>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-dot"></div>
-                        <div class="timeline-date">2017</div>
-                        <div class="timeline-content">
-                            <h3>Crecimiento físico</h3>
-                            <p>Apertura de nuestra segunda tienda física en Barcelona y lanzamiento de nuestro programa de fidelización MGames Rewards.</p>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-dot"></div>
-                        <div class="timeline-date">2019</div>
-                        <div class="timeline-content">
-                            <h3>Comunidad MGames</h3>
-                            <p>Inicio de nuestros eventos y torneos de gaming, fortaleciendo la comunidad de jugadores y creando espacios de encuentro para los apasionados de los videojuegos.</p>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-dot"></div>
-                        <div class="timeline-date">2021</div>
-                        <div class="timeline-content">
-                            <h3>Expansión internacional</h3>
-                            <p>Comenzamos a enviar productos a toda Europa y lanzamos nuestra aplicación móvil para mejorar la experiencia de compra de nuestros clientes.</p>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-dot"></div>
                         <div class="timeline-date">2023</div>
                         <div class="timeline-content">
-                            <h3>Actualidad</h3>
-                            <p>Celebración de nuestro 10º aniversario con la apertura de nuevas tiendas en Valencia y Sevilla, consolidándonos como referentes en el sector de los videojuegos en España.</p>
+                            <h3>Los inicios</h3>
+                            <p>Fundación de MGames en Barcelona, un proyecto nacido de la pasión por los videojuegos con el objetivo de crear una comunidad única.</p>
                         </div>
                     </div>
-                </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">2024</div>
+                        <div class="timeline-content">
+                            <h3>Los Pilares del exito</h3>
+                            <p>Definición de nuestra identidad y valores. Desarrollo de nuestra plataforma online con una amplia visión de futuro y experiencia de usuario.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">2025</div>
+                        <div class="timeline-content">
+                            <h3>Expansión total</h3>
+                            <p>Lanzamiento oficial de nuestra tienda online y consolidación en el mercado nacional, ampliando nuestro catálogo y nuestra comunidad de jugadores.</p>
+                        </div>
+                    </div>
+                    
             </div>
         </section>
 
@@ -207,15 +183,30 @@ $titulo = "Nosotros - MGames";
                     <div class="testimonial-card">
                         <div class="testimonial-content">
                             <i class="fas fa-quote-left quote-icon"></i>
-                            <p>MGames ha sido mi tienda de confianza durante años. Su catálogo es impresionante y el servicio al cliente es inmejorable. ¡Siempre encuentro lo que busco!</p>
+                            <p>MGames ha sido mi tienda de confianza durante años. Su catálogo es impresionante y el servicio al cliente es inmejorable. ¡Siempre encuentro lo que busco.<br>Me declaro TOTALMENTE FAN DE LOS FUNDADORES!</p>
                         </div>
                         <div class="testimonial-author">
                             <div class="author-image">
-                                <img src="FotosWeb/testimonials/user1.jpg" alt="Cliente">
+                                <img src="FotosWeb/julian.png" alt="Cliente">
                             </div>
                             <div class="author-info">
-                                <h4>David García</h4>
-                                <p>Cliente desde 2015</p>
+                                <h4>Julian Fortuño</h4>
+                                <p>Cliente desde 2024</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <i class="fas fa-quote-left quote-icon"></i>
+                            <p>Los eventos y torneos que organiza MGames son geniales. He conocido a muchos amigos gracias a ellos y me han permitido disfrutar aún más de mi afición, que ni yo sabia que tenia antes de conocer a los fundadores.</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-image">
+                                <img src="FotosWeb/marta.jpg" alt="Cliente">
+                            </div>
+                            <div class="author-info">
+                                <h4>Marta Carbonell</h4>
+                                <p>Cliente desde 2025</p>
                             </div>
                         </div>
                     </div>
@@ -226,26 +217,11 @@ $titulo = "Nosotros - MGames";
                         </div>
                         <div class="testimonial-author">
                             <div class="author-image">
-                                <img src="FotosWeb/testimonials/user2.jpg" alt="Cliente">
+                                <img src="FotosWeb/victor.jpg" alt="Cliente">
                             </div>
                             <div class="author-info">
-                                <h4>Elena Ruiz</h4>
-                                <p>Cliente desde 2018</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-card">
-                        <div class="testimonial-content">
-                            <i class="fas fa-quote-left quote-icon"></i>
-                            <p>Los eventos y torneos que organiza MGames son geniales. He conocido a muchos amigos gracias a ellos y me han permitido disfrutar aún más de mi afición.</p>
-                        </div>
-                        <div class="testimonial-author">
-                            <div class="author-image">
-                                <img src="FotosWeb/testimonials/user3.jpg" alt="Cliente">
-                            </div>
-                            <div class="author-info">
-                                <h4>Javier Moreno</h4>
-                                <p>Cliente desde 2019</p>
+                                <h4>Victor Martin</h4>
+                                <p>Cliente desde 2024</p>
                             </div>
                         </div>
                     </div>
@@ -918,6 +894,44 @@ $titulo = "Nosotros - MGames";
              display: flex;
              flex-direction: column;
              align-items: center;
+        }
+
+        /* Historia */
+        .history-section .container {
+            /* Asegurar que el contenedor no tenga estilos que impidan que el título esté encima */
+            /* Por ejemplo, si fuera flex o grid con una dirección específica */
+            display: block; /* Asegurar que sea un bloque normal */
+            /* Opcional: centrar el contenido si es necesario */
+            /* text-align: center; */
+        }
+
+        .history-section h2 {
+            margin-bottom: 2rem; /* Asegurar espacio debajo del título */
+            /* Otros estilos de h2 ya definidos globalmente */
+        }
+        
+        .timeline {
+            position: relative;
+        }
+
+        /* Testimonios */
+        .testimonials-section .container {
+            /* Asegurar que el contenedor no tenga estilos que impidan que el título esté encima */
+            display: block; /* Asegurar que sea un bloque normal */
+            /* Opcional: centrar el contenido si es necesario */
+            /* text-align: center; */
+        }
+
+        .testimonials-section h2 {
+            margin-bottom: 2rem; /* Asegurar espacio debajo del título */
+            /* Otros estilos de h2 ya definidos globalmente */
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
         }
     </style>
 
