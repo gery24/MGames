@@ -138,7 +138,7 @@ $titulo = "Preguntas Frecuentes - MGames";
                                     <i class="fas fa-chevron-down"></i>
                                 </div>
                                 <div class="faq-answer">
-                                    <p>Actualmente contamos con nuestra tienda principal en Barcelona, en la calle Diagonal 532. Próximamente abriremos nuevas sucursales en Madrid y Valencia. Puedes consultar la información detallada y mapas en nuestra sección de "Tiendas".</p>
+                                    <p>Actualmente contamos con nuestra tienda principal en Barcelona, en la Avinguda Meridiana, 263, Sant Andreu, 08027 Barcelona. Próximamente abriremos nuevas sucursales en Madrid y Valencia. Puedes consultar la información detallada y mapas en nuestra sección de "Tiendas".</p>
                                 </div>
                             </div>
 
@@ -151,7 +151,7 @@ $titulo = "Preguntas Frecuentes - MGames";
                                 <div class="faq-answer">
                                     <p>Puedes contactarnos a través de varios canales:</p>
                                     <ul>
-                                        <li>Teléfono: 900 123 456 (gratuito) de lunes a viernes de 9:00 a 18:00</li>
+                                        <li>Teléfono: +34 618491819 de lunes a viernes de 9:00 a 18:00</li>
                                         <li>Email: atencion@mgames.com</li>
                                         <li>Formulario de contacto en nuestra web</li>
                                         <li>Chat en vivo durante el horario de atención</li>
@@ -167,7 +167,7 @@ $titulo = "Preguntas Frecuentes - MGames";
                                     <i class="fas fa-chevron-down"></i>
                                 </div>
                                 <div class="faq-answer">
-                                    <p>Sí, ofrecemos servicio técnico especializado para la reparación de consolas de las principales marcas. Puedes solicitar presupuesto sin compromiso en nuestra tienda física o a través del formulario específico en nuestra web. El tiempo de reparación varía según el tipo de avería, pero generalmente oscila entre 3 y 10 días hábiles.</p>
+                                    <p>En este momento no ofrecemos servicio de reparación de consolas directamente. Estamos trabajando para poder ofrecer este servicio en el futuro y ampliar nuestra gama de asistencias técnicas para cubrir todas vuestras necesidades. Os mantendremos informados a través de nuestra web y redes sociales cuando este servicio esté disponible. Mientras tanto, para cualquier otro tipo de soporte técnico relacionado con nuestros productos, no dudéis en contactarnos.</p>
                                 </div>
                             </div>
                         </div>
@@ -195,7 +195,7 @@ $titulo = "Preguntas Frecuentes - MGames";
                                     <i class="fas fa-chevron-down"></i>
                                 </div>
                                 <div class="faq-answer">
-                                    <p>Sí, ofrecemos sistema de reservas para juegos y consolas de próximo lanzamiento. Para reservar, solo necesitas realizar un depósito del 20% del valor del producto. Las reservas tienen prioridad de entrega el día del lanzamiento y en muchos casos incluyen contenido exclusivo o regalos especiales.</p>
+                                    <p>Sí, ofrecemos sistema de reservas para juegos y consolas de próximo lanzamiento. Las reservas tienen prioridad de entrega el día del lanzamiento y en muchos casos incluyen contenido exclusivo o regalos especiales.</p>
                                 </div>
                             </div>
 
@@ -206,7 +206,7 @@ $titulo = "Preguntas Frecuentes - MGames";
                                     <i class="fas fa-chevron-down"></i>
                                 </div>
                                 <div class="faq-answer">
-                                    <p>Sí, ofrecemos el servicio "Click & Collect" que te permite comprar online y recoger en tienda sin costes de envío. Al finalizar tu compra, selecciona la opción "Recoger en tienda" y elige la tienda que prefieras. Recibirás un email cuando tu pedido esté listo para recoger, normalmente en un plazo de 24-48 horas.</p>
+                                    <p>En este momento, solamente ofrecemos envíos a domicilio. Estamos trabajando para implementar opciones de recogida en tienda física en el futuro. Por favor, revisa nuestra página de Envíos para más detalles sobre las opciones de entrega a domicilio disponibles.</p>
                                 </div>
                             </div>
 
@@ -412,14 +412,7 @@ $titulo = "Preguntas Frecuentes - MGames";
                                     <i class="fas fa-chevron-down"></i>
                                 </div>
                                 <div class="faq-answer">
-                                    <p>Crear una cuenta es muy sencillo. Puedes hacerlo de varias formas:</p>
-                                    <ul>
-                                        <li>Desde nuestra web, haz clic en "Mi cuenta" y luego en "Registrarse"</li>
-                                        <li>Durante el proceso de compra, seleccionando la opción "Crear cuenta"</li>
-                                        <li>A través de nuestra app móvil, en la sección "Perfil"</li>
-                                        <li>En tienda física, solicitándolo a cualquier empleado</li>
-                                    </ul>
-                                    <p>Solo necesitas proporcionar un email válido y crear una contraseña. También puedes registrarte usando tu cuenta de Google, Facebook o Apple.</p>
+                                    <p>Para crear una cuenta, es necesario registrarse y rellenar el formulario correspondiente.</p>
                                 </div>
                             </div>
 
@@ -430,16 +423,15 @@ $titulo = "Preguntas Frecuentes - MGames";
                                     <i class="fas fa-chevron-down"></i>
                                 </div>
                                 <div class="faq-answer">
-                                    <p>Crear una cuenta en MGames te ofrece numerosas ventajas:</p>
+                                    <p>Al crear una cuenta en MGames, podrás disfrutar de las siguientes ventajas como miembro:</p>
                                     <ul>
-                                        <li>Proceso de compra más rápido (datos guardados)</li>
-                                        <li>Seguimiento de pedidos en tiempo real</li>
-                                        <li>Historial de compras y facturas</li>
-                                        <li>Programa de fidelización con puntos canjeables</li>
-                                        <li>Acceso a ofertas exclusivas para miembros</li>
-                                        <li>Notificaciones sobre lanzamientos y reservas</li>
-                                        <li>Lista de deseos para guardar productos favoritos</li>
+                                        <li>Realizar tus compras de forma más rápida, guardando tus datos.</li>
+                                        <li>Consultar el estado y el historial de tus pedidos.</li>
+                                        <li>Acumular puntos en nuestro programa de fidelización y acceder a ofertas exclusivas para miembros.</li>
+                                        <li>Recibir notificaciones importantes sobre lanzamientos y el estado de tus pedidos.</li>
+                                        <li>Guardar tus productos favoritos en la lista de deseos.</li>
                                     </ul>
+                                    <p>Estas funcionalidades estarán disponibles una vez que inicies sesión con tu cuenta registrada.</p>
                                 </div>
                             </div>
 
