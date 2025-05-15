@@ -326,6 +326,7 @@ $titulo = "Nosotros - MGames";
             gap: 2rem;
             margin-top: 2rem;
             flex-direction: column;
+            align-items: center; /* Centrar contenido horizontalmente */
         }
         
         .about-text {
@@ -342,18 +343,19 @@ $titulo = "Nosotros - MGames";
         
         .about-image {
             flex: none;
-            width: 150px;
-            height: auto;
+            width: 150px; /* Tamaño fijo */
+            height: 150px; /* Tamaño fijo e igual al ancho */
             max-width: 100%;
-            margin: 0 auto 2rem;
+            margin: 0 auto 2rem; /* Centrar y añadir margen inferior */
+            border-radius: 50%; /* Hacer la imagen redonda */
+            overflow: hidden; /* Ocultar partes fuera del círculo */
         }
         
         .about-image img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            object-fit: cover; /* Asegurar que la imagen cubra el círculo */
+            border-radius: var(--radius); /* Eliminar o ajustar si se aplica al contenedor */
         }
         
         .about-section h2, .mission-vision-section h2, .values-section h2, 
