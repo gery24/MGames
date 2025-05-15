@@ -27,8 +27,8 @@ $titulo = "Nosotros - MGames";
         <!-- Hero Section para Nosotros -->
         <header class="about-hero">
             <div class="container">
-                <h1>Nosotros</h1>
-                <p>Conoce al equipo detrás de MGames, tu tienda de videojuegos favorita</p>
+                <h1>Sobre Nosotros</h1>
+                <p>Conoce al equipo detrás de MGames, tu tienda de videojuegos favorita.</p>
             </div>
         </header>
 
@@ -247,8 +247,7 @@ $titulo = "Nosotros - MGames";
     <style>
         /* Estilos específicos para la página Nosotros */
         .about-hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-                        url('FotosWeb/about-hero.jpg') no-repeat center center;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color)); /* Aplicar degradado aquí */
             background-size: cover;
             color: #fff;
             padding: 100px 0;
@@ -276,13 +275,49 @@ $titulo = "Nosotros - MGames";
         .history-section {
             padding: 4rem 0;
             background-color: var(--bg-white);
+            margin-bottom: 4rem;
         }
 
-        .mission-vision-section,
-        .team-section,
-        .testimonials-section {
+        /* Estilos específicos para la sección Sobre Nosotros - ahora con fondo blanco y separador */
+        .about-section {
+            padding: 4rem 0;
+            background-color: var(--bg-white); /* Fondo blanco */
+            margin-bottom: 0; /* Eliminar margen inferior */
+            border-bottom: 1px solid #e5e7eb; /* Añadir borde inferior */
+        }
+
+        /* Asegurar que Mision y Vision también tenga fondo blanco y separador */
+        .mission-vision-section {
             padding: 4rem 0;
             background-color: var(--bg-light);
+            margin-bottom: 0; /* Asegurar que no haya margen inferior */
+            border-bottom: none; /* Asegurar que no haya borde inferior si no se desea */
+        }
+
+        /* Aumentar padding inferior para separar de la siguiente sección */
+        .testimonials-section {
+             padding-bottom: 6rem; /* Aumentar el espacio debajo de la sección */
+        }
+
+        .values-section {
+            padding: 4rem 0;
+            background-color: var(--bg-white);
+            margin-bottom: 0; /* Eliminar margen inferior */
+            border-bottom: 1px solid #e5e7eb; /* Añadir borde inferior */
+        }
+
+        .team-section {
+            padding: 4rem 0;
+            background-color: var(--bg-light);
+            margin-bottom: 0; /* Eliminar margen inferior */
+            border-bottom: 1px solid #e5e7eb; /* Añadir borde inferior */
+        }
+        
+        .history-section {
+            padding: 4rem 0;
+            background-color: var(--bg-white);
+            margin-bottom: 0; /* Eliminar margen inferior */
+            border-bottom: 1px solid #e5e7eb; /* Añadir borde inferior */
         }
         
         .about-content {
@@ -371,7 +406,7 @@ $titulo = "Nosotros - MGames";
             background-color: var(--card-bg);
             padding: 2rem;
             border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
             text-align: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }

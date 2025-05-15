@@ -172,6 +172,7 @@ body {
                     <li><a href="tienda.php">Tienda</a></li>
                     <li><a href="novedades.php">Novedades</a></li>
                     <li><a href="contacto.php">Contacto</a></li>
+                    <li><a href="SobreNosotros.php">Sobre Nosotros</a></li>
                 </ul>
             </div>
             
