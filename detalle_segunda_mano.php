@@ -32,325 +32,632 @@ try {
 
 $titulo = htmlspecialchars($producto['nombre']);
 require_once 'includes/header.php';
-
-// Mostrar mensaje si el producto ya está en el carrito
-if (isset($_GET['already_in_cart'])) {
-    echo '<p style="color: red;">Este producto ya está en tu carrito.</p>';
-}
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $titulo; ?> - Segunda Mano</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #f5f5f5;
-            color: #333333;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
+<!-- Estilos específicos para la página de detalle de producto -->
+<style>
+    :root {
+        --primary-color: #6d28d9;
+        --primary-light: #8b5cf6;
+        --primary-dark: #5b21b6;
+        --secondary-color: #e0d5f7;
+        --accent-color: #f97316;
+        --text-color: #1f2937;
+        --text-light: #6b7280;
+        --bg-light: #f9fafb;
+        --bg-white: #ffffff;
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --radius: 0.5rem;
+        --radius-lg: 1rem;
+    }
+
+    body {
+        background-color: var(--bg-light);
+        color: var(--text-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+    }
+
+    .product-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+        color: var(--text-light);
+    }
+
+    .breadcrumb a {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .breadcrumb a:hover {
+        color: var(--primary-dark);
+    }
+
+    .breadcrumb .separator {
+        margin: 0 0.5rem;
+        color: var(--text-light);
+    }
+
+    /* Product Detail Card */
+    .product-detail-card {
+        background-color: var(--bg-white);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .product-detail-content {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .product-image-section {
+        flex: 1 1 400px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .product-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .product-image:hover {
+        transform: scale(1.03);
+    }
+
+    .product-info-section {
+        flex: 1 1 400px;
+        padding: 2.5rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-category {
+        display: inline-block;
+        background-color: var(--secondary-color);
+        color: var(--primary-dark);
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.3rem 0.8rem;
+        border-radius: 2rem;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .product-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin: 0 0 1rem;
+        color: var(--text-color);
+        line-height: 1.2;
+    }
+
+    .product-estado {
+        display: inline-flex;
+        align-items: center;
+        background-color: var(--primary-color);
+        color: white;
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.3rem 0.8rem;
+        border-radius: 2rem;
+        margin-bottom: 1.5rem;
+        text-transform: uppercase;
+    }
+
+    .product-estado i {
+        margin-right: 0.4rem;
+        font-size: 0.9rem;
+    }
+
+    .product-price {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin: 1rem 0 1.5rem;
+    }
+
+    .product-description {
+        margin-bottom: 1.5rem;
+        color: var(--text-light);
+        line-height: 1.7;
+    }
+
+    .product-features {
+        margin-bottom: 2rem;
+    }
+
+    .product-features h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+    }
+
+    .features-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .features-list li {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.8rem;
+        color: var(--text-light);
+    }
+
+    .features-list li i {
+        color: var(--primary-color);
+        margin-right: 0.8rem;
+        font-size: 1rem;
+    }
+
+    .add-to-cart-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--primary-color);
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: var(--radius);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: var(--shadow);
+        margin-top: auto;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .add-to-cart-btn:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .add-to-cart-btn i {
+        margin-right: 0.8rem;
+        font-size: 1.1rem;
+    }
+
+    /* Product Tabs */
+    .product-tabs {
+        background-color: var(--bg-white);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow);
+        margin-bottom: 3rem;
+        overflow: hidden;
+    }
+
+    .tabs-header {
+        display: flex;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .tab-button {
+        padding: 1.2rem 1.5rem;
+        background: none;
+        border: none;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-light);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .tab-button.active {
+        color: var(--primary-color);
+    }
+
+    .tab-button.active::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background-color: var(--primary-color);
+    }
+
+    .tab-content {
+        padding: 2rem;
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .tab-content h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+    }
+
+    .tab-content p {
+        color: var(--text-light);
+        line-height: 1.7;
+        margin-bottom: 1rem;
+    }
+
+    /* Similar Games Section */
+    .similar-games-section {
+        margin-bottom: 3rem;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: var(--text-color);
+        text-align: center;
+        position: relative;
+        padding-bottom: 1rem;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 4px;
+        background-color: var(--primary-color);
+        border-radius: 2px;
+    }
+
+    .similar-games-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .game-card {
+        background-color: var(--bg-white);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .game-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .game-card-image-container {
+        position: relative;
+        overflow: hidden;
+        height: 180px;
+    }
+
+    .game-card-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .game-card:hover .game-card-image {
+        transform: scale(1.05);
+    }
+
+    .game-card-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: var(--primary-color);
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 0.2rem 0.6rem;
+        border-radius: 1rem;
+        text-transform: uppercase;
+    }
+
+    .game-card-content {
+        padding: 1.2rem;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .game-card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0 0 0.5rem;
+        color: var(--text-color);
+        line-height: 1.3;
+    }
+
+    .game-card-price {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin: 0.5rem 0 1rem;
+    }
+
+    .game-card-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--primary-light);
+        color: white;
+        font-size: 0.9rem;
+        font-weight: 600;
+        padding: 0.6rem 1rem;
+        border-radius: var(--radius);
+        transition: background-color 0.3s ease;
+        margin-top: auto;
+        text-align: center;
+    }
+
+    .game-card-button:hover {
+        background-color: var(--primary-color);
+    }
+
+    /* Scroll to top button */
+    #scrollToTopBtn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+        z-index: 1000;
+    }
+
+    #scrollToTopBtn:hover {
+        background-color: var(--primary-dark);
+        transform: scale(1.1);
+    }
+
+    #scrollToTopBtn svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    /* Alert message */
+    .alert {
+        padding: 1rem;
+        border-radius: var(--radius);
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .alert-danger {
+        background-color: #fee2e2;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .product-detail-content {
+            flex-direction: column;
         }
 
-        .container {
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0;
-        }
-
-        /* Estilos de tarjeta principal */
-        .card {
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            margin-bottom: 16px;
-            padding: 24px;
-            overflow: hidden;
-        }
-
-        /* Estilos del producto */
-        .product-header {
-            display: flex;
-            align-items: flex-start;
-            gap: 30px;
-        }
-
-        .product-image {
-            width: 300px;
-            height: auto;
-            border-radius: 5px;
-            object-fit: cover;
-        }
-
-        .product-info {
-            flex: 1;
+        .product-image-section {
+            height: 300px;
         }
 
         .product-title {
-            font-size: 28px;
-            font-weight: bold;
-            margin: 0 0 15px 0;
-            color: #333;
+            font-size: 1.8rem;
         }
 
-        .price {
-            font-size: 28px;
-            font-weight: bold;
-            color: #6d28d9; /* Color morado para mantener consistencia */
-            margin: 15px 0;
+        .product-price {
+            font-size: 2rem;
         }
 
-        .category {
-            background-color: #f8f9fa;
-            padding: 8px 15px;
-            border-radius: 5px;
-            margin: 15px 0;
-            display: inline-block;
-        }
-
-        .estado-badge {
-            background-color: #6d28d9;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            margin: 15px 10px 15px 0;
-            display: inline-block;
-            font-weight: 500;
-            font-size: 0.85rem;
-            width: auto;
-            max-width: 100px;
-            text-align: center;
-        }
-
-        /* Botones */
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border-radius: 5px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            font-size: 16px;
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary {
-            background-color: #6d28d9;
-            color: white;
-            box-shadow: 0 4px 6px rgba(109, 40, 217, 0.2);
-            width: 100%;
-            max-width: 250px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-primary:hover {
-            background-color: #5b21b6;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(109, 40, 217, 0.3);
-        }
-
-        /* Secciones */
-        .section-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        /* Juegos similares */
-        .similar-games-grid {
-            display: flex;
-            gap: 15px;
+        .tabs-header {
             overflow-x: auto;
-            padding-bottom: 15px;
-            scrollbar-width: thin;
-            justify-content: center;
+            white-space: nowrap;
         }
 
-        .similar-games-grid::-webkit-scrollbar {
-            height: 6px;
+        .tab-button {
+            padding: 1rem;
+            font-size: 0.9rem;
         }
 
-        .similar-games-grid::-webkit-scrollbar-thumb {
-            background-color: #c1c1c1;
-            border-radius: 6px;
+        .similar-games-grid {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
+    }
+
+    @media (max-width: 480px) {
+        .product-info-section {
+            padding: 1.5rem;
         }
 
-        .game-card {
-            position: relative;
-            border-radius: 8px;
-            overflow: hidden;
-            background: #fff;
-            transition: transform 0.2s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            flex: 0 0 250px;
-            max-width: 250px;
+        .product-title {
+            font-size: 1.5rem;
         }
 
-        .game-card:hover {
-            transform: translateY(-4px);
+        .product-price {
+            font-size: 1.8rem;
         }
 
-        .game-image {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
+        .tab-content {
+            padding: 1.5rem;
         }
 
-        .game-info {
-            padding: 15px;
+        .similar-games-grid {
+            grid-template-columns: 1fr;
         }
+    }
+</style>
 
-        .game-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin: 0;
-            color: #333;
-        }
+<div class="product-container">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="index.php">Inicio</a>
+        <span class="separator">/</span>
+        <a href="segunda_mano.php">Segunda Mano</a>
+        <span class="separator">/</span>
+        <span><?php echo htmlspecialchars($producto['nombre']); ?></span>
+    </div>
 
-        .game-price {
-            font-size: 18px;
-            font-weight: bold;
-            color: #6d28d9;
-            margin-top: 10px;
-        }
+    <?php if (isset($_GET['already_in_cart'])): ?>
+    <div class="alert alert-danger">
+        Este producto ya está en tu carrito.
+    </div>
+    <?php endif; ?>
 
-        .view-details {
-            display: inline-block;
-            background-color: #6d28d9;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 4px;
-            text-decoration: none;
-            margin-top: 10px;
-            font-size: 14px;
-            transition: background-color 0.2s;
-        }
-
-        .view-details:hover {
-            background-color: #5b21b6;
-        }
-
-        @media (max-width: 768px) {
-            .product-header {
-                flex-direction: column;
-            }
-
-            .product-image {
-                width: 100%;
-                max-width: 300px;
-                margin: 0 auto 20px;
-            }
-
-            .button-group {
-                flex-direction: column;
-            }
-
-            .game-card {
-                flex: 0 0 200px;
-                max-width: 200px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <!-- Tarjeta principal del producto -->
-        <div class="card">
-            <div class="product-header">
+    <!-- Product Detail Card -->
+    <div class="product-detail-card">
+        <div class="product-detail-content">
+            <!-- Product Image -->
+            <div class="product-image-section">
                 <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" alt="<?php echo htmlspecialchars($producto['nombre']); ?>" class="product-image">
-                <div class="product-info">
-                    <h1 class="product-title"><?php echo htmlspecialchars($producto['nombre']); ?></h1>
-                    <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
-                    <div class="estado-badge">
-                        <?php echo htmlspecialchars($producto['estado'] ?? 'Usado'); ?>
-                    </div>
-                    <div class="category">
-                        <?php echo htmlspecialchars($producto['categoria_nombre']); ?>
-                    </div>
-                    <div class="button-group">
-                        <form method="POST" action="agregar_al_carrito.php">
-                            <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
-                            <input type="hidden" name="nombre" value="<?php echo htmlspecialchars($producto['nombre']); ?>">
-                            <input type="hidden" name="precio" value="<?php echo $producto['precio']; ?>">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-shopping-cart"></i> Añadir al Carrito
-                            </button>
-                        </form>
-                    </div>
+            </div>
+            
+            <!-- Product Info -->
+            <div class="product-info-section">
+                <span class="product-category"><?php echo htmlspecialchars($producto['categoria_nombre']); ?></span>
+                <h1 class="product-title"><?php echo htmlspecialchars($producto['nombre']); ?></h1>
+                <span class="product-estado">
+                    <i class="fas fa-tag"></i>
+                    <?php echo htmlspecialchars($producto['estado'] ?? 'Usado'); ?>
+                </span>
+                <p class="product-price">€<?php echo number_format($producto['precio'], 2); ?></p>
+                
+                <p class="product-description">
+                    <?php echo htmlspecialchars($producto['descripcion']); ?>
+                </p>
+                
+                <div class="product-features">
+                    <h3>Características</h3>
+                    <ul class="features-list">
+                        <?php if (!empty($producto['plataforma'])): ?>
+                        <li><i class="fas fa-gamepad"></i> Plataforma: <?php echo htmlspecialchars($producto['plataforma']); ?></li>
+                        <?php endif; ?>
+                        <?php if (!empty($producto['genero'])): ?>
+                        <li><i class="fas fa-film"></i> Género: <?php echo htmlspecialchars($producto['genero']); ?></li>
+                        <?php endif; ?>
+                        <?php if (!empty($producto['idioma'])): ?>
+                        <li><i class="fas fa-language"></i> Idioma: <?php echo htmlspecialchars($producto['idioma']); ?></li>
+                        <?php endif; ?>
+                        <?php if (!empty($producto['fecha_lanzamiento'])): ?>
+                        <li><i class="fas fa-calendar-alt"></i> Lanzamiento: <?php echo htmlspecialchars($producto['fecha_lanzamiento']); ?></li>
+                        <?php endif; ?>
+                    </ul>
                 </div>
+                
+                <form method="POST" action="agregar_al_carrito.php">
+                    <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
+                    <input type="hidden" name="nombre" value="<?php echo htmlspecialchars($producto['nombre']); ?>">
+                    <input type="hidden" name="precio" value="<?php echo $producto['precio']; ?>">
+                    <button type="submit" class="add-to-cart-btn">
+                        <i class="fas fa-shopping-cart"></i> Añadir al Carrito
+                    </button>
+                </form>
             </div>
         </div>
+    </div>
 
-        <!-- Acerca del juego -->
-        <?php if (isset($producto['acerca_de']) && !empty($producto['acerca_de'])): ?>
-        <div class="card">
-            <h2 class="section-title">Acerca del juego</h2>
+    <!-- Product Tabs -->
+    <div class="product-tabs">
+        <div class="tabs-header">
+            <button class="tab-button active" data-tab="description">Descripción</button>
+            <?php if (!empty($producto['acerca_de'])): ?>
+            <button class="tab-button" data-tab="about">Acerca del juego</button>
+            <?php endif; ?>
+            <?php if (!empty($producto['descripcion_adicional'])): ?>
+            <button class="tab-button" data-tab="additional">Información adicional</button>
+            <?php endif; ?>
+            <?php if (!empty($producto['comentario'])): ?>
+            <button class="tab-button" data-tab="comments">Comentarios</button>
+            <?php endif; ?>
+        </div>
+        
+        <div id="description" class="tab-content active">
+            <h3>Descripción detallada</h3>
+            <p><?php echo htmlspecialchars($producto['descripcion']); ?></p>
+        </div>
+        
+        <?php if (!empty($producto['acerca_de'])): ?>
+        <div id="about" class="tab-content">
+            <h3>Acerca del juego</h3>
             <p><?php echo htmlspecialchars($producto['acerca_de']); ?></p>
         </div>
         <?php endif; ?>
-
-        <!-- Descripción -->
-        <div class="card">
-            <h2 class="section-title">Descripción</h2>
-            <p><?php echo htmlspecialchars($producto['descripcion']); ?></p>
-        </div>
-
-        <!-- Descripción adicional -->
+        
         <?php if (!empty($producto['descripcion_adicional'])): ?>
-        <div class="card">
-            <h2 class="section-title">Descripción adicional</h2>
+        <div id="additional" class="tab-content">
+            <h3>Información adicional</h3>
             <p><?php echo htmlspecialchars($producto['descripcion_adicional']); ?></p>
         </div>
         <?php endif; ?>
-
-        <!-- Comentarios adicionales -->
+        
         <?php if (!empty($producto['comentario'])): ?>
-        <div class="card">
-            <h2 class="section-title">Comentarios adicionales</h2>
+        <div id="comments" class="tab-content">
+            <h3>Comentarios del vendedor</h3>
             <p><?php echo htmlspecialchars($producto['comentario']); ?></p>
         </div>
         <?php endif; ?>
-
-        <!-- Juegos similares -->
-        <?php if ($juegos_similares): ?>
-        <div class="card">
-            <h2 class="section-title">Juegos similares</h2>
-            <div style="text-align: center;">
-                <div class="similar-games-grid">
-                    <?php foreach ($juegos_similares as $juego): ?>
-                        <div class="game-card">
-                            <img 
-                                src="<?php echo htmlspecialchars($juego['imagen']); ?>" 
-                                alt="<?php echo htmlspecialchars($juego['nombre']); ?>"
-                                class="game-image"
-                            >
-                            <div class="game-info">
-                                <h3 class="game-title"><?php echo htmlspecialchars($juego['nombre']); ?></h3>
-                                <p class="game-price">€<?php echo number_format($juego['precio'], 2); ?></p>
-                                <a href="detalle_segunda_mano.php?id=<?php echo $juego['id']; ?>" class="view-details">
-                                    Ver detalles
-                                </a>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-        </div>
-        <?php endif; ?>
     </div>
-    </style>
-<!-- Botón -->
+
+    <!-- Similar Games Section -->
+    <?php if ($juegos_similares): ?>
+    <div class="similar-games-section">
+        <h2 class="section-title">Juegos similares</h2>
+        <div class="similar-games-grid">
+            <?php foreach ($juegos_similares as $juego): ?>
+            <a href="detalle_segunda_mano.php?id=<?php echo $juego['id']; ?>" class="game-card">
+                <div class="game-card-image-container">
+                    <img src="<?php echo htmlspecialchars($juego['imagen']); ?>" alt="<?php echo htmlspecialchars($juego['nombre']); ?>" class="game-card-image">
+                    <span class="game-card-badge"><?php echo htmlspecialchars($juego['estado'] ?? 'Usado'); ?></span>
+                </div>
+                <div class="game-card-content">
+                    <h3 class="game-card-title"><?php echo htmlspecialchars($juego['nombre']); ?></h3>
+                    <p class="game-card-price">€<?php echo number_format($juego['precio'], 2); ?></p>
+                    <span class="game-card-button">Ver detalles</span>
+                </div>
+            </a>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?php endif; ?>
+</div>
+
 <!-- Botón scroll arriba -->
 <button id="scrollToTopBtn" aria-label="Volver arriba">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -359,54 +666,40 @@ if (isset($_GET['already_in_cart'])) {
   </svg>
 </button>
 
-<!-- Estilos CSS -->
-<style>
- #scrollToTopBtn {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 50px;
-  height: 50px;
-  background-color: #0d6efd; /* Azul Bootstrap */
-  color: white;
-  border: none;
-  border-radius: 50%;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
-  z-index: 1000;
-}
-
-#scrollToTopBtn:hover {
-  background-color: #0b5ed7;
-  transform: scale(1.1);
-}
-
-#scrollToTopBtn svg {
-  width: 24px;
-  height: 24px;
-}
-</style>
-
 <!-- Script JS -->
 <script>
- const scrollBtn = document.getElementById('scrollToTopBtn');
+    // Scroll to top button
+    const scrollBtn = document.getElementById('scrollToTopBtn');
 
-window.addEventListener('scroll', () => {
-  scrollBtn.style.display = window.scrollY > 300 ? 'flex' : 'none';
-});
+    window.addEventListener('scroll', () => {
+        scrollBtn.style.display = window.scrollY > 300 ? 'flex' : 'none';
+    });
 
-scrollBtn.addEventListener('click', () => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  });
-});
+    scrollBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    // Tabs functionality
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Remove active class from all buttons and contents
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked button
+            button.classList.add('active');
+            
+            // Show corresponding content
+            const tabId = button.getAttribute('data-tab');
+            document.getElementById(tabId).classList.add('active');
+        });
+    });
 </script>
-    <?php require_once 'includes/footer.php'; ?>
-</body>
-</html>
-                        
+
+<?php require_once 'includes/footer.php'; ?>
