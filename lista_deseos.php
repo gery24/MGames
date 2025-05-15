@@ -15,15 +15,42 @@ if (!isset($_SESSION['usuario'])) {
 try {
     // Obtener los productos de la lista de deseos del usuario
     $stmt = $pdo->prepare("
-        SELECT p.*, c.nombre as categoria_nombre 
+        SELECT l.id, l.producto_id, l.tipo 
         FROM lista_deseos l
-        JOIN productos p ON l.producto_id = p.id
-        LEFT JOIN categorias c ON p.categoria_id = c.id
         WHERE l.usuario_id = ?
         ORDER BY l.fecha_agregado DESC
     ");
     $stmt->execute([$_SESSION['usuario']['id']]);
-    $productos = $stmt->fetchAll();
+    $items_lista_deseos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Ahora $items_lista_deseos contiene los IDs y tipos de los ítems en la lista de deseos.
+    // Necesitamos obtener los detalles de cada ítem (nombre, imagen, precio, etc.) 
+    // de la tabla productos o segunda_mano basándonos en el campo 'tipo'.
+    $productos = []; // Inicializar un array para almacenar los detalles completos
+
+    foreach ($items_lista_deseos as $item) {
+        if ($item['tipo'] === 'producto') {
+            // Obtener detalles del producto normal
+            $stmt_producto = $pdo->prepare("SELECT p.*, c.nombre as categoria_nombre FROM productos p LEFT JOIN categorias c ON p.categoria_id = c.id WHERE p.id = ?");
+            $stmt_producto->execute([$item['producto_id']]);
+            $detalle_item = $stmt_producto->fetch(PDO::FETCH_ASSOC);
+            if ($detalle_item) {
+                $detalle_item['tipo'] = 'producto';
+                $detalle_item['lista_deseos_id'] = $item['id'];
+                $productos[] = $detalle_item;
+            }
+        } elseif ($item['tipo'] === 'segunda_mano') {
+            // Obtener detalles del juego de segunda mano
+            $stmt_segunda_mano = $pdo->prepare("SELECT sm.*, c.nombre as categoria_nombre FROM segunda_mano sm LEFT JOIN categorias c ON sm.categoria_id = c.id WHERE sm.id = ?");
+            $stmt_segunda_mano->execute([$item['producto_id']]);
+            $detalle_item = $stmt_segunda_mano->fetch(PDO::FETCH_ASSOC);
+            if ($detalle_item) {
+                $detalle_item['tipo'] = 'segunda_mano';
+                $detalle_item['lista_deseos_id'] = $item['id'];
+                $productos[] = $detalle_item;
+            }
+        }
+    }
 
 } catch(PDOException $e) {
     die("Error en la base de datos: " . $e->getMessage());
@@ -59,13 +86,18 @@ $titulo = "Lista de Deseos - MGames";
                 </div>
             <?php else: ?>
                 <div class="products-grid">
-                    <?php foreach($productos as $producto): ?>
+                    <?php foreach($productos as $producto): 
+                        // Determinar la URL de detalle basada en el tipo
+                        $detalle_url = ($producto['tipo'] === 'producto') ? 
+                                       'producto.php?id=' . $producto['id'] : 
+                                       'detalle_segunda_mano.php?id=' . $producto['id'];
+                    ?>
                         <div class="product-card">
                             <div class="product-image">
                                 <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" 
                                     alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
                                 <div class="product-overlay">
-                                    <a href="producto.php?id=<?php echo $producto['id']; ?>" class="btn-overlay">
+                                    <a href="<?php echo $detalle_url; ?>" class="btn-overlay">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                 </div>
@@ -75,20 +107,23 @@ $titulo = "Lista de Deseos - MGames";
                                 <h3><?php echo htmlspecialchars($producto['nombre']); ?></h3>
                                 <div class="price-container">
                                     <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
-                                    <?php if (isset($producto['precio_anterior']) && $producto['precio_anterior'] > $producto['precio']): ?>
+                                    <?php if ($producto['tipo'] === 'producto' && isset($producto['precio_anterior']) && $producto['precio_anterior'] > $producto['precio']): ?>
                                         <p class="old-price">€<?php echo number_format($producto['precio_anterior'], 2); ?></p>
                                         <?php 
                                             $discount = round(100 - ($producto['precio'] * 100 / $producto['precio_anterior']));
                                             echo '<span class="discount-badge">-' . $discount . '%</span>';
                                         ?>
                                     <?php endif; ?>
+                                     <?php if ($producto['tipo'] === 'segunda_mano' && isset($producto['estado'])): ?>
+                                        <span class="discount-badge" style="background-color: #10b981;"><?php echo htmlspecialchars($producto['estado']); ?></span>
+                                     <?php endif; ?>
                                 </div>
                                 <div class="product-actions">
-                                    <a href="producto.php?id=<?php echo $producto['id']; ?>" class="btn btn-primary">
+                                    <a href="<?php echo $detalle_url; ?>" class="btn btn-primary">
                                         <i class="fas fa-info-circle"></i> Ver Detalles
                                     </a>
                                     <button class="btn btn-danger remove-from-wishlist" 
-                                            data-product-id="<?php echo $producto['id']; ?>">
+                                            data-wishlist-id="<?php echo $producto['lista_deseos_id']; ?>">
                                         <i class="fas fa-trash"></i> Eliminar
                                     </button>
                                 </div>
@@ -243,10 +278,6 @@ body.admin .badge {
 .profile-dropdown {
     position: relative;
 }
-
-
-
-
 
 /* Nuevo estilo para el avatar cuadrado */
 .avatar-square {
@@ -715,7 +746,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            const productId = this.getAttribute('data-product-id');
+            // Usar data-wishlist-id en lugar de data-product-id
+            const wishlistId = this.getAttribute('data-wishlist-id');
             const productCard = this.closest('.product-card');
             
             // Añadir clase para animación de salida
@@ -729,7 +761,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ productId: productId })
+                    // Pasar el ID de la entrada de la lista de deseos
+                    body: JSON.stringify({ wishlistId: wishlistId })
                 });
 
                 const data = await response.json();

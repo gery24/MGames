@@ -16,9 +16,10 @@ $precio = isset($_GET['precio']) ? $_GET['precio'] : '';
 $busqueda = isset($_GET['busqueda']) ? trim($_GET['busqueda']) : '';
 
 // Construir la consulta SQL base
-$sql = "SELECT s.*, c.nombre as categoria_nombre 
+$sql = "SELECT s.*, c.nombre as categoria_nombre, u.nombre as usuario_nombre 
         FROM segunda_mano s 
-        LEFT JOIN categorias c ON s.categoria_id = c.id 
+        LEFT JOIN categorias c ON s.categoria_id = c.id
+        LEFT JOIN usuarios u ON s.usuario_id = u.id
         WHERE 1=1";
 
 // Aplicar filtros
@@ -143,11 +144,17 @@ require_once 'includes/header.php';
                             <div class="product-image">
                                 <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" 
                                      alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
+                                <!-- Etiqueta de categoría encima de la foto -->
+                                <div class="category-tag">
+                                    <?php echo htmlspecialchars($producto['categoria_nombre']); ?>
+                                </div>
                             </div>
                             <div class="product-card-content">
                                 <h3 class="product-title"><?php echo htmlspecialchars($producto['nombre']); ?></h3>
                                 <p class="product-price"><?php echo number_format($producto['precio'], 2); ?>€</p>
-                                <p class="product-category"><?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>
+                                <p class="product-category">
+                                    Subido por: <?php echo htmlspecialchars($producto['usuario_nombre']); ?>
+                                </p>
                                 <a href="detalle_segunda_mano.php?id=<?php echo $producto['id']; ?>" class="btn-details">
                                     Ver Detalles
                                 </a>
