@@ -1952,43 +1952,8 @@ try {
     </section>
 </div>
 
-<footer class="site-footer">
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-logo">
-                <img src="FotosWeb/logo.png" alt="MGames Logo">
-                <h3>MGames</h3>
-            </div>
-            <div class="footer-links">
-                <h4>Enlaces rápidos</h4>
-                <ul>
-                    <li><a href="index.php">Inicio</a></li>
-                    <li><a href="tienda.php">Tienda</a></li>
-                    <li><a href="todos_productos.php">Todos los Productos</a></li>
-                    <li><a href="contacto.php">Contacto</a></li>
-                </ul>
-            </div>
-            <div class="footer-contact">
-                <h4>Contacto</h4>
-                <p><i class="fas fa-map-marker-alt"></i> Calle Principal 123, Ciudad</p>
-                <p><i class="fas fa-phone"></i> +34 123 456 789</p>
-                <p><i class="fas fa-envelope"></i> info@mgames.com</p>
-            </div>
-            <div class="footer-social">
-                <h4>Síguenos</h4>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 MGames. Todos los derechos reservados.</p>
-        </div>
-    </div>
-</footer>
+<?php require_once 'includes/footer.php'; ?>
+
 
 <!-- Botón scroll arriba -->
 <button id="scrollToTopBtn" aria-label="Volver arriba">
