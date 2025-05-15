@@ -232,11 +232,11 @@ $titulo = "Nosotros - MGames";
         <!-- Contacto CTA -->
         <section class="contact-cta">
             <div class="container">
-                <h2>¿Quieres formar parte de nuestra historia?</h2>
+                <h2 style="color: white;">¿Quieres formar parte de nuestra historia?</h2>
                 <p>Si tienes alguna pregunta o quieres saber más sobre MGames, no dudes en contactarnos.</p>
                 <div class="cta-buttons">
                     <a href="contacto.php" class="btn btn-primary">Contactar</a>
-                    <a href="tienda.php" class="btn btn-outline">Nuestras Tiendas</a>
+                    <a href="tienda.php" class="btn btn-outline">Nuestra Tiendas</a>
                 </div>
             </div>
         </section>
@@ -761,25 +761,46 @@ $titulo = "Nosotros - MGames";
             justify-content: center;
             gap: 1rem;
             flex-wrap: wrap;
+            margin-top: 2rem;
         }
         
         .contact-cta .btn-primary {
-            background-color: var(--primary-color);
+            background-color: transparent;
             color: white;
+            border: 2px solid white;
+            padding: 10px 23px;
+            border-radius: var(--radius);
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .contact-cta .btn-primary:hover {
-            background-color: var(--primary-dark);
+            background-color: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         .contact-cta .btn-outline {
             background-color: transparent;
             color: white;
             border: 2px solid white;
+            padding: 10px 23px;
+            border-radius: var(--radius);
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         .contact-cta .btn-outline:hover {
             background-color: rgba(255, 255, 255, 0.15);
             border-color: rgba(255, 255, 255, 0.3);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
         
         @media (max-width: 768px) {
@@ -868,6 +889,10 @@ $titulo = "Nosotros - MGames";
             
             .contact-cta h2 {
                 font-size: 2rem;
+                margin-bottom: 2rem;
+                color: white !important;
+                text-align: center;
+                position: relative;
             }
             
             .contact-cta p {
@@ -932,6 +957,156 @@ $titulo = "Nosotros - MGames";
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
             margin-top: 3rem;
+        }
+
+        /* Botón scroll arriba */
+        #scrollToTopBtn {
+            display: none; /* Ocultar por defecto */
+            position: fixed; /* Posición fija en la pantalla */
+            bottom: 20px; /* Distancia desde el borde inferior */
+            right: 20px; /* Distancia desde el borde derecho */
+            z-index: 99; /* Asegurar que esté por encima de otros elementos */
+            width: 50px; /* Tamaño del botón */
+            height: 50px; /* Tamaño del botón */
+            background-color: #0d6efd; /* Color azul */
+            color: white; /* Color del icono */
+            border: none; /* Sin borde */
+            border-radius: 50%; /* Forma redonda */
+            cursor: pointer; /* Cursor de mano */
+            justify-content: center; /* Centrar contenido (el icono) */
+            align-items: center; /* Centrar contenido (el icono) */
+            box-shadow: var(--shadow);
+            transition: background-color 0.3s ease, opacity 0.3s ease, transform 0.3s ease; /* Transiciones suaves */
+        }
+
+        body.admin #scrollToTopBtn {
+             background-color: #0d6efd; /* Color azul también para admin */
+        }
+
+        #scrollToTopBtn:hover {
+            background-color: #0b5ed7; /* Color azul más oscuro en hover */
+            transform: translateY(-2px); /* Efecto de elevación al pasar el ratón */
+            box-shadow: var(--hover-shadow);
+        }
+
+        body.admin #scrollToTopBtn:hover {
+            background-color: #0b5ed7; /* Color azul más oscuro en hover para admin */
+        }
+
+        #scrollToTopBtn svg {
+            width: 24px; /* Tamaño del icono SVG */
+            height: 24px; /* Tamaño del icono SVG */
+        }
+
+        @media (max-width: 768px) {
+            .about-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .about-content {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .mission-vision-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 2rem;
+            }
+             
+            .mission-card, .vision-card {
+                max-width: 400px;
+                padding: 1.5rem;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-content,
+            .timeline-item:nth-child(even) .timeline-content {
+                width: calc(100% - 60px);
+                margin-left: 60px;
+                margin-right: auto;
+                text-align: left;
+                padding: 1.5rem;
+            }
+            
+            .timeline-dot {
+                left: 20px;
+                top: 1rem;
+            }
+            
+            .timeline-date {
+                left: 20px;
+                transform: translateX(0);
+                top: -2rem;
+                font-size: 0.8rem;
+                padding: 0.15rem 0.5rem;
+            }
+            
+            .testimonials-grid {
+                gap: 1.5rem;
+            }
+
+            .testimonial-content {
+                padding: 1.5rem;
+            }
+
+            .testimonial-author {
+                padding: 1rem 1.5rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .about-hero {
+                padding: 4rem 0;
+            }
+            
+            .about-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .about-section h2, .mission-vision-section h2, .values-section h2, 
+            .team-section h2, .history-section h2, .testimonials-section h2,
+            .contact-cta h2
+            {
+                font-size: 1.8rem;
+                margin-bottom: 1.5rem;
+            }
+             .about-section h2:after, .mission-vision-section h2:after, .values-section h2:after, 
+            .team-section h2:after, .history-section h2:after, .testimonials-section h2:after,
+            .contact-cta h2:after
+            {
+                width: 40px;
+                margin-top: 0.4rem;
+            }
+            
+            .contact-cta h2 {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+                color: white !important;
+                text-align: center;
+                position: relative;
+            }
+            
+            .contact-cta p {
+                font-size: 1rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .cta-buttons .btn {
+                width: 100%;
+            }
+
+            .team-grid {
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: 1.5rem;
+            }
         }
     </style>
 
