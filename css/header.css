@@ -260,6 +260,7 @@ body.admin .dropdown-content a:hover {
   background-color: #7e22ce;
   color: white;
   border: none;
+  transition: all 0.3s ease;
 }
 
 .auth-buttons .btn-primary:hover {
@@ -270,6 +271,7 @@ body.admin .dropdown-content a:hover {
   background-color: transparent;
   color: #7e22ce;
   border: 1px solid #7e22ce;
+  transition: all 0.3s ease;
 }
 
 .auth-buttons .btn-outline:hover {

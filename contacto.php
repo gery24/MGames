@@ -8,17 +8,6 @@ require_once 'includes/header.php';
 
 <style>
 /* Estilos para la página de contacto */
-:root {
-  --primary-color: #6c5ce7;
-  --secondary-color: #a29bfe;
-  --accent-color: #fd79a8;
-  --text-color: #2d3436;
-  --light-color: #f5f6fa;
-  --dark-color: #2d3436;
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  --transition: all 0.3s ease;
-}
-
 .content {
   max-width: 1200px;
   margin: 0 auto;
@@ -28,14 +17,14 @@ require_once 'includes/header.php';
 .contact-container {
   background-color: white;
   border-radius: 15px;
-  box-shadow: var(--shadow);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   margin-bottom: 50px;
 }
 
 .contact-container h1 {
   text-align: center;
-  color: var(--primary-color);
+  color: #7e22ce;
   font-size: 2.5rem;
   margin: 30px 0;
   position: relative;
@@ -49,11 +38,11 @@ require_once 'includes/header.php';
   transform: translateX(-50%);
   width: 80px;
   height: 4px;
-  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(to right, #7e22ce, #a29bfe);
   border-radius: 2px;
 }
 
-.contact-info {
+.contact-container .contact-info {
   display: flex;
   flex-direction: column;
   gap: 30px;
@@ -61,26 +50,26 @@ require_once 'includes/header.php';
 }
 
 @media (min-width: 768px) {
-  .contact-info {
+  .contact-container .contact-info {
     flex-direction: row;
   }
 }
 
-.contact-details,
-.contact-form {
+.contact-container .contact-details.contact-info-section,
+.contact-container .contact-form {
   flex: 1;
   padding: 30px;
   border-radius: 10px;
 }
 
-.contact-details {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+.contact-container .contact-details.contact-info-section {
+  background: linear-gradient(135deg, #7e22ce, #a29bfe);
   color: white;
   position: relative;
   overflow: hidden;
 }
 
-.contact-details:before {
+.contact-container .contact-details.contact-info-section:before {
   content: "";
   position: absolute;
   top: -50px;
@@ -91,90 +80,90 @@ require_once 'includes/header.php';
   border-radius: 50%;
 }
 
-.contact-details h2,
-.contact-form h2 {
+.contact-container .contact-details.contact-info-section h2,
+.contact-container .contact-form h2 {
   margin-bottom: 25px;
   font-size: 1.8rem;
   position: relative;
   display: inline-block;
 }
 
-.contact-details h2:after,
-.contact-form h2:after {
+.contact-container .contact-details.contact-info-section h2:after,
+.contact-container .contact-form h2:after {
   content: "";
   position: absolute;
   bottom: -8px;
   left: 0;
   width: 40px;
   height: 3px;
-  background-color: var(--accent-color);
+  background-color: #fd79a8;
   border-radius: 2px;
 }
 
-.info-item {
+.contact-container .info-item {
   display: flex;
   align-items: flex-start;
   margin-bottom: 20px;
-  transition: var(--transition);
+  transition: all 0.3s ease;
 }
 
-.info-item:hover {
+.contact-container .info-item:hover {
   transform: translateX(5px);
 }
 
-.info-item i {
+.contact-container .info-item i {
   font-size: 1.2rem;
   margin-right: 15px;
   margin-top: 5px;
-  color: var(--light-color);
+  color: #f5f6fa;
 }
 
-.info-item p {
+.contact-container .info-item p {
   margin: 0;
   line-height: 1.6;
 }
 
-.contact-form {
-  background-color: var(--light-color);
+.contact-container .contact-form {
+  background-color: #f5f6fa;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
-.form-group {
+.contact-container .form-group {
   margin-bottom: 20px;
 }
 
-.form-group label {
+.contact-container .form-group label {
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
-  color: var(--text-color);
+  color: #2d3436;
 }
 
-.form-group input,
-.form-group textarea {
+.contact-container .form-group input,
+.contact-container .form-group textarea {
   width: 100%;
   padding: 12px 15px;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
   font-size: 1rem;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   background-color: white;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
-  border-color: var(--primary-color);
+.contact-container .form-group input:focus,
+.contact-container .form-group textarea:focus {
+  border-color: #7e22ce;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+  box-shadow: 0 0 0 3px rgba(126, 34, 206, 0.2);
 }
 
-.form-group textarea {
+.contact-container .form-group textarea {
   min-height: 150px;
   resize: vertical;
 }
 
-.btn {
-  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+.contact-container .btn {
+  background: linear-gradient(to right, #7e22ce, #a29bfe);
   color: white;
   border: none;
   padding: 12px 25px;
@@ -182,19 +171,19 @@ require_once 'includes/header.php';
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   display: inline-block;
   text-transform: uppercase;
   letter-spacing: 1px;
-  box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3);
+  box-shadow: 0 4px 10px rgba(126, 34, 206, 0.3);
 }
 
-.btn:hover {
+.contact-container .btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(108, 92, 231, 0.4);
+  box-shadow: 0 6px 15px rgba(126, 34, 206, 0.4);
 }
 
-.btn:active {
+.contact-container .btn:active {
   transform: translateY(1px);
 }
 
@@ -214,23 +203,23 @@ require_once 'includes/header.php';
   animation: fadeIn 0.8s ease-out;
 }
 
-.info-item:nth-child(1) {
+.contact-container .info-item:nth-child(1) {
   animation: fadeIn 0.5s ease-out 0.2s both;
 }
-.info-item:nth-child(2) {
+.contact-container .info-item:nth-child(2) {
   animation: fadeIn 0.5s ease-out 0.4s both;
 }
-.info-item:nth-child(3) {
+.contact-container .info-item:nth-child(3) {
   animation: fadeIn 0.5s ease-out 0.6s both;
 }
-.info-item:nth-child(4) {
+.contact-container .info-item:nth-child(4) {
   animation: fadeIn 0.5s ease-out 0.8s both;
 }
 
 /* Responsive adjustments */
 @media (max-width: 767px) {
-  .contact-details,
-  .contact-form {
+  .contact-container .contact-details.contact-info-section,
+  .contact-container .contact-form {
     padding: 20px;
   }
 
@@ -238,12 +227,12 @@ require_once 'includes/header.php';
     font-size: 2rem;
   }
 
-  .contact-details h2,
-  .contact-form h2 {
+  .contact-container .contact-details.contact-info-section h2,
+  .contact-container .contact-form h2 {
     font-size: 1.5rem;
   }
 
-  .btn {
+  .contact-container .btn {
     width: 100%;
   }
 }
@@ -254,7 +243,7 @@ require_once 'includes/header.php';
         <h1>Contacto</h1>
         
         <div class="contact-info">
-            <div class="contact-details">
+            <div class="contact-details contact-info-section">
                 <h2>Información de Contacto</h2>
                 <div class="info-item">
                     <i class="fas fa-map-marker-alt"></i>
