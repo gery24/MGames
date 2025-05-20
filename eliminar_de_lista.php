@@ -11,16 +11,20 @@ if (!isset($_SESSION['usuario'])) {
 // Obtener datos de la solicitud
 $data = json_decode(file_get_contents('php://input'), true);
 
-if (!isset($data['productId'])) {
-    echo json_encode(['success' => false, 'message' => 'ID de producto no válido']);
+// Ahora esperamos 'wishlistId' en lugar de 'productId'
+if (!isset($data['wishlistId'])) {
+    echo json_encode(['success' => false, 'message' => 'ID de lista de deseos no válido']);
     exit;
 }
 
+$wishlistId = intval($data['wishlistId']);
+
 try {
-    $stmt = $pdo->prepare("DELETE FROM lista_deseos WHERE usuario_id = ? AND producto_id = ?");
-    $stmt->execute([$_SESSION['usuario']['id'], $data['productId']]);
+    // Eliminar la entrada de la lista de deseos por su ID
+    $stmt = $pdo->prepare("DELETE FROM lista_deseos WHERE id = ? AND usuario_id = ?");
+    $stmt->execute([$wishlistId, $_SESSION['usuario']['id']]); // Añadimos usuario_id para seguridad
     
     echo json_encode(['success' => true]);
 } catch(PDOException $e) {
-    echo json_encode(['success' => false, 'message' => 'Error al eliminar el producto']);
+    echo json_encode(['success' => false, 'message' => 'Error al eliminar de la lista de deseos']);
 } 

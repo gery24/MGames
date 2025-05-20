@@ -6,9 +6,13 @@ require_once 'config/database.php';
 if (!isset($_SESSION['usuario']) || !in_array($_SESSION['usuario']['rol'], ['CLIENTE', 'ADMIN'])) {
     die("Acceso denegado. Solo los usuarios con una cuenta creada pueden agregar juegos de segunda mano.");
 }
+
 // Obtener categorías de la base de datos
-$stmt = $pdo->query("SELECT * FROM categorias");
+$stmt = $pdo->query("SELECT * FROM categorias ORDER BY nombre");
 $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Eliminar código para obtener plataformas de la base de datos
+
 ?>
 
 <!DOCTYPE html>
@@ -41,6 +45,28 @@ $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </option>
                     <?php endforeach; ?>
                 </select>
+                <!-- Campo de selección de plataformas como checkboxes -->
+                <div class='form-group'>
+                    <label>Plataformas:</label>
+                    <div class='checkbox-group'>
+                        <label>
+                            <input type='checkbox' name='plataformas[]' value='fotosWeb/pc.png'>
+                            PC
+                        </label>
+                        <label>
+                            <input type='checkbox' name='plataformas[]' value='fotosWeb/ps.png'>
+                            PlayStation
+                        </label>
+                        <label>
+                            <input type='checkbox' name='plataformas[]' value='fotosWeb/xbox.png'>
+                            Xbox
+                        </label>
+                        <label>
+                            <input type='checkbox' name='plataformas[]' value='fotosWeb/switch.png'>
+                            Switch
+                        </label>
+                    </div>
+                </div>
                 <div class='form-group'>
                     <label>Condición del juego:</label>
                     <div class='radio-group'>

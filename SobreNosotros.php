@@ -217,7 +217,7 @@ $titulo = "Nosotros - MGames";
                         </div>
                         <div class="testimonial-author">
                             <div class="author-image">
-                                <img src="FotosWeb/victor.jpg" alt="Cliente">
+                                <img src="FotosWeb/victor.png" alt="Cliente">
                             </div>
                             <div class="author-info">
                                 <h4>Victor Martin</h4>
