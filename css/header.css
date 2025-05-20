@@ -304,3 +304,67 @@ body.admin .dropdown-content a:hover {
     display: none;
   }
 }
+
+.search-dropdown {
+  position: relative;
+}
+
+.search-dropdown .dropdown-content {
+  position: absolute;
+  top: calc(100% + 5px); /* Ajustar la distancia del header */
+  right: 0;
+  background-color: var(--card-bg); /* Usar color de fondo de tarjeta */
+  box-shadow: var(--shadow); /* Usar sombra general */
+  border-radius: var(--border-radius); /* Usar radio de borde general */
+  padding: 15px; /* Aumentar padding */
+  z-index: 100;
+  display: none; /* Oculto por defecto */
+  min-width: 300px; /* Aumentar ancho mínimo */
+  max-height: 200px; /* Altura máxima para scroll si hay muchos resultados */
+  overflow-y: auto; /* Agregar scroll si los resultados exceden la altura máxima */
+}
+
+.search-dropdown .dropdown-content input[type="text"] {
+  width: 100%;
+  padding: 10px; /* Ajustar padding */
+  border: 1px solid #e0e0e0; /* Borde más sutil */
+  border-radius: 6px; /* Borde ligeramente redondeado */
+  box-sizing: border-box; /* Incluir padding y border en el ancho */
+  margin-bottom: 10px; /* Espacio debajo del input */
+  font-size: 1rem; /* Tamaño de fuente consistente */
+}
+
+.search-result-item {
+  padding: 10px 5px; /* Espaciado para cada resultado */
+  border-bottom: 1px solid #eee; /* Separador entre resultados */
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.search-result-item:last-child {
+  border-bottom: none; /* Eliminar borde del último elemento */
+}
+
+.search-result-item:hover {
+  background-color: var(--page-bg); /* Color de fondo al pasar el mouse */
+}
+
+.search-result-item a {
+  text-decoration: none;
+  color: var(--text-color); /* Color de texto general */
+  display: block;
+}
+
+.no-results {
+  padding: 10px 5px;
+  color: var(--light-text); /* Color de texto claro */
+  font-style: italic;
+}
+
+.search-dropdown button.header-icon {
+  border: none;
+  background: none;
+  padding: 0; /* Eliminar padding por defecto del botón */
+  cursor: pointer; /* Asegurar que el cursor sea de puntero */
+  /* Si es necesario, ajustar margin o position para alinearlo verticalmente */
+}
