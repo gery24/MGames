@@ -29,12 +29,13 @@ body {
     color: var(--dark);
     line-height: 1.6;
     padding-top: 80px; /* Espacio arriba para el header fijo */
-    padding-bottom: 40px; /* Espacio al final de la página */
+    padding-bottom: 0 !important; /* Eliminar espacio al final de la página y forzar */
     /* Anular posibles estilos raros de layout global */
     position: static !important;
     margin: 0 !important;
     float: none !important;
     width: auto !important;
+    overflow-x: hidden !important; /* Eliminar desplazamiento horizontal y espacio a la derecha */
 }
 
 .eventos-page {
@@ -446,18 +447,19 @@ body {
 
 /* Newsletter Section */
 .eventos-newsletter {
-    width: 100%;
+    width: 100% !important; /* Usar 100% y forzar */
     /* margin-left: 50%; */
     /* transform: translateX(-50%); */
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-    padding: 4rem 0;
-    margin: 3rem auto 0 auto;
+    padding: 4rem 0; /* Mantener padding vertical, se ajustará después si es necesario */
+    margin: 3rem auto 2rem auto !important; /* Asegurar margen superior y añadir margen inferior */
     border-radius: 0;
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
+    padding-bottom: 0 !important; /* Eliminar padding inferior que pueda causar espacio */
 }
 
 .newsletter-content {

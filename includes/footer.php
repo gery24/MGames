@@ -221,7 +221,6 @@ body {
         </div>
     </div>
 </footer>
-
 <script>
 // Script para asegurar que el footer llegue hasta el final de la página
 document.addEventListener('DOMContentLoaded', function() {
