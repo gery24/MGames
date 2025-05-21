@@ -41,9 +41,10 @@ try {
     <!-- Filtros de Eventos (fuera del container) -->
     <div class="eventos-filters">
         <div class="search-box">
-            <input type="text" id="evento-search" placeholder="Buscar eventos...">
+            <input type="text" id="evento-search" placeholder="Buscar eventos..."> 
             <!-- <i class="fas fa-search"></i> -->
         </div>
+        
         <div class="filter-options">
             <select id="filtro-fecha">
                 <option value="">Todas las fechas</option>

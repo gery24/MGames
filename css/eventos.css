@@ -370,28 +370,28 @@ body {
 .eventos-filters {
     width: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: row; /* Asegurar que por defecto sea horizontal */
     align-items: center;
-    justify-content: center;
+    justify-content: space-between; /* Poner espacio entre el campo de búsqueda y los filtros */
     background: white;
     border-radius: 1rem;
     box-shadow: var(--shadow);
-    padding: 1.5rem 2rem;
+    padding: 1.5rem 2rem; /* Padding interno del contenedor de filtros */
     box-sizing: border-box;
     margin: 0 auto 2.5rem auto;
-    gap: 2rem;
+    gap: 1rem; /* Ajustar el espacio general */
     max-width: 1100px;
 }
 
 .search-box {
-    flex: 2;
-    max-width: 350px;
+    flex: 0 0 280px; /* No crecer, no encoger, base de 280px (ajustar si es necesario) */
+    max-width: none; /* Eliminar limitación de ancho máximo */
 }
 
 .filter-options {
     display: flex;
-    gap: 1rem;
-    flex: 3;
+    gap: 1rem; /* Espacio entre los selectores */
+    flex-shrink: 0; /* Asegurar que no se encoja */
     justify-content: flex-start;
 }
 
@@ -441,7 +441,7 @@ body {
     }
     .filter-options {
         flex-direction: column;
-        gap: 0.7rem;
+        gap: 0.7rem; /* Espacio entre los selectores en pantallas pequeñas */
     }
 }
 
@@ -482,7 +482,7 @@ body {
 
 .newsletter-form {
     display: flex;
-    gap: 2rem; /* Aumentar más el espacio entre inputs y botón */
+    gap: 1rem; /* Reducir el espacio entre inputs y botón */
     margin: 0 auto; /* Centrar el formulario dentro de .newsletter-content */
     width: 100%; /* Asegurar que el formulario ocupe el ancho disponible */
     flex-direction: column; /* Apilar los inputs y el botón verticalmente */
