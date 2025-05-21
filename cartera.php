@@ -36,7 +36,10 @@ try {
 }
 
 $titulo = "Cartera - MGames";
- require_once 'includes/header.php';
+require_once 'includes/header.php';
+
+// Verificar si hay un parámetro de compra exitosa
+$mostrarModal = isset($_GET['compra_exitosa']) && $_GET['compra_exitosa'] === 'true';
 ?>
 
 <!DOCTYPE html>
@@ -50,466 +53,184 @@ $titulo = "Cartera - MGames";
     <link rel="stylesheet" href="css/cartera.css">
     <link rel="stylesheet" href="css/header.css">
 </head>
+<style>
+    .avatar-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+</style>
+
 <body class="<?php echo $bodyClass; ?>">
     
-    <div class="content">
-        <h1>Cartera</h1>
-        <div class="balance">Saldo actual: €<?php echo number_format($saldo, 2); ?></div>
+    <!-- Modal de pago exitoso -->
+    <div id="successModal" class="success-modal <?php echo $mostrarModal ? 'active' : ''; ?>">
+        <div class="modal-content">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h2 class="modal-title">¡Pago Realizado con Éxito!</h2>
+            <p class="modal-message">Tu compra ha sido procesada correctamente. Gracias por tu confianza.</p>
+            <button class="modal-btn" onclick="closeModal()">Aceptar</button>
+        </div>
+    </div>
+    
+    <div class="wallet-container">
+        <?php
+        // Mostrar mensaje de éxito si existe en la sesión (mantenemos esto como respaldo)
+        if (isset($_SESSION['mensaje'])) {
+            echo '<div class="alert alert-success"><i class="fas fa-check-circle"></i> ' . $_SESSION['mensaje'] . '</div>';
+            unset($_SESSION['mensaje']); // Limpiar el mensaje después de mostrarlo
+        }
+        
+        // Mostrar mensaje de error si existe
+        if (isset($_SESSION['error'])) {
+            echo '<div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> ' . $_SESSION['error'] . '</div>';
+            unset($_SESSION['error']); // Limpiar el error después de mostrarlo
+        }
+        ?>
+        
+        <div class="wallet-header">
+            <h1><i class="fas fa-wallet"></i> Mi Cartera</h1>
+            <div class="balance-card">
+                <div class="balance-label">Saldo actual</div>
+                <div class="balance-amount">€<?php echo number_format($saldo, 2); ?></div>
+            </div>
+        </div>
 
-        <div class="transaction-forms">
+        <div class="wallet-actions">
             <!-- Formulario para agregar dinero -->
-            <div class="form-container deposit">
-                <h3>Agregar Dinero</h3>
+            <div class="action-card deposit-card">
+                <div class="card-header">
+                    <i class="fas fa-plus-circle"></i>
+                    <h3>Agregar Dinero</h3>
+                </div>
                 <form class="transaction-form" method="POST" action="procesar_transaccion.php">
-                    <input type="number" name="monto" placeholder="Monto a agregar" min="1" step="0.01" required>
-                    <input type="text" name="descripcion" placeholder="Descripción" required>
+                    <div class="form-group">
+                        <label for="deposit-amount"><i class="fas fa-euro-sign"></i> Monto</label>
+                        <input type="number" id="deposit-amount" name="monto" placeholder="Cantidad a agregar" min="1" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="deposit-description"><i class="fas fa-comment-alt"></i> Descripción</label>
+                        <input type="text" id="deposit-description" name="descripcion" placeholder="Motivo del ingreso" required>
+                    </div>
                     <input type="hidden" name="origen" value="cartera">
                     <input type="hidden" name="tipo" value="deposito">
-                    <button type="submit" class="btn-deposit">Agregar a la Cartera</button>
+                    <button type="submit" class="btn-action btn-deposit">
+                        <i class="fas fa-arrow-circle-up"></i> Agregar a la Cartera
+                    </button>
                 </form>
             </div>
 
             <!-- Formulario para retirar dinero -->
-            <div class="form-container withdraw">
-                <h3>Retirar Dinero</h3>
+            <div class="action-card withdraw-card">
+                <div class="card-header">
+                    <i class="fas fa-minus-circle"></i>
+                    <h3>Retirar Dinero</h3>
+                </div>
                 <form class="transaction-form" method="POST" action="procesar_retiro.php">
-                    <input type="number" name="monto" placeholder="Monto a retirar" min="1" max="<?php echo $saldo; ?>" step="0.01" required>
-                    <input type="text" name="descripcion" placeholder="Descripción" required>
+                    <div class="form-group">
+                        <label for="withdraw-amount"><i class="fas fa-euro-sign"></i> Monto</label>
+                        <input type="number" id="withdraw-amount" name="monto" placeholder="Cantidad a retirar" min="1" max="<?php echo $saldo; ?>" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="withdraw-description"><i class="fas fa-comment-alt"></i> Descripción</label>
+                        <input type="text" id="withdraw-description" name="descripcion" placeholder="Motivo del retiro" required>
+                    </div>
                     <input type="hidden" name="origen" value="cartera">
-                    <button type="submit" class="btn-withdraw">Retirar de la Cartera</button>
+                    <button type="submit" class="btn-action btn-withdraw">
+                        <i class="fas fa-arrow-circle-down"></i> Retirar de la Cartera
+                    </button>
                 </form>
             </div>
         </div>
 
-        <div class="transaction-list">
-            <h2>Transacciones</h2>
+        <div class="transactions-section">
+            <h2><i class="fas fa-history"></i> Historial de Transacciones</h2>
             <?php if (empty($transacciones)): ?>
-                <p>No hay transacciones registradas.</p>
+                <div class="empty-transactions">
+                    <i class="fas fa-receipt"></i>
+                    <p>No hay transacciones registradas.</p>
+                </div>
             <?php else: ?>
-                <?php foreach ($transacciones as $transaccion): ?>
-                    <div class="transaction-item <?php echo $transaccion['monto'] < 0 ? 'withdrawal' : 'deposit'; ?>">
-                        <p><?php echo htmlspecialchars($transaccion['descripcion']); ?></p>
-                        <p class="amount">€<?php echo number_format($transaccion['monto'], 2); ?></p>
-                    </div>
-                <?php endforeach; ?>
+                <div class="transactions-list">
+                    <?php foreach ($transacciones as $transaccion): ?>
+                        <div class="transaction-item <?php echo $transaccion['monto'] < 0 ? 'withdrawal' : 'deposit'; ?>">
+                            <div class="transaction-icon">
+                                <i class="fas <?php echo $transaccion['monto'] < 0 ? 'fa-arrow-down' : 'fa-arrow-up'; ?>"></i>
+                            </div>
+                            <div class="transaction-details">
+                                <p class="transaction-description"><?php echo htmlspecialchars($transaccion['descripcion']); ?></p>
+                                <p class="transaction-date"><?php echo date('d/m/Y H:i', strtotime($transaccion['fecha'])); ?></p>
+                            </div>
+                            <p class="amount">€<?php echo number_format($transaccion['monto'], 2); ?></p>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
             <?php endif; ?>
         </div>
     </div>
 
-<style>
-/* Estilos del header */
-.site-header {
-    background-color: #fff;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 8px 0;
-    position: relative;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #7e22ce;
-    text-decoration: none;
-}
-
-body.admin .logo span {
-    color: #ff0000;
-}
-
-.main-nav {
-    display: flex;
-    align-items: center;
-}
-
-.nav-links {
-    display: flex;
-    list-style: none;
-    gap: 30px;
-    margin: 0;
-    padding: 0;
-}
-
-.nav-links li a {
-    color: #333;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s;
-}
-
-.nav-links li a:hover {
-    color: #7e22ce;
-}
-
-body.admin .nav-links li a:hover {
-    color: #ff0000;
-}
-
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.header-icon {
-    color: #333;
-    font-size: 1.2rem;
-    transition: color 0.3s;
-    text-decoration: none;
-    position: relative;
-}
-
-.header-icon:hover {
-    color: #7e22ce;
-}
-
-body.admin .header-icon:hover {
-    color: #ff0000;
-}
-
-.badge {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background-color: #7e22ce;
-    color: white;
-    font-size: 0.75rem;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-body.admin .badge {
-    background-color: #ff0000;
-}
-
-.balance-indicator {
-    position: absolute;
-    top: -8px;
-    right: -20px;
-    background-color: #10b981;
-    color: white;
-    font-size: 0.75rem;
-    padding: 0.1rem 0.4rem;
-    border-radius: 0.25rem;
-    white-space: nowrap;
-}
-
-.profile-dropdown {
-    position: relative;
-}
-
-
-
-/* Estilo para el avatar - ahora siempre redondo */
-.avatar-square {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%; /* Redondo en lugar de cuadrado */
-    background-color: #7e22ce;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 1.2rem;
-    border: none;
-}
-
-.admin-avatar {
-    background-color: #ff0000;
-}
-
-.dropdown-content {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: white;
-    min-width: 200px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    border-radius: 0.5rem;
-    padding: 0.5rem 0;
-    z-index: 100;
-    display: none;
-}
-
-.profile-dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown-content a {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    color: #1f2937;
-    text-decoration: none;
-    transition: background-color 0.3s;
-}
-
-.dropdown-content a:hover {
-    background-color: #f3f4f6;
-    color: #7e22ce;
-}
-
-body.admin .dropdown-content a:hover {
-    color: #ff0000;
-}
-
-.dropdown-content a i {
-    width: 20px;
-    text-align: center;
-}
-
-.admin-dropdown {
-    border: 2px solid #ff0000;
-}
-
-.admin-dropdown a.admin-link {
-    background-color: #ff0000;
-    color: white;
-}
-
-.admin-dropdown a.admin-link:hover {
-    background-color: #cc0000;
-    color: white;
-}
-
-.auth-buttons {
-    display: flex;
-    gap: 10px;
-}
-
-.auth-buttons .btn {
-    padding: 6px 20px;
-    border-radius: 4px;
-    font-weight: 600;
-    text-decoration: none;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-size: 0.75rem;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    width: auto;
-}
-
-.auth-buttons .btn-primary {
-    background-color: #7e22ce;
-    color: white;
-    border: none;
-}
-
-.auth-buttons .btn-primary:hover {
-    background-color: #6b21a8;
-}
-
-.auth-buttons .btn-outline {
-    background-color: transparent;
-    color: #7e22ce;
-    border: 1px solid #7e22ce;
-}
-
-.auth-buttons .btn-outline:hover {
-    background-color: rgba(126, 34, 206, 0.1);
-}
-
-.mobile-menu-toggle {
-    display: none;
-    background: none;
-    border: none;
-    color: #333;
-    font-size: 1.5rem;
-    cursor: pointer;
-}
-
-@media (max-width: 768px) {
-    .mobile-menu-toggle {
-        display: block;
-    }
-    
-    .nav-links {
-        display: none;
-    }
-    
-    .header-actions {
-        gap: 0.5rem;
-    }
-    
-    .auth-buttons {
-        display: none;
-    }
-}
-
-/* Estilos adicionales para los formularios de transacción */
-.transaction-forms {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.avatar-circle {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background-color: purple;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 1.2rem;
-}
-
-.form-container {
-    flex: 1;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.form-container h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: #333;
-}
-
-.deposit {
-    background-color: #e0f7fa;
-    border-left: 4px solid #2563eb;
-}
-
-.withdraw {
-    background-color: #fff5f5;
-    border-left: 4px solid #e74c3c;
-}
-
-.transaction-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.btn-deposit {
-    background-color: #2563eb;
-    color: white;
-    padding: 0.8rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.btn-withdraw {
-    background-color: #e74c3c;
-    color: white;
-    padding: 0.8rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.transaction-item.withdrawal {
-    background-color: rgba(231, 76, 60, 0.05);
-}
-
-.transaction-item.deposit {
-    background-color: rgba(46, 204, 113, 0.05);
-}
-
-/* Estilos para administradores */
-body.admin h1 {
-    color: #ff0000;
-}
-
-body.admin .balance {
-    background-color: #fff0f0;
-}
-
-body.admin .deposit {
-    border-left: 4px solid #ff0000;
-    background-color: #fff0f0;
-}
-
-body.admin .withdraw {
-    border-left: 4px solid #cc0000;
-}
-
-body.admin .btn-deposit {
-    background-color: #ff0000;
-}
-
-body.admin .btn-deposit:hover {
-    background-color: #cc0000;
-}
-
-body.admin .btn-withdraw {
-    background-color: #cc0000;
-}
-
-body.admin .btn-withdraw:hover {
-    background-color: #990000;
-}
-
-body.admin .transaction-item .amount {
-    color: #ff0000;
-}
-
-body.admin .transaction-item.deposit {
-    background-color: rgba(255, 0, 0, 0.05);
-    border-left: 3px solid #ff0000;
-}
-
-body.admin .transaction-item.withdrawal {
-    background-color: rgba(204, 0, 0, 0.05);
-    border-left: 3px solid #cc0000;
-}
-
-/* Estilos responsivos */
-@media (max-width: 768px) {
-    .transaction-forms {
-        flex-direction: column;
-    }
-}
-</style>
-
 <script>
-// Verificar si hay un parámetro de éxito en la URL
-if (window.location.search.includes('success=true')) {
-    // Mostrar mensaje de éxito
-    alert('Transacción realizada con éxito');
+// Función para cerrar el modal
+function closeModal() {
+    const modal = document.getElementById('successModal');
+    modal.classList.remove('active');
     
-    // Limpiar la URL
+    // Limpiar la URL para evitar que el modal aparezca de nuevo al recargar
     window.history.replaceState({}, document.title, window.location.pathname);
 }
 
-// Verificar si hay un parámetro de error en la URL
-if (window.location.search.includes('error=')) {
-    // Obtener el mensaje de error
-    const urlParams = new URLSearchParams(window.location.search);
-    const errorMsg = urlParams.get('error');
+// Verificar si hay un parámetro de éxito en la URL (transacción de cartera)
+document.addEventListener('DOMContentLoaded', function() {
+    // Si el modal está activo, añadir listener para cerrar con Escape
+    if (document.getElementById('successModal').classList.contains('active')) {
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+        
+        // También cerrar al hacer clic fuera del modal
+        document.getElementById('successModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    }
     
-    // Mostrar mensaje de error
-    alert('Error: ' + decodeURIComponent(errorMsg));
-    
-    // Limpiar la URL
-    window.history.replaceState({}, document.title, window.location.pathname);
-}
+    // Verificar si hay un parámetro de éxito en la URL (transacción de cartera)
+    if (window.location.search.includes('success=true')) {
+        // Mostrar mensaje de éxito
+        const modal = document.getElementById('successModal');
+        modal.classList.add('active');
+        
+        // Limpiar la URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    // Verificar si hay un parámetro de error en la URL
+    if (window.location.search.includes('error=')) {
+        // Obtener el mensaje de error
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorMsg = urlParams.get('error');
+        
+        // Mostrar mensaje de error
+        alert('Error: ' + decodeURIComponent(errorMsg));
+        
+        // Limpiar la URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+});
 </script>
-</style>
-<!-- Botón -->
+
 <!-- Botón scroll arriba -->
 <button id="scrollToTopBtn" aria-label="Volver arriba">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -518,51 +239,6 @@ if (window.location.search.includes('error=')) {
   </svg>
 </button>
 
-<!-- Estilos CSS -->
-<style>
- #scrollToTopBtn {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 50px;
-  height: 50px;
-  background-color: #0d6efd; /* Azul Bootstrap */
-  color: white;
-  border: none;
-  border-radius: 50%;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
-  z-index: 1000;
-}
-
-#scrollToTopBtn:hover {
-  background-color: #0b5ed7;
-  transform: scale(1.1);
-}
-
-#scrollToTopBtn svg {
-  width: 24px;
-  height: 24px;
-}
-</style>
-
-<!-- Script JS -->
-<script>
- const scrollBtn = document.getElementById('scrollToTopBtn');
-
-window.addEventListener('scroll', () => {
-  scrollBtn.style.display = window.scrollY > 300 ? 'flex' : 'none';
-});
-
-scrollBtn.addEventListener('click', () => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  });
-});
-</script>
 <?php require_once 'includes/footer.php'; ?>
+</body>
+</html>

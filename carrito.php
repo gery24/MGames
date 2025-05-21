@@ -72,7 +72,17 @@ $titulo = "Carrito - MGames";
 
         <div class="cart-container">
             <?php if (empty($productos_en_carrito)): ?>
-                <p>No hay productos en tu carrito. <a href="index.php">Continuar comprando</a></p>
+                <!-- Diseño mejorado para carrito vacío -->
+                <div class="empty-cart-container">
+                    <div class="empty-cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h2>Tu carrito está vacío</h2>
+                    <p>Parece que aún no has añadido ningún juego a tu carrito. Explora nuestra tienda para encontrar los mejores títulos.</p>
+                    <a href="index.php" class="btn btn-primary">
+                        <i class="fas fa-gamepad"></i> Explorar juegos
+                    </a>
+                </div>
             <?php else: ?>
                 <div class="cart-content">
                     <div class="products-list">
@@ -220,11 +230,17 @@ $titulo = "Carrito - MGames";
 
         <section class="recommended-products">
             <h2>Juegos Recomendados</h2>
-            <div class="products-list">
+            <!-- Nuevo slider horizontal para productos recomendados -->
+            <div class="products-slider">
                 <?php foreach ($productos_recomendados as $recomendado): ?>
                     <div class="product-card">
-                        <img src="<?php echo !empty($recomendado['imagen']) ? htmlspecialchars($recomendado['imagen']) : 'images/default.jpg'; ?>" 
-                             alt="<?php echo htmlspecialchars($recomendado['nombre']); ?>">
+                        <div class="product-image-container">
+                            <img src="<?php echo !empty($recomendado['imagen']) ? htmlspecialchars($recomendado['imagen']) : 'images/default.jpg'; ?>" 
+                                 alt="<?php echo htmlspecialchars($recomendado['nombre']); ?>">
+                            <?php if (isset($recomendado['descuento']) && $recomendado['descuento'] > 0): ?>
+                                <div class="discount-badge">-<?php echo htmlspecialchars($recomendado['descuento']); ?>%</div>
+                            <?php endif; ?>
+                        </div>
                         <div class="product-card-content">
                             <h3><?php echo htmlspecialchars($recomendado['nombre']); ?></h3>
                             <p class="price">€<?php echo number_format($recomendado['precio'], 2); ?></p>
@@ -283,6 +299,17 @@ $titulo = "Carrito - MGames";
                     headerActions.classList.toggle('active');
                 });
             }
+            
+            // Scroll horizontal con rueda del mouse para el slider de productos
+            const slider = document.querySelector('.products-slider');
+            if (slider) {
+                slider.addEventListener('wheel', function(e) {
+                    if (e.deltaY !== 0) {
+                        e.preventDefault();
+                        slider.scrollLeft += e.deltaY;
+                    }
+                }, { passive: false });
+            }
         });
         
         function actualizarCantidad(productoId, cantidad) {
@@ -339,6 +366,19 @@ $titulo = "Carrito - MGames";
       z-index: 1000;
     }
 
+    .avatar-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
     #scrollToTopBtn:hover {
       background-color: #0b5ed7;
       transform: scale(1.1);
@@ -365,473 +405,5 @@ $titulo = "Carrito - MGames";
       });
     });
     </script>
-
-    <style>
-    /* Estilos generales del header */
-    .site-header {
-        background-color: white;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        position: sticky;
-        top: 0;
-        z-index: 100;
-    }
-
-    .header-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .logo {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #4f46e5;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-    }
-
-    .nav-links {
-        display: flex;
-        gap: 1.5rem;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-
-    .nav-links li a {
-        color: #1f2937;
-        text-decoration: none;
-        font-weight: 500;
-        transition: color 0.3s;
-        padding: 0.5rem 0;
-        position: relative;
-    }
-
-    .nav-links li a:hover {
-        color: #4f46e5;
-    }
-
-    .header-actions {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-
-    .header-icon {
-        color: #1f2937;
-        font-size: 1.25rem;
-        transition: color 0.3s;
-        position: relative;
-        text-decoration: none;
-    }
-
-    .header-icon:hover {
-        color: #4f46e5;
-    }
-
-    /* Estilos para el botón de búsqueda (lupa) */
-    .search-container {
-        position: relative;
-    }
-
-    .search-button {
-        width: 32px;
-        height: 32px;
-        background-color: #4f46e5;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-
-    .search-button:hover {
-        background-color: #4338ca;
-    }
-
-    .search-button i {
-        font-size: 1rem;
-    }
-
-    .search-form {
-        position: absolute;
-        top: 100%;
-        right: 0;
-        background-color: white;
-        padding: 1rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        z-index: 100;
-        display: flex;
-        gap: 0.5rem;
-        min-width: 300px;
-    }
-
-    .search-form input,
-    .search-form select {
-        padding: 0.5rem;
-        border: 1px solid #e5e7eb;
-        border-radius: 4px;
-    }
-
-    .search-form input {
-        flex: 1;
-    }
-
-    .filter-select {
-        width: auto;
-    }
-
-    /* Estilos para el badge */
-    .badge {
-        position: absolute;
-        top: -8px;
-        right: -8px;
-        background-color: #4f46e5;
-        color: white;
-        font-size: 0.75rem;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .balance-indicator {
-        position: absolute;
-        top: -8px;
-        right: -20px;
-        background-color: #10b981;
-        color: white;
-        font-size: 0.75rem;
-        padding: 0.1rem 0.4rem;
-        border-radius: 0.25rem;
-        white-space: nowrap;
-    }
-
-    /* Estilos para el perfil de usuario */
-    .user-profile {
-        position: relative;
-    }
-
-    .profile-dropdown {
-        position: relative;
-    }
-
-    .profile-button {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 0.5rem 0.75rem;
-        border-radius: 8px;
-    }
-
-    .profile-button:hover {
-        background-color: #f9fafb;
-    }
-
-    .avatar-circle {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background-color: #4f46e5;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 1.2rem;
-    }
-
-    .username {
-        font-weight: 500;
-        color: #1f2937;
-        max-width: 100px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .dropdown-content {
-        position: absolute;
-        top: 100%;
-        right: 0;
-        background-color: white;
-        min-width: 200px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        padding: 0.5rem 0;
-        z-index: 100;
-        display: none;
-    }
-
-    .profile-dropdown:hover .dropdown-content {
-        display: block;
-    }
-
-    .dropdown-content a {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.75rem 1rem;
-        color: #1f2937;
-        text-decoration: none;
-        transition: background-color 0.3s;
-    }
-
-    .dropdown-content a:hover {
-        background-color: #f9fafb;
-        color: #4f46e5;
-    }
-
-    .dropdown-content a i {
-        width: 20px;
-        text-align: center;
-    }
-
-    /* Estilos para los botones de autenticación */
-    .auth-buttons {
-        display: flex;
-        gap: 0.5rem;
-    }
-
-    /* Estilos para los botones */
-    .btn {
-        display: inline-block;
-        padding: 0.75rem 1.5rem;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        text-decoration: none;
-        text-align: center;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        border: none;
-        background-color: #4f46e5;
-        color: white;
-    }
-
-    /* Corregir el problema del hover en los botones */
-    .btn:hover {
-        background-color: #4338ca;
-        color: white;
-        opacity: 1;
-    }
-
-    .btn-sm {
-        padding: 0.5rem 1rem;
-        font-size: 0.875rem;
-    }
-
-    .btn-primary {
-        background-color: #4f46e5;
-        color: white;
-    }
-
-    .btn-primary:hover {
-        background-color: #4338ca;
-        color: white;
-        opacity: 1;
-    }
-
-    .btn-outline {
-        background-color: transparent;
-        color: #4f46e5;
-        border: 2px solid #4f46e5;
-    }
-
-    .btn-outline:hover {
-        background-color: rgba(79, 70, 229, 0.1);
-        color: #4f46e5;
-        opacity: 1;
-    }
-
-    /* Estilos para el menú móvil */
-    .mobile-menu-toggle {
-        display: none;
-        background: none;
-        border: none;
-        color: #1f2937;
-        font-size: 1.5rem;
-        cursor: pointer;
-    }
-
-    /* Admin-specific styles for header */
-    body.admin .site-header {
-        border-bottom: 3px solid #ff0000;
-    }
-
-    body.admin .logo span {
-        color: #ff0000;
-    }
-
-    body.admin .search-button {
-        background-color: #ff0000;
-    }
-
-    body.admin .search-button:hover {
-        background-color: #cc0000;
-    }
-
-    body.admin .nav-links li a:hover {
-        color: #ff0000;
-    }
-
-    body.admin .header-icon:hover {
-        color: #ff0000;
-    }
-
-    body.admin .badge {
-        background-color: #ff0000;
-    }
-
-    body.admin .avatar-circle {
-        background-color: #ff0000;
-    }
-
-    body.admin .admin-username {
-        color: white !important;
-        font-weight: bold;
-    }
-
-    body.admin .profile-button:hover {
-        background-color: rgba(255, 0, 0, 0.1);
-    }
-
-    body.admin .dropdown-content {
-        position: absolute;
-        top: 100%;
-        right: 0;
-        background-color: white;
-        min-width: 200px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        padding: 0.5rem 0;
-        z-index: 100;
-        display: none;
-        border: 2px solid #ff0000;
-    }
-
-    body.admin .dropdown-content a:hover {
-        color: #ff0000;
-    }
-
-    body.admin .admin-link {
-        background-color: #ff0000;
-        color: white !important;
-    }
-
-    body.admin .admin-link:hover {
-        background-color: #cc0000;
-    }
-
-    /* Estilos específicos para los botones del carrito */
-    .cart-summary .btn,
-    .product-card-content .btn {
-        background-color: #4f46e5;
-        color: white;
-        opacity: 1;
-    }
-
-    .cart-summary .btn:hover,
-    .product-card-content .btn:hover {
-        background-color: #4338ca;
-        color: white;
-        opacity: 1;
-    }
-
-    /* Para usuarios admin */
-    body.admin .cart-summary .btn,
-    body.admin .product-card-content .btn {
-        background-color: #ff0000;
-        color: white;
-        opacity: 1;
-    }
-
-    body.admin .cart-summary .btn:hover,
-    body.admin .product-card-content .btn:hover {
-        background-color: #cc0000;
-        color: white;
-        opacity: 1;
-    }
-
-    /* Responsive styles */
-    @media (max-width: 768px) {
-        .mobile-menu-toggle {
-            display: block;
-        }
-
-        .nav-links {
-            display: none;
-        }
-
-        .nav-links.active {
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background-color: white;
-            padding: 1rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            z-index: 50;
-        }
-
-        .header-actions {
-            gap: 0.5rem;
-        }
-
-        .search-container,
-        .auth-buttons {
-            display: none;
-        }
-
-        .header-actions.active .search-container,
-        .header-actions.active .auth-buttons {
-            display: block;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background-color: white;
-            padding: 1rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            z-index: 50;
-        }
-    }
-
-    /* Estilos para la etiqueta de descuento */
-    .discount-badge {
-        position: absolute;
-        top: 10px; /* Ajusta según sea necesario */
-        left: 10px; /* Ajusta según sea necesario */
-        background-color: #ff0000; /* Color rojo llamativo para descuentos */
-        color: white;
-        padding: 0.25rem 0.5rem;
-        border-radius: 0.25rem;
-        font-size: 0.875rem;
-        font-weight: bold;
-        z-index: 10; /* Asegura que esté sobre la imagen */
-        /* Estilo adicional para mejor visibilidad */
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Asegura que el contenedor de la imagen sea relativo para posicionar el badge */
-    .product-image-container {
-        position: relative;
-        /* Otros estilos como altura fija y object-fit ya deberían estar definidos */
-    }
-    </style>
 </body>
 </html>

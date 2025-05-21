@@ -1,215 +1,372 @@
 body {
-    background-color: #f4f4f4;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  .content {
-    max-width: 800px;
-    margin: 30px auto;
-    padding: 25px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  }
-  
-  h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #333;
-    font-size: 28px;
-  }
-  
-  h2 {
-    color: #444;
-    margin-bottom: 15px;
-    font-size: 20px;
-  }
-  
-  .payment-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .payment-selector {
-    margin-bottom: 10px;
-  }
-  
+  background-color: #f4f4f4;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Estilos específicos para administradores */
+body.admin {
+  --primary-color: #ff0000;
+  --primary-hover: #cc0000;
+  --secondary-color: #ff6b6b;
+  --secondary-hover: #ff5252;
+}
+
+.content {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 25px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+  font-size: 28px;
+}
+
+/* Título en rojo para administradores */
+body.admin h1 {
+  color: #ff0000;
+}
+
+h2 {
+  color: #444;
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+/* Subtítulos en rojo para administradores */
+body.admin h2 {
+  color: #ff0000;
+}
+
+.payment-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.payment-selector {
+  margin-bottom: 10px;
+}
+
+.payment-methods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.payment-method-option {
+  flex: 1;
+  min-width: 150px;
+  padding: 15px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.payment-method-option:hover {
+  background-color: #fff9f5;
+}
+
+/* Estilos normales para las opciones de pago */
+.payment-method-option.visa:hover {
+  border-color: #003366;
+}
+
+.payment-method-option.bizum:hover {
+  border-color: #007bff;
+}
+
+.payment-method-option.paypal:hover {
+  border-color: #003366;
+}
+
+.payment-method-option.visa.active {
+  border-color: #003366;
+}
+
+.payment-method-option.bizum.active {
+  border-color: #007bff;
+}
+
+.payment-method-option.paypal.active {
+  border-color: #003366;
+}
+
+/* Estilos para administradores - opciones de pago */
+body.admin .payment-method-option.visa:hover {
+  border-color: #ff0000;
+}
+
+body.admin .payment-method-option.bizum:hover {
+  border-color: #ff0000;
+}
+
+body.admin .payment-method-option.paypal:hover {
+  border-color: #ff0000;
+}
+
+body.admin .payment-method-option.visa.active {
+  border-color: #ff0000;
+}
+
+body.admin .payment-method-option.bizum.active {
+  border-color: #ff0000;
+}
+
+body.admin .payment-method-option.paypal.active {
+  border-color: #ff0000;
+}
+
+.payment-icon {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.payment-method-option span {
+  font-weight: 500;
+  color: #444;
+}
+
+.payment-form {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 10px;
+  border: 1px solid #eee;
+  display: none;
+}
+
+/* Estilos normales para los formularios de pago */
+.payment-form.visa {
+  border-color: #003366;
+}
+
+.payment-form.bizum {
+  border-color: #007bff;
+}
+
+.payment-form.paypal {
+  border-color: #003366;
+}
+
+/* Estilos para administradores - formularios de pago */
+body.admin .payment-form.visa {
+  border-color: #ff0000;
+  border-width: 2px;
+}
+
+body.admin .payment-form.bizum {
+  border-color: #ff0000;
+  border-width: 2px;
+}
+
+body.admin .payment-form.paypal {
+  border-color: #ff0000;
+  border-width: 2px;
+}
+
+.payment-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Borde inferior rojo para administradores */
+body.admin .payment-form-header {
+  border-bottom: 1px solid #ff0000;
+}
+
+.payment-form-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.payment-info {
+  margin-bottom: 20px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.payment-option {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.payment-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.payment-option.half {
+  flex: 1;
+  position: relative;
+}
+
+.payment-option label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #555;
+}
+
+/* Etiquetas en rojo para administradores */
+body.admin .payment-option label {
+  color: #ff0000;
+}
+
+.payment-option input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 15px;
+  transition: border-color 0.3s, background-color 0.3s;
+  background-color: white; /* Fondo blanco por defecto */
+}
+
+.payment-option input:focus {
+  border-color: #ff6600;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.1);
+}
+
+/* Focus en rojo para administradores */
+body.admin .payment-option input:focus {
+  border-color: #ff0000;
+  box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.1);
+}
+
+/* Estilo específico para campos con error */
+.payment-option input.error {
+  border-color: #dc3545;
+  background-color: rgba(220, 53, 69, 0.05); /* Fondo rojo muy suave */
+}
+
+.btn {
+  width: 100%;
+  padding: 14px;
+  background-color: #ff6600;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #e65c00;
+}
+
+/* Botones en rojo para administradores */
+body.admin .btn {
+  background-color: #ff0000;
+}
+
+body.admin .btn:hover {
+  background-color: #cc0000;
+}
+
+/* Estilos para mensajes de alerta */
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+/* Alertas para administradores */
+body.admin .alert-danger {
+  border-left: 4px solid #ff0000;
+}
+
+body.admin .alert-success {
+  border-left: 4px solid #ff0000;
+  color: #ff0000;
+}
+
+/* Estilos para mensajes de error en los campos */
+.error-message {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 5px;
+  display: none; /* Ocultar por defecto */
+  font-weight: 500;
+  background-color: rgba(220, 53, 69, 0.05);
+  padding: 5px 8px;
+  border-radius: 4px;
+  border-left: 3px solid #dc3545;
+}
+
+/* Mensajes de error para administradores */
+body.admin .error-message {
+  border-left: 3px solid #ff0000;
+  color: #ff0000;
+}
+
+/* Cuando se muestra un mensaje de error */
+.error-message:not(:empty) {
+  display: block;
+}
+
+.payment-option input.error {
+  border-color: #dc3545;
+}
+
+/* Campos con error para administradores */
+body.admin .payment-option input.error {
+  border-color: #ff0000;
+  background-color: rgba(255, 0, 0, 0.05);
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
   .payment-methods {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 25px;
-  }
-  
-  .payment-method-option {
-    flex: 1;
-    min-width: 150px;
-    padding: 15px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    display: flex;
     flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
   }
-  
-  .payment-method-option:hover {
-    background-color: #fff9f5;
+
+  .payment-method-option {
+    width: 100%;
   }
-  
-  .payment-method-option.visa:hover {
-    border-color: #003366;
-  }
-  
-  .payment-method-option.bizum:hover {
-    border-color: #007bff;
-  }
-  
-  .payment-method-option.paypal:hover {
-    border-color: #003366;
-  }
-  
-  .payment-method-option.visa.active {
-    border-color: #003366;
-  }
-  
-  .payment-method-option.bizum.active {
-    border-color: #007bff;
-  }
-  
-  .payment-method-option.paypal.active {
-    border-color: #003366;
-  }
-  
-  .payment-icon {
-    width: 50px;
-    height: 50px;
-    object-fit: contain;
-    margin-bottom: 10px;
-  }
-  
-  .payment-method-option span {
-    font-weight: 500;
-    color: #444;
-  }
-  
-  .payment-form {
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    padding: 20px;
-    margin-top: 10px;
-    border: 1px solid #eee;
-    display: none;
-  }
-  
-  .payment-form.visa {
-    border-color: #003366;
-  }
-  
-  .payment-form.bizum {
-    border-color: #007bff;
-  }
-  
-  .payment-form.paypal {
-    border-color: #003366;
-  }
-  
-  .payment-form-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .payment-form-icon {
-    width: 40px;
-    height: 40px;
-    object-fit: contain;
-  }
-  
-  .payment-info {
-    margin-bottom: 20px;
-    color: #666;
-    line-height: 1.5;
-  }
-  
-  .payment-option {
-    margin-bottom: 20px;
-  }
-  
+
   .payment-row {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
+    flex-direction: column;
+    gap: 10px;
   }
-  
+
   .payment-option.half {
-    flex: 1;
-  }
-  
-  .payment-option label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #555;
-  }
-  
-  .payment-option input {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 15px;
-    transition: border-color 0.3s;
   }
-  
-  .payment-option input:focus {
-    border-color: #ff6600;
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.1);
-  }
-  
-  .btn {
-    width: 100%;
-    padding: 14px;
-    background-color: #ff6600;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    transition: background-color 0.3s;
-  }
-  
-  .btn:hover {
-    background-color: #e65c00;
-  }
-  
-  /* Estilos para mensajes de alerta */
-  .alert {
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    text-align: center;
-    font-weight: bold;
-  }
-  
-  .alert-danger {
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-  }
-  
-  .alert-success {
-    color: #155724;
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-  }
-  
-  
+}
