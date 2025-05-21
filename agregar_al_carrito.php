@@ -2,44 +2,69 @@
 session_start();
 require_once 'config/database.php';
 
-// Función para manejar errores y redirigir con mensaje
-function handleError($message, $redirect_page = 'carrito.php') {
-    error_log("Error en agregar_al_carrito.php: " . $message);
-    $_SESSION['error'] = $message;
-    header('Location: ' . $redirect_page);
+// Función para enviar respuesta JSON (para solicitudes AJAX)
+function sendJsonResponse($status, $data) {
+    header('Content-Type: application/json');
+    echo json_encode(['status' => $status] + $data);
     exit;
 }
 
-// Función para manejar éxito y redirigir con mensaje
-function handleSuccess($message, $redirect_page = 'carrito.php') {
-    $_SESSION['mensaje'] = $message;
-    header('Location: ' . $redirect_page);
-    exit;
+// Función para manejar errores (común para ambos tipos de solicitud)
+function handleError($message) {
+    error_log("Error en agregar_al_carrito.php: " . $message);
+    
+    // Detectar si es una solicitud AJAX
+    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        sendJsonResponse('error', ['message' => $message]);
+    } else {
+        // Para solicitudes de formulario normales, usar sesión y redirigir
+        $_SESSION['error'] = $message;
+        $referer = $_SERVER['HTTP_REFERER'] ?? 'index.php';
+        header('Location: ' . $referer);
+        exit;
+    }
+}
+
+// Función para manejar éxito (común para ambos tipos de solicitud)
+function handleSuccess($message) {
+    // Detectar si es una solicitud AJAX
+    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        sendJsonResponse('success', ['message' => $message]);
+    } else {
+        // Para solicitudes de formulario normales, usar sesión y redirigir
+        $_SESSION['mensaje'] = $message;
+        $referer = $_SERVER['HTTP_REFERER'] ?? 'carrito.php'; // Redirigir al carrito por defecto
+        header('Location: ' . $referer);
+        exit;
+    }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['id']) && isset($_POST['tipo_producto'])) {
+    // Verificar si se han pasado el ID, tipo de producto y cantidad
+    // La validación de cantidad > 0 se hace más adelante.
+    if (isset($_POST['id']) && isset($_POST['tipo_producto']) && isset($_POST['cantidad'])) {
         $producto_id = intval($_POST['id']);
         $tipo_producto = $_POST['tipo_producto']; // 'productos' o 'segunda_mano'
+        $cantidad = intval($_POST['cantidad']);
+
+        // Validar la cantidad después de obtenerla
+        if ($cantidad <= 0) {
+            handleError("La cantidad debe ser un número positivo.");
+        }
         
         $tabla = '';
-        $redirect_page = 'carrito.php'; // Página por defecto para redirigir después de agregar al carrito
 
-        // Determinar la tabla y la página de origen/redirección
+        // Determinar la tabla
         if ($tipo_producto === 'productos') {
             $tabla = 'productos';
-            // Podrías querer redirigir de vuelta a la página del producto normal
-            // $redirect_page = 'producto.php?id=' . $producto_id;
         } elseif ($tipo_producto === 'segunda_mano') {
             $tabla = 'segunda_mano';
-            // Podrías querer redirigir de vuelta a la página del producto de segunda mano
-            // $redirect_page = 'detalle_segunda_mano.php?id=' . $producto_id;
         } else {
-            handleError("Tipo de producto no válido: " . htmlspecialchars($tipo_producto), $_SERVER['HTTP_REFERER'] ?? 'index.php');
+            handleError("Tipo de producto no válido: " . htmlspecialchars($tipo_producto));
         }
 
         if (empty($tabla)) {
-             handleError("Tipo de producto no especificado o vacío.", $_SERVER['HTTP_REFERER'] ?? 'index.php');
+             handleError("Tipo de producto no especificado o vacío.");
         }
 
         try {
@@ -56,33 +81,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 
                 // Generar una clave única para el producto en el carrito
-                // Usamos el ID y el tipo de producto para diferenciar
                 $cart_item_key = $tipo_producto . '_' . $producto_id;
 
                 // Agregar el producto al carrito o incrementar la cantidad
                 if (isset($_SESSION['carrito'][$cart_item_key])) {
-                    $_SESSION['carrito'][$cart_item_key]['cantidad']++;
+                    // Incrementar la cantidad existente
+                    $_SESSION['carrito'][$cart_item_key]['cantidad'] += $cantidad;
                 } else {
-                    $producto['cantidad'] = 1;
+                    // Añadir el producto con la cantidad especificada
+                    $producto['cantidad'] = $cantidad;
                     $producto['tipo_producto'] = $tipo_producto; // Guardar el tipo de producto en el carrito
                     $_SESSION['carrito'][$cart_item_key] = $producto;
                 }
                 
-                // Redirigir de vuelta a la página desde donde se añadió o al carrito
-                $referer = $_SERVER['HTTP_REFERER'] ?? 'carrito.php';
-                handleSuccess('Producto agregado al carrito correctamente', $referer);
+                // Usar handleSuccess que ahora maneja la redirección o JSON
+                handleSuccess('Producto agregado al carrito correctamente');
 
             } else {
-                handleError("Producto no encontrado en la tabla '" . $tabla . "' con ID " . htmlspecialchars($producto_id), $_SERVER['HTTP_REFERER'] ?? 'index.php');
+                handleError("Producto no encontrado en la tabla '" . $tabla . "' con ID " . htmlspecialchars($producto_id));
             }
         } catch (PDOException $e) {
-            handleError("Error de base de datos al buscar producto: " . $e->getMessage(), $_SERVER['HTTP_REFERER'] ?? 'index.php');
+            handleError("Error de base de datos al buscar producto: " . $e->getMessage());
         }
     } else {
-        handleError("ID de producto o tipo de producto no proporcionado.", $_SERVER['HTTP_REFERER'] ?? 'index.php');
+        // Mensaje de error más específico si falta algún campo
+        $missing_fields = [];
+        if (!isset($_POST['id'])) $missing_fields[] = 'ID de producto';
+        if (!isset($_POST['tipo_producto'])) $missing_fields[] = 'tipo de producto';
+        if (!isset($_POST['cantidad'])) $missing_fields[] = 'cantidad';
+        handleError("Faltan campos necesarios: " . implode(", ", $missing_fields));
     }
 } else {
-    handleError("Método de solicitud no válido.", $_SERVER['HTTP_REFERER'] ?? 'index.php');
+    handleError("Método de solicitud no válido.");
 }
 
 ?>

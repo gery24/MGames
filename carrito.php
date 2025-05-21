@@ -109,13 +109,20 @@ $titulo = "Carrito - MGames";
                                             <?php endfor; ?>
                                         </select>
                                     </div>
-                                    <form method="POST" action="eliminar_del_carrito.php">
-                                        <input type="hidden" name="id" value="<?php echo htmlspecialchars($producto_data['id']); ?>">
-                                        <input type="hidden" name="tipo_producto" value="<?php echo htmlspecialchars($producto_data['tipo_producto'] ?? 'productos'); ?>">
-                                        <button type="submit" class="btn">
-                                            <i class="fas fa-trash-alt"></i> Eliminar
+                                    <div class="product-actions">
+                                        <!-- Botón de Añadir Uno Más -->
+                                        <button type="button" class="btn btn-add-one" data-id="<?php echo htmlspecialchars($producto_data['id']); ?>" data-type="<?php echo htmlspecialchars($producto_data['tipo_producto'] ?? 'productos'); ?>">
+                                            <i class="fas fa-plus"></i>
                                         </button>
-                                    </form>
+                                        <!-- Formulario de Eliminar -->
+                                        <form method="POST" action="eliminar_del_carrito.php" style="display: inline-block;">
+                                            <input type="hidden" name="id" value="<?php echo htmlspecialchars($producto_data['id']); ?>">
+                                            <input type="hidden" name="tipo_producto" value="<?php echo htmlspecialchars($producto_data['tipo_producto'] ?? 'productos'); ?>">
+                                            <button type="submit" class="btn">
+                                                <i class="fas fa-trash-alt"></i> Eliminar
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                             <?php endif; ?>
@@ -232,6 +239,7 @@ $titulo = "Carrito - MGames";
                             <form method="POST" action="agregar_al_carrito.php">
                                 <input type="hidden" name="id" value="<?php echo $recomendado['id']; ?>">
                                 <input type="hidden" name="tipo_producto" value="productos">
+                                <input type="hidden" name="cantidad" value="1">
                                 <button type="submit" class="btn">
                                     <i class="fas fa-cart-plus"></i> Añadir al carrito
                                 </button>
@@ -308,6 +316,54 @@ $titulo = "Carrito - MGames";
                 alert('Error al procesar la solicitud');
             });
         }
+
+        // Script para el botón de añadir uno más
+        document.querySelectorAll('.btn-add-one').forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.getAttribute('data-id');
+                const productType = this.getAttribute('data-type');
+                
+                // Encontrar el selector de cantidad asociado a este producto
+                const quantitySelectId = 'quantity-' + productId; // Asumiendo que el ID del select es quantity-PRODUCT_ID
+                const quantitySelect = document.getElementById(quantitySelectId);
+                const cantidad = quantitySelect ? quantitySelect.value : 1; // Obtener el valor seleccionado, por defecto 1 si no se encuentra
+
+                fetch('agregar_al_carrito.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    // Enviamos el ID, tipo de producto y la cantidad seleccionada
+                    body: 'id=' + encodeURIComponent(productId) + '&tipo_producto=' + encodeURIComponent(productType) + '&cantidad=' + encodeURIComponent(cantidad)
+                })
+                .then(response => {
+                     // Verificar si la respuesta es JSON antes de intentar parsearla
+                    const contentType = response.headers.get("content-type");
+                    if (contentType && contentType.indexOf("application/json") !== -1) {
+                        return response.json();
+                    } else {
+                        // Si no es JSON, mostrar el texto de la respuesta (podría ser un error de PHP)
+                         throw new Error('Respuesta no es JSON: ' + response.status + ' ' + response.statusText + '\n' + response.text());
+                    }
+                })
+                .then(data => {
+                    // Puedes mostrar un mensaje de éxito o simplemente recargar la página
+                    if (data.status === 'success') {
+                        // alert(data.message);
+                        window.location.reload(); // Recargar para ver la cantidad actualizada
+                    } else if (data.status === 'error') {
+                         alert('Error al añadir el producto: ' + data.message);
+                    } else {
+                         alert('Respuesta inesperada del servidor.'); // Mensaje si el status no es ni success ni error
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Mostrar el error capturado (incluyendo el texto de respuesta no JSON si aplica)
+                    alert('Error al procesar la solicitud para añadir producto: ' + error.message);
+                });
+            });
+        });
     </script>
     
     <?php require_once 'includes/footer.php'; ?>

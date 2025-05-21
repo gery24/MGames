@@ -380,6 +380,13 @@ if (isset($_GET['already_in_cart'])) {
                             <input type="hidden" name="nombre" value="<?php echo htmlspecialchars($producto['nombre']); ?>">
                             <input type="hidden" name="precio" value="<?php echo $producto['precio']; ?>">
                             <input type="hidden" name="tipo_producto" value="segunda_mano">
+                            
+                            <!-- Selector de cantidad -->
+                            <div class="quantity-selector">
+                                <label for="cantidad">Cantidad:</label>
+                                <input type="number" id="cantidad" name="cantidad" value="1" min="1" max="10" style="width: 60px; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+                            </div>
+
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-shopping-cart"></i> Añadir al Carrito
                             </button>
