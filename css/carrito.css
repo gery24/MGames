@@ -81,20 +81,61 @@ header h1 {
   margin-bottom: 2rem;
 }
 
-.cart-container p {
+/* Estilos para carrito vacío */
+.empty-cart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
   text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.empty-cart-icon {
+  font-size: 5rem;
+  color: var(--light-text);
+  margin-bottom: 1.5rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.empty-cart-container h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.empty-cart-container p {
   font-size: 1.1rem;
-  margin: 2rem 0;
+  color: var(--light-text);
+  margin-bottom: 2rem;
+  max-width: 500px;
 }
 
-.cart-container a {
-  color: var(--primary-color);
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.cart-container a:hover {
-  text-decoration: underline;
+.empty-cart-container .btn {
+  padding: 0.75rem 2rem;
+  font-size: 1.1rem;
 }
 
 /* Contenido del carrito */
@@ -120,17 +161,6 @@ header h1 {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   animation: fadeIn 0.5s ease forwards;
   opacity: 0;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .product-card:hover {
@@ -222,6 +252,15 @@ header h1 {
   background-color: var(--primary-hover);
 }
 
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
 /* Asegurar que el botón no se vuelve transparente en hover */
 .cart-summary .btn:hover,
 .product-card-content .btn:hover {
@@ -270,7 +309,7 @@ header h1 {
   margin-top: 1rem;
 }
 
-/* Productos recomendados */
+/* Productos recomendados - NUEVO DISEÑO HORIZONTAL */
 .recommended-products {
   margin-top: 3rem;
 }
@@ -280,41 +319,107 @@ header h1 {
   margin-bottom: 2rem;
   font-size: 1.5rem;
   color: var(--text-color);
+  position: relative;
 }
 
-.recommended-products .products-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 2rem;
+.recommended-products h2:after {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 3px;
+  background-color: var(--primary-color);
+  margin: 0.5rem auto 0;
+  border-radius: 3px;
 }
 
-.recommended-products .product-card {
+/* Nuevo slider horizontal para productos recomendados */
+.products-slider {
+  display: flex;
+  overflow-x: auto;
+  gap: 1.5rem;
+  padding: 1rem 0.5rem;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) #f1f1f1;
+}
+
+/* Estilizar la barra de desplazamiento */
+.products-slider::-webkit-scrollbar {
+  height: 8px;
+}
+
+.products-slider::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.products-slider::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 10px;
+}
+
+.products-slider::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
+}
+
+/* Ajustar las tarjetas para el slider */
+.products-slider .product-card {
+  flex: 0 0 280px;
   flex-direction: column;
-  height: 100%;
+  height: auto;
+  min-height: 350px;
+  margin-bottom: 0.5rem;
 }
 
-.recommended-products .product-card img {
+.products-slider .product-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.products-slider .product-image-container {
   width: 100%;
   height: 180px;
 }
 
-.recommended-products .product-card-content {
-  padding: 1.5rem;
+.products-slider .product-card-content {
+  padding: 1.25rem;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
 
-.recommended-products .product-card-content h3 {
+.products-slider .product-card-content h3 {
   height: 2.8rem;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  margin-bottom: 0.5rem;
 }
 
-.recommended-products .btn {
+.products-slider .product-card-content .price {
+  margin-bottom: 1rem;
+}
+
+.products-slider .btn {
   margin-top: auto;
+}
+
+/* Estilos para la etiqueta de descuento */
+.discount-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #ef4444;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: bold;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Estilos responsivos */
@@ -323,8 +428,12 @@ header h1 {
     grid-template-columns: 1fr;
   }
 
-  .recommended-products .products-list {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  .products-slider {
+    padding-bottom: 1.5rem;
+  }
+
+  .products-slider .product-card {
+    flex: 0 0 250px;
   }
 }
 
@@ -338,7 +447,7 @@ header h1 {
     height: 180px;
   }
 
-  .recommended-products .products-list {
-    grid-template-columns: 1fr;
+  .products-slider .product-card {
+    flex: 0 0 220px;
   }
 }
