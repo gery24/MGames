@@ -126,7 +126,7 @@ try {
     // Mensaje de éxito
     $_SESSION['mensaje'] = "¡Pago realizado con éxito! Gracias por tu compra.";
     
-    // Redirigir a la página de cartera
+    // Redirigir a la página de cartera con parámetro para mostrar el modal
     header('Location: cartera.php?compra_exitosa=true');
     exit;
     
