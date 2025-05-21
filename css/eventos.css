@@ -1,0 +1,279 @@
+/* Estilos para la página de eventos.php */
+
+/* Asegurarse de tener las variables de color si no se incluyen globalmente */
+:root {
+    --primary: #7e22ce;
+    --primary-dark: #6b21a8;
+    --primary-light: #a855f7;
+    --secondary: #2563eb;
+    --secondary-dark: #1d4ed8;
+    --accent: #f97316;
+    --dark: #0f172a;
+    --dark-light: #1e293b;
+    --light: #f8fafc;
+    --gray: #64748b;
+    --gray-light: #cbd5e1;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+        "Helvetica Neue", sans-serif;
+    background-color: #f1f5f9; /* Fondo suave */
+    color: var(--dark);
+    line-height: 1.6;
+    padding-top: 80px; /* Espacio arriba para el header fijo */
+    padding-bottom: 40px; /* Espacio al final de la página */
+    /* Anular posibles estilos raros de layout global */
+    position: static !important;
+    margin: 0 !important;
+    float: none !important;
+    width: auto !important;
+}
+
+.eventos-page {
+    padding: 2rem 0;
+    /* Asegurarse de que el contenedor de la página principal se comporte normalmente */
+    position: static !important;
+    float: none !important;
+    width: auto !important;
+    margin: 0 auto !important; /* Centrar el contenido principal */
+    display: block !important;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+     /* Asegurarse de que el contenedor no tenga estilos de layout que lo pongan al lado */
+    position: static !important;
+    float: none !important;
+    width: auto !important;
+}
+
+.page-title {
+    font-size: 2.5em;
+    font-weight: 800;
+    color: var(--dark);
+    text-align: center;
+    margin-bottom: 10px;
+    position: relative;
+    /* Anular posibles estilos de rotación o escritura vertical */
+    writing-mode: horizontal-tb !important;
+    transform: none !important;
+    text-orientation: mixed !important;
+    float: none !important;
+    width: auto !important;
+}
+
+/* Estilos para la decoración del título */
+.title-decoration {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+     /* Asegurarse de que la decoración no se vea afectada por estilos globales */
+    position: static !important;
+    float: none !important;
+    width: auto !important;
+}
+
+.title-line {
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(to right, var(--primary-light), var(--secondary));
+    border-radius: 2px;
+}
+
+.title-dot {
+    width: 10px;
+    height: 10px;
+    background-color: var(--primary);
+    border-radius: 50%;
+    margin: 0 10px;
+}
+
+.eventos-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px; /* Aumentar espacio entre tarjetas */
+     /* Asegurarse de que el grid ocupe el espacio correcto y no se apile verticalmente */
+     position: static !important;
+     float: none !important;
+     width: auto !important;
+}
+
+.evento-item {
+    background-color: white; /* Usar white o variable si está definida */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* Asegurarse de que los items de la cuadrícula no tengan anchos o floats que rompan el grid */
+     width: auto !important;
+     float: none !important;
+}
+
+.evento-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.evento-image-container {
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+}
+
+.evento-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: var(--transition);
+}
+
+.evento-item:hover img {
+    transform: scale(1.05);
+}
+
+.evento-fecha {
+    position: absolute;
+    bottom: 0;
+    left: 1rem;
+    transform: translateY(50%); /* Mover hacia abajo la mitad de su altura */
+    background-color: var(--primary); /* Usar color primario */
+    color: white;
+    padding: 0.5rem; /* Ajustar padding */
+    border-radius: 0.25rem; /* Ajustar border-radius */
+    text-align: center;
+    min-width: 60px;
+    z-index: 5; /* Asegurar que esté encima */
+}
+
+.evento-dia {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.evento-mes {
+     display: block;
+     font-size: 0.75rem;
+     text-transform: uppercase;
+     line-height: 1.2;
+}
+
+.evento-content {
+    padding: 1.5rem;
+    padding-top: 2rem; /* Espacio extra arriba para el evento-fecha */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.evento-content h3 {
+    color: var(--dark); /* Color de texto oscuro */
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.evento-info {
+    margin-bottom: 1rem;
+    color: var(--gray); /* Color gris para información */
+    font-size: 0.875rem;
+}
+
+.evento-info p {
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.evento-info i {
+    color: var(--primary-light); /* Color primario claro para íconos */
+}
+
+.evento-descripcion {
+    font-size: 0.875rem;
+    color: var(--dark); /* Color de texto oscuro */
+    margin-bottom: 1rem;
+    flex-grow: 1;
+}
+
+.evento-actions {
+     margin-top: auto;
+     /* Asegurar que el botón use los estilos de .btn .btn-primary */
+}
+
+/* Estilos para el mensaje cuando no hay eventos (si aplicara) */
+.eventos-list > p {
+    text-align: center;
+    grid-column: 1 / -1;
+    font-size: 1.1em;
+    color: var(--gray);
+    margin-top: 20px;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 2em;
+    }
+
+    .title-decoration {
+        margin-bottom: 30px;
+    }
+
+    .title-line {
+        width: 40px;
+    }
+
+    .title-dot {
+        width: 8px;
+        height: 8px;
+        margin: 0 8px;
+    }
+
+    .eventos-list {
+        gap: 20px;
+    }
+
+    .evento-content {
+         padding: 15px;
+    }
+
+    .evento-content h3 {
+        font-size: 1.2em;
+    }
+
+    .evento-info,
+    .evento-descripcion,
+    .evento-actions .btn { /* Ajustar selector para el botón */
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 600px) {
+    .eventos-list {
+        grid-template-columns: 1fr;
+    }
+
+     .page-title {
+        font-size: 1.8em;
+     }
+} 

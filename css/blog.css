@@ -1,0 +1,236 @@
+/* Estilos para la página de blog.php */
+
+/* Asegurarse de tener las variables de color si no se incluyen globalmente */
+:root {
+    --primary: #7e22ce;
+    --primary-dark: #6b21a8;
+    --primary-light: #a855f7;
+    --secondary: #2563eb;
+    --secondary-dark: #1d4ed8;
+    --accent: #f97316;
+    --dark: #0f172a;
+    --dark-light: #1e293b;
+    --light: #f8fafc;
+    --gray: #64748b;
+    --gray-light: #cbd5e1;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+        "Helvetica Neue", sans-serif;
+    background-color: #f1f5f9; /* Fondo suave */
+    color: var(--dark);
+    line-height: 1.6;
+    padding-top: 80px; /* Espacio arriba para el header fijo */
+    padding-bottom: 40px; /* Espacio al final de la página */
+}
+
+.blog-page {
+    padding: 2rem 0;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.page-title {
+    font-size: 2.5em;
+    font-weight: 800;
+    color: var(--dark);
+    text-align: center;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+/* Estilos para la decoración del título */
+.title-decoration {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.title-line {
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(to right, var(--primary-light), var(--secondary));
+    border-radius: 2px;
+}
+
+.title-dot {
+    width: 10px;
+    height: 10px;
+    background-color: var(--primary);
+    border-radius: 50%;
+    margin: 0 10px;
+}
+
+.blog-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px; /* Aumentar espacio entre tarjetas */
+}
+
+.blog-item {
+    background-color: var(--bg-white); /* Usar variable si está definida en styles.css o usar white */
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column; /* Para que el contenido se apile verticalmente */
+    height: 100%; /* Para que todas las tarjetas tengan la misma altura en el grid */
+}
+
+.blog-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.blog-image-container {
+    height: 200px;
+    position: relative; /* Para posicionar la categoría */
+    overflow: hidden;
+}
+
+.blog-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: var(--transition);
+}
+
+.blog-item:hover img {
+    transform: scale(1.05);
+}
+
+.blog-category {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background-color: var(--primary); /* Usar color primario */
+    color: white;
+    font-size: 0.8em;
+    padding: 5px 10px;
+    border-radius: 4px;
+    z-index: 5; /* Asegurar que esté encima de la imagen */
+    font-weight: bold;
+}
+
+.blog-content {
+    padding: 20px; /* Aumentar padding */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Para que el contenido empuje el botón hacia abajo */
+}
+
+.blog-content h3 {
+    color: var(--dark); /* Color de texto oscuro */
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.3em; /* Aumentar tamaño */
+    font-weight: 700;
+}
+
+.blog-meta {
+    font-size: 0.9em;
+    color: var(--gray); /* Color gris para metadatos */
+    margin-bottom: 15px; /* Aumentar espacio */
+    display: flex; /* Para alinear íconos y texto */
+    align-items: center;
+    gap: 15px; /* Espacio entre meta elementos */
+}
+
+.blog-meta span {
+     display: flex;
+     align-items: center;
+     gap: 5px;
+}
+
+.blog-meta i {
+    color: var(--primary-light); /* Color primario claro para íconos */
+}
+
+.blog-description {
+    font-size: 1em;
+    color: var(--text-color); /* Usar variable o color oscuro */
+    color: #333;
+    margin-bottom: 20px; /* Aumentar espacio */
+    flex-grow: 1; /* Asegurar que ocupe el espacio disponible */
+}
+
+.read-more {
+    display: inline-block;
+    color: var(--secondary); /* Usar color secundario para el enlace */
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: auto; /* Empujar el botón hacia abajo */
+    align-self: flex-start; /* Alinear a la izquierda si el flex-direction es column */
+    transition: color 0.3s ease;
+}
+
+.read-more:hover {
+    color: var(--secondary-dark); /* Oscurecer al pasar el ratón */
+    text-decoration: underline;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 2em;
+    }
+
+    .title-decoration {
+        margin-bottom: 30px;
+    }
+
+    .title-line {
+        width: 40px;
+    }
+
+    .title-dot {
+        width: 8px;
+        height: 8px;
+        margin: 0 8px;
+    }
+
+    .blog-list {
+        gap: 20px;
+    }
+
+    .blog-content {
+         padding: 15px;
+    }
+
+    .blog-content h3 {
+        font-size: 1.2em;
+    }
+
+    .blog-meta,
+    .blog-description,
+     .read-more {
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 600px) {
+    .blog-list {
+        grid-template-columns: 1fr;
+    }
+
+     .page-title {
+        font-size: 1.8em;
+     }
+} 
