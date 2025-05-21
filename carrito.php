@@ -86,8 +86,12 @@ $titulo = "Carrito - MGames";
             <?php else: ?>
                 <div class="cart-content">
                     <div class="products-list">
-                        <?php foreach ($productos_en_carrito as $producto_id => $producto_data): ?>
+                        <?php foreach ($productos_en_carrito as $cart_item_key => $producto_data): ?>
                             <?php 
+                            // Extraer el ID numérico del producto de la clave del carrito (ej: "productos_7" -> 7)
+                            $key_parts = explode('_', $cart_item_key);
+                            $producto_id = (count($key_parts) > 1) ? intval($key_parts[1]) : $cart_item_key; // Usar la clave completa si no tiene el formato esperado
+
                             // Verificar si el elemento es un array y contiene las claves necesarias
                             if (is_array($producto_data) && isset($producto_data['nombre'], $producto_data['imagen'], $producto_data['precio'])): 
                             ?>
@@ -107,10 +111,10 @@ $titulo = "Carrito - MGames";
                                         <p class="price">€<?php echo number_format($producto_data['precio'], 2); ?></p>
                                     </div>
                                     <div class="quantity">
-                                        <label for="quantity-<?php echo $producto_id; ?>">Cantidad:</label>
-                                        <select id="quantity-<?php echo $producto_id; ?>" 
+                                        <label for="quantity-<?php echo $cart_item_key; ?>">Cantidad:</label>
+                                        <select id="quantity-<?php echo $cart_item_key; ?>" 
                                                 name="quantity" 
-                                                onchange="actualizarCantidad(<?php echo $producto_id; ?>, this.value)">
+                                                onchange="actualizarCantidad('<?php echo $cart_item_key; ?>', this.value)">
                                             <?php for ($i = 1; $i <= 10; $i++): ?>
                                                 <option value="<?php echo $i; ?>" 
                                                     <?php echo (isset($producto_data['cantidad']) && $producto_data['cantidad'] == $i) ? 'selected' : ''; ?>>
@@ -120,7 +124,8 @@ $titulo = "Carrito - MGames";
                                         </select>
                                     </div>
                                     <form method="POST" action="eliminar_del_carrito.php">
-                                        <input type="hidden" name="id" value="<?php echo $producto_id; ?>">
+                                        <input type="hidden" name="id" value="<?php echo $cart_item_key; ?>">
+                                        <input type="hidden" name="tipo_producto" value="<?php echo $producto_data['tipo_producto']; ?>">
                                         <button type="submit" class="btn">
                                             <i class="fas fa-trash-alt"></i> Eliminar
                                         </button>
@@ -150,9 +155,15 @@ $titulo = "Carrito - MGames";
                             }
                         }
 
+                        // Modificar la estructura HTML del resumen para incluir atributos data-producto-id
+                        
                         // --- Mostrar resumen por producto ---
-                        foreach ($productos_en_carrito as $producto_id => $producto_data) {
+                        foreach ($productos_en_carrito as $cart_item_key => $producto_data) {
                             
+                            // Extraer el ID numérico del producto de la clave del carrito
+                            $key_parts = explode('_', $cart_item_key);
+                            $producto_id = (count($key_parts) > 1) ? intval($key_parts[1]) : $cart_item_key; // Usar la clave completa si no tiene el formato esperado
+
                             // Aplicar la misma validación que para mostrar las tarjetas
                             if (is_array($producto_data) && isset($producto_data['nombre'], $producto_data['imagen'], $producto_data['precio'])): 
 
@@ -172,14 +183,14 @@ $titulo = "Carrito - MGames";
                                     $total_descuento_aplicado += ($precio_unitario * $cantidad) - $precio_linea_total; // Descuento total aplicado en esta línea
 
                                     ?>
-                                    <div class="summary-item">
-                                        <p><strong><?php echo $nombre_producto; ?></strong> (x<?php echo $cantidad; ?>)</p>
+                                    <div class="summary-item" data-producto-id="<?php echo $cart_item_key; ?>">
+                                        <p><strong><?php echo $nombre_producto; ?></strong> (<span class="producto-cantidad">x<?php echo $cantidad; ?></span>)</p>
                                         <p>Precio unitario: €<?php echo number_format($precio_unitario, 2); ?></p>
                                         <p>Descuento: <?php echo $descuento_porcentaje > 0 ? $descuento_porcentaje . '%' : '0%'; ?></p>
                                         <?php if ($descuento_porcentaje > 0): ?>
                                             <p>Precio con descuento: €<?php echo number_format($precio_con_descuento_unitario, 2); ?></p>
                                         <?php endif; ?>
-                                        <p>Subtotal línea: €<?php echo number_format($precio_linea_total, 2); ?></p>
+                                        <p>Subtotal línea: <span class="subtotal-linea">€<?php echo number_format($precio_linea_total, 2); ?></span></p>
                                     </div>
                                     <hr> <!-- Separador entre productos -->
                                     <?php
@@ -194,11 +205,11 @@ $titulo = "Carrito - MGames";
                                     $subtotal += $precio_linea_total;
                                     // Aquí no podemos calcular el descuento individual si no lo tenemos de la DB o sesión
                                     ?>
-                                    <div class="summary-item">
-                                        <p><strong><?php echo $nombre_producto; ?></strong> (x<?php echo $cantidad; ?>)</p>
+                                    <div class="summary-item" data-producto-id="<?php echo $cart_item_key; ?>">
+                                        <p><strong><?php echo $nombre_producto; ?></strong> (<span class="producto-cantidad">x<?php echo $cantidad; ?></span>)</p>
                                         <p>Precio unitario: €<?php echo number_format($precio_unitario, 2); ?></p>
                                         <p>Descuento: N/A</p>
-                                         <p>Subtotal línea: €<?php echo number_format($precio_linea_total, 2); ?></p>
+                                        <p>Subtotal línea: <span class="subtotal-linea">€<?php echo number_format($precio_linea_total, 2); ?></span></p>
                                     </div>
                                     <hr> <!-- Separador entre productos -->
                                     <?php
@@ -246,6 +257,14 @@ $titulo = "Carrito - MGames";
                             <p class="price">€<?php echo number_format($recomendado['precio'], 2); ?></p>
                             <form method="POST" action="agregar_al_carrito.php">
                                 <input type="hidden" name="id" value="<?php echo $recomendado['id']; ?>">
+                                <input type="hidden" name="nombre" value="<?php echo htmlspecialchars($recomendado['nombre']); ?>">
+                                <input type="hidden" name="precio" value="<?php echo $recomendado['precio']; ?>">
+                                <input type="hidden" name="imagen" value="<?php echo htmlspecialchars($recomendado['imagen']); ?>">
+                                <input type="hidden" name="tipo_producto" value="producto">
+                                <input type="hidden" name="cantidad" value="1">
+                                <?php if (isset($recomendado['descuento'])): ?>
+                                    <input type="hidden" name="descuento" value="<?php echo $recomendado['descuento']; ?>">
+                                <?php endif; ?>
                                 <button type="submit" class="btn">
                                     <i class="fas fa-cart-plus"></i> Añadir al carrito
                                 </button>
@@ -312,25 +331,87 @@ $titulo = "Carrito - MGames";
             }
         });
         
-        function actualizarCantidad(productoId, cantidad) {
+        // Función mejorada para actualizar la cantidad y reflejar los cambios en el resumen
+        function actualizarCantidad(cartItemKey, cantidad) {
+            console.log('Actualizando cantidad para key:', cartItemKey, 'con cantidad:', cantidad);
+            
+            // Mostrar indicador de carga
+            const loadingIndicator = document.createElement('div');
+            loadingIndicator.className = 'update-message';
+            loadingIndicator.textContent = 'Actualizando...';
+            document.querySelector('.cart-container').prepend(loadingIndicator);
+            
             fetch('actualizar_cantidad.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: 'id=' + productoId + '&cantidad=' + cantidad
+                body: 'id=' + cartItemKey + '&cantidad=' + cantidad
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log('Respuesta recibida');
+                return response.json();
+            })
             .then(data => {
+                console.log('Datos recibidos:', data);
+                
+                // Eliminar indicador de carga
+                loadingIndicator.remove();
+                
                 if (data.success) {
-                    window.location.reload();
+                    // Actualizar el total a pagar
+                    const totalElement = document.querySelector('.final-summary p strong');
+                    if (totalElement) {
+                        totalElement.textContent = 'Total a pagar: €' + data.total;
+                        totalElement.classList.add('price-updated');
+                        setTimeout(() => totalElement.classList.remove('price-updated'), 1000);
+                    } else {
+                        console.error('Elemento total no encontrado');
+                    }
+                    
+                    // Actualizar el subtotal de la línea del producto modificado
+                    const productoSubtotalElement = document.querySelector(`.summary-item[data-producto-id="${cartItemKey}"] .subtotal-linea`);
+                    if (productoSubtotalElement) {
+                        const subtotalProducto = data.subtotales[cartItemKey].subtotal;
+                        productoSubtotalElement.textContent = '€' + subtotalProducto;
+                        productoSubtotalElement.classList.add('price-updated');
+                        setTimeout(() => productoSubtotalElement.classList.remove('price-updated'), 1000);
+                    } else {
+                        console.error('Elemento subtotal no encontrado para el item key:', cartItemKey);
+                    }
+                    
+                    // Actualizar la cantidad mostrada en el resumen
+                    const cantidadElement = document.querySelector(`.summary-item[data-producto-id="${cartItemKey}"] .producto-cantidad`);
+                    if (cantidadElement) {
+                        const nuevaCantidad = data.subtotales[cartItemKey].cantidad;
+                        cantidadElement.textContent = 'x' + nuevaCantidad;
+                        cantidadElement.classList.add('quantity-updated');
+                        setTimeout(() => cantidadElement.classList.remove('quantity-updated'), 1000);
+                    } else {
+                        console.error('Elemento cantidad no encontrado para el item key:', cartItemKey);
+                    }
+                    
+                    // Mostrar mensaje de confirmación
+                    const mensajeElement = document.createElement('div');
+                    mensajeElement.className = 'update-message';
+                    mensajeElement.innerHTML = '<i class="fas fa-check-circle"></i> Carrito actualizado';
+                    document.querySelector('.cart-container').prepend(mensajeElement);
+                    
+                    // Eliminar el mensaje después de 2 segundos
+                    setTimeout(() => {
+                        mensajeElement.remove();
+                    }, 2000);
                 } else {
-                    alert('Error al actualizar la cantidad');
+                    console.error('Error en la respuesta:', data.message);
+                    alert('Error al actualizar la cantidad: ' + (data.message || 'Error desconocido'));
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('Error al procesar la solicitud');
+                // Eliminar indicador de carga
+                loadingIndicator.remove();
+                
+                console.error('Error en la solicitud:', error);
+                alert('Error al procesar la solicitud. Por favor, inténtalo de nuevo.');
             });
         }
     </script>
@@ -387,6 +468,42 @@ $titulo = "Carrito - MGames";
     #scrollToTopBtn svg {
       width: 24px;
       height: 24px;
+    }
+
+    /* Añadir animación para la cantidad actualizada */
+    .quantity-updated {
+      animation: quantityPulse 1s ease;
+      font-weight: bold;
+      color: #10b981;
+    }
+
+    @keyframes quantityPulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    /* Versión para administradores */
+    body.admin .quantity-updated {
+      color: #ff0000;
+    }
+
+    /* Mejorar el mensaje de actualización */
+    .update-message {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .update-message i {
+      font-size: 1.1rem;
     }
     </style>
 

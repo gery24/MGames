@@ -2,52 +2,64 @@
 session_start();
 require_once 'config/database.php';
 
-// Función para manejar errores
-function handleError($message) {
-    error_log($message);
-    $_SESSION['error'] = $message;
+// Verificar si se han enviado los datos necesarios
+if (!isset($_POST['id']) || !isset($_POST['tipo_producto']) || !isset($_POST['cantidad'])) {
+    $campos_faltantes = [];
+    if (!isset($_POST['id'])) $campos_faltantes[] = 'id';
+    if (!isset($_POST['tipo_producto'])) $campos_faltantes[] = 'tipo de producto';
+    if (!isset($_POST['cantidad'])) $campos_faltantes[] = 'cantidad';
+    
+    $_SESSION['error'] = "Faltan campos necesarios: " . implode(', ', $campos_faltantes);
     header('Location: carrito.php');
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['id'])) {
-        $producto_id = intval($_POST['id']);
-        
-        try {
-            // Consulta para obtener el producto
-            $stmt = $pdo->prepare("SELECT * FROM productos WHERE id = ?");
-            $stmt->execute([$producto_id]);
-            $producto = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            if ($producto) {
-                // Inicializar el carrito si no existe
-                if (!isset($_SESSION['carrito'])) {
-                    $_SESSION['carrito'] = [];
-                }
-                
-                // Agregar el producto al carrito o incrementar la cantidad
-                if (isset($_SESSION['carrito'][$producto_id])) {
-                    $_SESSION['carrito'][$producto_id]['cantidad']++;
-                } else {
-                    $producto['cantidad'] = 1;
-                    $_SESSION['carrito'][$producto_id] = $producto;
-                }
-                
-                $_SESSION['mensaje'] = 'Producto agregado al carrito correctamente';
-                header('Location: carrito.php');
-                exit;
-            } else {
-                handleError("Producto no encontrado");
-            }
-        } catch (PDOException $e) {
-            handleError("Error de base de datos: " . $e->getMessage());
-        }
-    } else {
-        handleError("ID de producto no proporcionado");
-    }
-} else {
-    handleError("Método de solicitud no válido");
+$producto_id = $_POST['id'];
+$tipo_producto = $_POST['tipo_producto'];
+$cantidad = intval($_POST['cantidad']);
+
+// Validar que la cantidad sea positiva
+if ($cantidad <= 0) {
+    $cantidad = 1;
 }
 
-?>
+// Inicializar el carrito si no existe
+if (!isset($_SESSION['carrito'])) {
+    $_SESSION['carrito'] = [];
+}
+
+// Verificar si el producto ya está en el carrito
+if (isset($_SESSION['carrito'][$producto_id])) {
+    // Si ya está, incrementar la cantidad
+    $_SESSION['carrito'][$producto_id]['cantidad'] += $cantidad;
+    $_SESSION['mensaje'] = "Se ha actualizado la cantidad del producto en el carrito.";
+} else {
+    // Si no está, añadirlo
+    // Verificar que se han enviado todos los datos necesarios
+    if (!isset($_POST['nombre']) || !isset($_POST['precio']) || !isset($_POST['imagen'])) {
+        $_SESSION['error'] = "Faltan datos del producto para añadir al carrito.";
+        header('Location: carrito.php');
+        exit;
+    }
+    
+    // Añadir el producto al carrito
+    $_SESSION['carrito'][$producto_id] = [
+        'nombre' => $_POST['nombre'],
+        'precio' => floatval($_POST['precio']),
+        'imagen' => $_POST['imagen'],
+        'cantidad' => $cantidad,
+        'tipo_producto' => $tipo_producto
+    ];
+    
+    // Añadir descuento si existe
+    if (isset($_POST['descuento'])) {
+        $_SESSION['carrito'][$producto_id]['descuento'] = floatval($_POST['descuento']);
+    }
+    
+    $_SESSION['mensaje'] = "Producto añadido al carrito correctamente.";
+}
+
+// Redireccionar de vuelta a la página anterior o al carrito
+$referer = $_SERVER['HTTP_REFERER'] ?? 'carrito.php';
+header("Location: $referer");
+exit;

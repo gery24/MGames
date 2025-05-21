@@ -9,9 +9,11 @@
 }
 
 .site-footer {
-    background-color: var(--footer-bg);
-    color: var(--footer-text);
-    padding: 3rem 0 1.5rem;
+    background: linear-gradient(to right, #1a2a6c, #b21f1f, #fdbb2d); /* Degradado llamativo */
+    color: #ffffff; /* Texto blanco */
+    padding: 4rem 0 2rem; /* Más padding */
+    font-family: 'Poppins', sans-serif; /* Fuente moderna */
+    box-shadow: 0 -8px 15px rgba(0, 0, 0, 0.3); /* Sombra superior */
 }
 
 .container {
@@ -23,38 +25,47 @@
 
 .footer-content {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
-    margin-bottom: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Columnas flexibles */
+    gap: 2.5rem; /* Más espacio entre columnas */
+    margin-bottom: 3rem; /* Más espacio inferior */
 }
 
 /* Logo section */
 .footer-logo {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row; /* Logo y texto en fila */
+    align-items: center;
+    gap: 10px; /* Espacio entre logo e h3 */
 }
 
 .footer-logo img {
-    height: 40px;
-    margin-bottom: 1rem;
+    height: 50px; /* Logo más grande */
+    margin-bottom: 0; /* Eliminar margen inferior */
+    filter: drop-shadow(0 0 5px rgba(255,255,255,0.5)); /* Sombra en el logo */
 }
 
 .footer-logo h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 0;
+    font-size: 1.8rem; /* Texto del logo más grande */
+    font-weight: 800; /* Texto del logo más negrita */
+    margin: 0; /* Eliminar márgenes */
+    background: linear-gradient(45deg, #ffffff, #f0f0f0); /* Degradado sutil en el texto */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2); /* Sombra en el texto del logo */
 }
 
 /* Section headings */
 .footer-links h4, 
 .footer-contact h4, 
 .footer-social h4 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 1.25rem;
-    position: relative;
-    padding-bottom: 0.5rem;
+    font-size: 1.3rem; /* Títulos de sección más grandes */
+    font-weight: 700; /* Títulos de sección más negrita */
+    margin-bottom: 1.5rem; /* Más espacio inferior */
+    color: #ffffff; /* Color blanco */
+    position: relative; /* Necesario para el after */
+    padding-bottom: 0.75rem; /* Más espacio para la línea */
 }
 
 .footer-links h4::after, 
@@ -64,9 +75,10 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 40px;
-    height: 3px;
-    background-color: var(--footer-accent);
+    width: 60px; /* Línea más larga */
+    height: 4px; /* Línea más gruesa */
+    background: #ffffff; /* Línea blanca sólida */
+    border-radius: 2px; /* Bordes redondeados para la línea */
 }
 
 /* Quick links */
@@ -77,29 +89,32 @@
 }
 
 .footer-links ul li {
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem; /* Más espacio entre enlaces */
 }
 
 .footer-links ul li a {
-    color: var(--footer-text);
+    color: #e0e0e0; /* Color de enlace más claro */
     text-decoration: none;
-    transition: color 0.3s;
+    transition: color 0.3s ease, transform 0.2s ease; /* Transición y transformación al pasar el ratón */
+    display: inline-block; /* Para permitir transformaciones */
 }
 
 .footer-links ul li a:hover {
-    color: var(--footer-accent);
+    color: #ffffff; /* Enlace blanco al pasar el ratón */
+    transform: translateX(5px); /* Mover ligeramente al pasar el ratón */
 }
 
 /* Contact info */
 .footer-contact p {
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem; /* Más espacio entre ítems de contacto */
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    color: #e0e0e0; /* Color de texto más claro */
 }
 
 .footer-contact p i {
-    color: var(--footer-accent);
+    color: #ffffff; /* Iconos de contacto blancos */
     width: 16px;
     text-align: center;
 }
@@ -107,44 +122,50 @@
 /* Social icons */
 .social-icons {
     display: flex;
-    gap: 0.75rem;
+    gap: 1rem; /* Más espacio entre iconos */
 }
 
 .social-icons a {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
-    background-color: var(--social-bg);
+    width: 45px; /* Iconos más grandes */
+    height: 45px; /* Iconos más grandes */
+    background-color: rgba(255, 255, 255, 0.15); /* Fondo semitransparente */
     border-radius: 50%;
-    color: var(--footer-text);
-    transition: all 0.3s ease;
+    color: #ffffff; /* Iconos blancos */
+    transition: all 0.3s ease; /* Transición suave */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Sombra sutil */
 }
 
 .social-icons a:hover {
-    background-color: var(--social-hover);
+    background: #ffffff; /* Fondo blanco al pasar el ratón */
+    color: #1a2a6c; /* Color oscuro al pasar el ratón */
     transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.3); /* Sombra más pronunciada */
 }
 
 /* Divider */
 .footer-divider {
-    height: 1px;
-    background-color: var(--footer-divider);
-    margin-bottom: 1.5rem;
+    height: 2px; /* Divisor más grueso */
+    background-color: rgba(255, 255, 255, 0.2); /* Divisor semitransparente */
+    margin: 2.5rem 0; /* Más espacio alrededor del divisor */
+    width: 80%; /* Ancho del divisor */
+    margin-left: auto; /* Centrar divisor */
+    margin-right: auto; /* Centrar divisor */
 }
 
 /* Copyright */
 .footer-bottom {
     text-align: center;
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.7);
+    font-size: 1rem; /* Texto de copyright un poco más grande */
+    color: #e0e0e0; /* Color de texto más claro */
 }
 
 /* Responsive adjustments */
 @media (max-width: 992px) {
     .footer-content {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Ajuste para pantallas medianas */
     }
 }
 
@@ -154,12 +175,22 @@
         gap: 2rem;
     }
     
-    .footer-logo, .footer-links, .footer-contact, .footer-social {
-        text-align: center;
+    .footer-logo, .footer-links, .footer-contact, .footer-social, .footer-bottom {
+        text-align: center; /* Centrar texto en móvil */
     }
     
     .footer-logo {
         align-items: center;
+        flex-direction: column; /* Logo y texto apilados en móvil */
+        gap: 5px; /* Espacio más pequeño en móvil */
+    }
+    
+    .footer-logo img {
+        height: 40px; /* Logo un poco más pequeño en móvil */
+    }
+    
+    .footer-logo h3 {
+        font-size: 1.5rem; /* Texto del logo más pequeño en móvil */
     }
     
     .footer-links h4::after, 
@@ -167,6 +198,7 @@
     .footer-social h4::after {
         left: 50%;
         transform: translateX(-50%);
+        width: 50px; /* Línea más corta en móvil */
     }
     
     .footer-contact p {
@@ -177,3 +209,14 @@
         justify-content: center;
     }
 }
+
+/* Asegurarse de que el contenedor general del pie de página no limite el ancho */
+.site-footer .container {
+    max-width: 100%;
+    padding: 0 1rem;
+}
+
+/* Ajustes para el script que ya no debería ser necesario con flexbox */
+/* .mgames-footer {
+    margin-top: 0 !important; 
+} */

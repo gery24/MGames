@@ -498,11 +498,6 @@ $titulo = "Mi Perfil - MGames";
                                 <i class="fas fa-user-cog"></i> Ajustes de Cuenta
                             </a>
                         </li>
-                        <li>
-                            <a href="#" class="menu-option" data-content="pedidos">
-                                <i class="fas fa-shopping-bag"></i> Mis Pedidos
-                            </a>
-                        </li>
                         <?php if ($usuario['rol'] !== 'ADMIN'): ?>
                         <li>
                             <a href="#" class="menu-option" data-content="wishlist">
@@ -1217,72 +1212,6 @@ $titulo = "Mi Perfil - MGames";
                     <?php endif; ?>
                     
                     $('#dynamic-content').html(wishlistHTML);
-                } else if (content === 'pedidos') {
-                    // Contenido de Pedidos
-                    let pedidosHTML = `
-                        <h1>Mis Pedidos</h1>
-                    `;
-                    
-                    <?php if (!empty($pedidos)): ?>
-                        pedidosHTML += `
-                            <div class="card">
-                                <div class="table-container">
-                                    <table class="data-table">
-                                        <thead>
-                                            <tr>
-                                                <th>ID Pedido</th>
-                                                <th>Fecha</th>
-                                                <th>Total</th>
-                                                <th>Estado</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                        `;
-                        
-                        <?php foreach ($pedidos as $pedido): ?>
-                            pedidosHTML += `
-                                <tr>
-                                    <td>#<?php echo $pedido['id']; ?></td>
-                                    <td><?php echo htmlspecialchars($pedido['fecha']); ?></td>
-                                    <td>€<?php echo number_format($pedido['total'], 2); ?></td>
-                                    <td>
-                                        <span class="status-badge status-<?php echo strtolower($pedido['estado']); ?>">
-                                            <?php echo htmlspecialchars($pedido['estado']); ?>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <a href="detalle_pedido.php?id=<?php echo $pedido['id']; ?>" class="btn-link">
-                                            <i class="fas fa-eye"></i> Ver detalles
-                                        </a>
-                                    </td>
-                                </tr>
-                            `;
-                        <?php endforeach; ?>
-                        
-                        pedidosHTML += `
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        `;
-                    <?php else: ?>
-                        pedidosHTML += `
-                            <div class="empty-state">
-                                <div class="empty-icon">
-                                    <i class="fas fa-shopping-bag"></i>
-                                </div>
-                                <h3>No tienes pedidos realizados</h3>
-                                <p>Cuando realices compras, tus pedidos aparecerán aquí.</p>
-                                <a href="index.php" class="btn-primary">
-                                    <i class="fas fa-shopping-cart"></i> Ir a la tienda
-                                </a>
-                            </div>
-                        `;
-                    <?php endif; ?>
-                    
-                    $('#dynamic-content').html(pedidosHTML);
-                    
                 } else if (content === 'segunda_mano') {
                     // Contenido de Segunda Mano
                     $('#dynamic-content').html(`
@@ -1309,6 +1238,162 @@ $titulo = "Mi Perfil - MGames";
                     // Manejar clic en "Publicar Nuevo Producto"
                     $('#add-second-hand').on('click', function() {
                         window.location.href = 'publicar_segunda_mano.php';
+                    });
+                } else if (content === 'billetera') {
+                    // Contenido de Billetera
+                    $('#dynamic-content').html(`
+                        <h1>Mi Billetera</h1>
+                        
+                        <div class="wallet-card">
+                            <div class="wallet-icon">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="wallet-label">Saldo disponible</div>
+                            <div class="wallet-balance">€${parseFloat(saldo).toFixed(2)}</div>
+                            <div class="wallet-label">Última actualización: ${new Date().toLocaleDateString()}</div>
+                        </div>
+
+                        <div class="transaction-forms">
+                            <!-- Formulario para agregar dinero -->
+                            <div class="form-container deposit">
+                                <h3><i class="fas fa-plus-circle"></i> Agregar Dinero</h3>
+                                <form id="deposit-form" class="transaction-form">
+                                    <div class="form-group">
+                                        <label for="monto-deposito">Monto:</label>
+                                        <div class="input-container">
+                                            <input type="number" id="monto-deposito" name="monto" placeholder="Monto a agregar" min="1" step="0.01" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="descripcion-deposito">Descripción:</label>
+                                        <div class="input-container">
+                                            <input type="text" id="descripcion-deposito" name="descripcion" placeholder="Ej: Recarga de saldo" required>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="origen" value="perfil">
+                                    <input type="hidden" name="tipo" value="deposito">
+                                    <button type="submit" class="btn-deposit">
+                                        <i class="fas fa-plus"></i> Agregar Fondos
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Formulario para retirar dinero -->
+                            <div class="form-container withdraw">
+                                <h3><i class="fas fa-minus-circle"></i> Retirar Dinero</h3>
+                                <form id="withdraw-form" class="transaction-form">
+                                    <div class="form-group">
+                                        <label for="monto-retiro">Monto:</label>
+                                        <div class="input-container">
+                                            <input type="number" id="monto-retiro" name="monto" placeholder="Monto a retirar" min="1" max="${saldo}" step="0.01" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="descripcion-retiro">Descripción:</label>
+                                        <div class="input-container">
+                                            <input type="text" id="descripcion-retiro" name="descripcion" placeholder="Ej: Retiro a cuenta bancaria" required>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="origen" value="perfil">
+                                    <button type="submit" class="btn-withdraw">
+                                        <i class="fas fa-minus"></i> Retirar Fondos
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="transaction-list">
+                            <h2><i class="fas fa-history"></i> Historial de Transacciones</h2>
+                            ${transacciones.length === 0 ? 
+                                '<p class="empty-message">No hay transacciones registradas.</p>' : 
+                                transacciones.map(transaccion => `
+                                    <div class="transaction-item ${parseFloat(transaccion.monto) < 0 ? 'withdrawal' : 'deposit'}">
+                                        <div class="transaction-info">
+                                            <p class="transaction-title">
+                                                <i class="fas ${parseFloat(transaccion.monto) < 0 ? 'fa-arrow-down' : 'fa-arrow-up'}"></i> 
+                                                ${transaccion.descripcion}
+                                            </p>
+                                            <p class="transaction-date">${transaccion.fecha || 'Fecha no disponible'}</p>
+                                        </div>
+                                        <p class="transaction-amount ${parseFloat(transaccion.monto) >= 0 ? 'positive' : 'negative'}">
+                                            €${parseFloat(transaccion.monto).toFixed(2)}
+                                        </p>
+                                    </div>
+                                `).join('')
+                            }
+                        </div>
+                    `);
+
+                    // Manejar el envío del formulario de depósito con AJAX
+                    $('#deposit-form').on('submit', function(e) {
+                        e.preventDefault();
+                        
+                        const formData = $(this).serialize();
+                        
+                        // Mostrar indicador de carga
+                        $(this).find('button').html('<i class="fas fa-spinner fa-spin"></i> Procesando...');
+                        $(this).find('button').prop('disabled', true);
+                        
+                        $.ajax({
+                            url: 'procesar_transaccion.php',
+                            type: 'POST',
+                            data: formData,
+                            dataType: 'json',
+                            success: function(response) {
+                                if (response.success) {
+                                    showModal('Fondos agregados correctamente', 'success');
+                                    // Recargar la sección de billetera para mostrar el saldo actualizado
+                                    loadContent('billetera');
+                                } else {
+                                    showModal(response.message || 'Error al procesar la transacción', 'error');
+                                    // Restaurar el botón
+                                    $('#deposit-form').find('button').html('<i class="fas fa-plus"></i> Agregar Fondos');
+                                    $('#deposit-form').find('button').prop('disabled', false);
+                                }
+                            },
+                            error: function() {
+                                showModal('Error al procesar la transacción', 'error');
+                                // Restaurar el botón
+                                $('#deposit-form').find('button').html('<i class="fas fa-plus"></i> Agregar Fondos');
+                                $('#deposit-form').find('button').prop('disabled', false);
+                            }
+                        });
+                    });
+
+                    // Manejar el envío del formulario de retiro con AJAX
+                    $('#withdraw-form').on('submit', function(e) {
+                        e.preventDefault();
+                        
+                        const formData = $(this).serialize();
+                        
+                        // Mostrar indicador de carga
+                        $(this).find('button').html('<i class="fas fa-spinner fa-spin"></i> Procesando...');
+                        $(this).find('button').prop('disabled', true);
+                        
+                        $.ajax({
+                            url: 'procesar_retiro.php',
+                            type: 'POST',
+                            data: formData,
+                            dataType: 'json',
+                            success: function(response) {
+                                if (response.success) {
+                                    showModal('Fondos retirados correctamente', 'success');
+                                    // Recargar la sección de billetera para mostrar el saldo actualizado
+                                    loadContent('billetera');
+                                } else {
+                                    showModal(response.message || 'Error al procesar el retiro', 'error');
+                                    // Restaurar el botón
+                                    $('#withdraw-form').find('button').html('<i class="fas fa-minus"></i> Retirar Fondos');
+                                    $('#withdraw-form').find('button').prop('disabled', false);
+                                }
+                            },
+                            error: function() {
+                                showModal('Error al procesar el retiro', 'error');
+                                // Restaurar el botón
+                                $('#withdraw-form').find('button').html('<i class="fas fa-minus"></i> Retirar Fondos');
+                                $('#withdraw-form').find('button').prop('disabled', false);
+                            }
+                        });
                     });
                 } else {
                     // Contenido por defecto o no encontrado
