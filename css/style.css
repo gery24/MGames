@@ -960,3 +960,85 @@ textarea {
 .search-button:hover {
     background-color: var(--secondary-color);
 }
+
+/* ===== COMUNIDAD GAMERS ===== */
+.comunidad-gamers {
+    background-color: var(--dark);
+    color: white;
+}
+
+.comunidad-gamers .section-title {
+    font-size: 3.5rem; /* Tamaño de fuente como el título del hero */
+    font-weight: 800; /* Peso de fuente como el título del hero */
+    margin-bottom: 1rem; /* Margen inferior como el título del hero */
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary) 100%); /* Degradado */
+    -webkit-background-clip: text; /* Para navegadores Webkit */
+    -webkit-text-fill-color: white; /* Rellenar texto con blanco */
+    background-clip: text; /* Estándar */
+    text-fill-color: white; /* Rellenar texto con blanco */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra de texto */
+    /* Eliminar la línea decorativa del section-title */
+    &::after {
+        content: none;
+    }
+}
+
+.section-logo {
+    text-align: center;
+    margin-bottom: 2rem; /* Espacio debajo del logo */
+}
+
+.section-logo img {
+    max-width: 25px; /* Hacer el logo diminuto */
+    height: auto;
+    display: inline-block; /* Para que margin auto funcione si el padre es flex/grid */
+}
+
+.comunidad-content {
+    display: grid;
+}
+
+.comunidad-imagen img {
+    width: 180px; /* Tamaño fijo para la imagen */
+    height: 180px; /* Tamaño fijo para la imagen */
+    object-fit: cover; /* Asegura que la imagen cubra el área sin distorsionarse */
+    border-radius: 50%; /* Hace la imagen redonda */
+    display: block; /* Para que margin auto funcione */
+    margin: 0 auto; /* Centra la imagen horizontalmente */
+    box-shadow: var(--shadow-lg); /* Añadir una sombra para destacarla */
+}
+
+.comunidad-info p {
+    font-size: 1.125rem;
+    margin-bottom: 1.5rem;
+}
+
+.comunidad-beneficios {
+    margin-bottom: 2rem;
+}
+
+.comunidad-beneficios li {
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.comunidad-beneficios i {
+    color: var(--success);
+}
+
+.comunidad-cta {
+    display: flex;
+    gap: 1rem;
+}
+
+.comunidad-imagen img {
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-lg);
+}
+
+/* ===== NEWSLETTER ===== */
+.newsletter {
+    // ... existing code ...
+}

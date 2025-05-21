@@ -1798,7 +1798,7 @@ try {
                             <p><i class="far fa-clock"></i> 10:00 AM - 8:00 PM</p> <!-- Dejar texto placeholder -->
                         </div>
                         <p class="evento-descripcion">Participa en el torneo de MGames de 2025.</p> <!-- Descripción actualizada -->
-                        <a href="eventos.php?id=torneo2025" class="btn btn-secondary btn-sm">Más Información</a> <!-- Enlace actualizado -->
+                        <a href="eventos.php?id=torneo2025" class="btn btn-primary">Más Información</a> <!-- Enlace actualizado -->
                     </div>
                 </div>
                 <div class="evento-card">
@@ -1816,7 +1816,7 @@ try {
                             <p><i class="far fa-clock"></i> 8:00 PM - 12:00 AM</p> <!-- Dejar texto placeholder -->
                         </div>
                         <p class="evento-descripcion">Sé el primero en probar el nuevo título exclusivo.</p> <!-- Descripción actualizada -->
-                        <a href="eventos.php?id=lanzamiento" class="btn btn-secondary btn-sm">Más Información</a> <!-- Enlace actualizado -->
+                        <a href="eventos.php?id=lanzamiento" class="btn btn-primary">Más Información</a> <!-- Enlace actualizado -->
                     </div>
                 </div>
                 <div class="evento-card">
@@ -1834,7 +1834,7 @@ try {
                             <p><i class="far fa-clock"></i> 9:00 AM - 7:00 PM</p> <!-- Dejar texto placeholder -->
                         </div>
                         <p class="evento-descripcion">La mayor convención de videojuegos de 2025.</p> <!-- Descripción actualizada -->
-                        <a href="eventos.php?id=convencion2025" class="btn btn-secondary btn-sm">Más Información</a> <!-- Enlace actualizado -->
+                        <a href="eventos.php?id=convencion2025" class="btn btn-primary">Más Información</a> <!-- Enlace actualizado -->
                     </div>
                 </div>
             </div>
@@ -1906,7 +1906,8 @@ try {
     <!-- Comunidad de Gamers -->
     <section class="comunidad-gamers">
         <div class="container">
-            <h2 class="section-title">Únete a Nuestra Comunidad</h2>
+        <h1 style="text-align: center; color: white; font-size: 36px;">Únete a Nuestra Comunidad</h1>
+<br>
             <div class="comunidad-content">
                 <div class="comunidad-info">
                     <p>Forma parte de la comunidad de MGames y disfruta de beneficios exclusivos:</p>
@@ -1918,12 +1919,12 @@ try {
                         <li><i class="fas fa-check-circle"></i> Guías y tutoriales exclusivos</li>
                     </ul>
                     <div class="comunidad-cta">
-                        <a href="registro_comunidad.php" class="btn btn-primary">Unirse Ahora</a>
-                        <a href="comunidad.php" class="btn btn-outline">Más Información</a>
+                        <a href="eventos.php" class="btn btn-primary">Unirse Ahora</a>
+                        <a href="blog.php" class="btn btn-primary">Más Información</a>
                     </div>
                 </div>
                 <div class="comunidad-imagen">
-                    <img src="FotosWeb/comunidad-gamers.jpg" alt="Comunidad de Gamers">
+                <img src="FotosWeb/logo.png" alt="Comunidad de Gamers" style="width:100px; height:100px; border-radius:50%;">
                 </div>
             </div>
         </div>
