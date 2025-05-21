@@ -530,7 +530,10 @@ if (isset($_GET['already_in_cart'])) {
                         <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
                         <input type="hidden" name="nombre" value="<?php echo htmlspecialchars($producto['nombre']); ?>">
                         <input type="hidden" name="precio" value="<?php echo $producto['precio']; ?>">
+                        <input type="hidden" name="imagen" value="<?php echo htmlspecialchars($producto['imagen']); ?>">
                         <input type="hidden" name="tipo_producto" value="segunda_mano">
+                        <input type="hidden" name="cantidad" value="1">
+                        <input type="hidden" name="redirect_to" value="carrito.php">
                         
                         <!-- Selector de cantidad -->
                         <div class="quantity-selector">

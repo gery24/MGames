@@ -560,8 +560,12 @@ if (isset($_GET['review_error'])) {
                 <div class="button-group">
                     <form method="POST" action="agregar_al_carrito.php">
                         <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
+                        <input type="hidden" name="nombre" value="<?php echo htmlspecialchars($producto['nombre']); ?>">
+                        <input type="hidden" name="precio" value="<?php echo $producto['precio']; ?>">
+                        <input type="hidden" name="imagen" value="<?php echo htmlspecialchars($producto['imagen']); ?>">
                         <input type="hidden" name="tipo_producto" value="productos">
                         <input type="hidden" name="cantidad" value="1">
+                        <input type="hidden" name="redirect_to" value="carrito.php">
                         <button type="submit" class="btn btn-primary">Añadir al Carrito</button>
                     </form>
                     <form method="POST" action="agregar_lista_deseos.php">
