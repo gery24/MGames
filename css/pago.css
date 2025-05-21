@@ -166,13 +166,20 @@ h2 {
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 15px;
-  transition: border-color 0.3s;
+  transition: border-color 0.3s, background-color 0.3s;
+  background-color: white; /* Fondo blanco por defecto */
 }
 
 .payment-option input:focus {
   border-color: #ff6600;
   outline: none;
   box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.1);
+}
+
+/* Estilo específico para campos con error */
+.payment-option input.error {
+  border-color: #dc3545;
+  background-color: rgba(220, 53, 69, 0.05); /* Fondo rojo muy suave */
 }
 
 .btn {
@@ -219,8 +226,17 @@ h2 {
   color: #dc3545;
   font-size: 12px;
   margin-top: 5px;
-  display: block;
+  display: none; /* Ocultar por defecto */
   font-weight: 500;
+  background-color: rgba(220, 53, 69, 0.05);
+  padding: 5px 8px;
+  border-radius: 4px;
+  border-left: 3px solid #dc3545;
+}
+
+/* Cuando se muestra un mensaje de error */
+.error-message:not(:empty) {
+  display: block;
 }
 
 .payment-option input.error {

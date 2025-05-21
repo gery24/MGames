@@ -126,6 +126,11 @@ require_once 'includes/header.php';
                 form.style.display = 'none';
             });
 
+            // Ocultar todos los mensajes de error al cargar la página
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+
             // Seleccionar Visa por defecto al cargar la página
             seleccionarMetodo('visa');
         });
@@ -164,6 +169,12 @@ require_once 'includes/header.php';
             // Limpiar mensajes de error previos
             document.querySelectorAll('.error-message').forEach(el => {
                 el.textContent = '';
+                el.style.display = 'none'; // Ocultar los contenedores de mensajes de error
+            });
+            
+            // Quitar clases de error de los campos
+            document.querySelectorAll('.payment-option input').forEach(input => {
+                input.classList.remove('error');
             });
         }
 
@@ -182,69 +193,91 @@ require_once 'includes/header.php';
         }
         
         function validarFormulario() {
-            // Obtener el método de pago seleccionado
-            const metodoPago = document.getElementById('metodo_pago').value;
-            let esValido = true;
-            
-            // Limpiar mensajes de error previos
-            document.querySelectorAll('.error-message').forEach(el => {
-                el.textContent = '';
-            });
-            
-            if (metodoPago === 'visa') {
-                // Validar tarjeta de crédito
-                const numeroTarjeta = document.getElementById('numero_tarjeta').value.replace(/\s+/g, '');
-                const titularTarjeta = document.getElementById('titular_tarjeta').value.trim();
-                const fechaExpiracion = document.getElementById('fecha_expiracion').value.trim();
-                const cvv = document.getElementById('cvv').value.trim();
-                
-                // Validar número de tarjeta
-                if (!numeroTarjeta || numeroTarjeta.length !== 16 || !/^\d+$/.test(numeroTarjeta)) {
-                    document.getElementById('error-numero-tarjeta').textContent = 'Introduce un número de tarjeta válido de 16 dígitos';
-                    esValido = false;
-                }
-                
-                // Validar titular
-                if (!titularTarjeta) {
-                    document.getElementById('error-titular-tarjeta').textContent = 'El nombre del titular es obligatorio';
-                    esValido = false;
-                }
-                
-                // Validar fecha de expiración
-                if (!fechaExpiracion || !/^(0[1-9]|1[0-2])\/([0-9]{2})$/.test(fechaExpiracion)) {
-                    document.getElementById('error-fecha-expiracion').textContent = 'Formato inválido. Usa MM/AA';
-                    esValido = false;
-                } else {
-                    // Verificar que la fecha no esté expirada
-                    const [mes, anio] = fechaExpiracion.split('/');
-                    const fechaActual = new Date();
-                    const anioActual = fechaActual.getFullYear() % 100; // Últimos 2 dígitos del año
-                    const mesActual = fechaActual.getMonth() + 1; // getMonth() devuelve 0-11
-                    
-                    if (parseInt(anio) < anioActual || (parseInt(anio) === anioActual && parseInt(mes) < mesActual)) {
-                        document.getElementById('error-fecha-expiracion').textContent = 'La tarjeta ha expirado';
-                        esValido = false;
-                    }
-                }
-                
-                // Validar CVV
-                if (!cvv || cvv.length !== 3 || !/^\d+$/.test(cvv)) {
-                    document.getElementById('error-cvv').textContent = 'El CVV debe tener 3 dígitos';
-                    esValido = false;
-                }
-                
-            } else if (metodoPago === 'bizum') {
-                // Validar Bizum
-                const numeroBizum = document.getElementById('numero_bizum').value.trim();
-                
-                if (!numeroBizum || numeroBizum.length !== 9 || !/^\d+$/.test(numeroBizum)) {
-                    document.getElementById('error-numero-bizum').textContent = 'Introduce un número de teléfono válido de 9 dígitos';
-                    esValido = false;
-                }
-            }
-            
-            return esValido;
+    // Obtener el método de pago seleccionado
+    const metodoPago = document.getElementById('metodo_pago').value;
+    let esValido = true;
+    
+    // Limpiar mensajes de error previos y quitar clases de error
+    document.querySelectorAll('.error-message').forEach(el => {
+        el.textContent = '';
+        el.style.display = 'none'; // Ocultar todos los contenedores de mensajes de error
+    });
+    document.querySelectorAll('.payment-option input').forEach(input => {
+        input.classList.remove('error');
+    });
+    
+    if (metodoPago === 'visa') {
+        // Validar tarjeta de crédito
+        const numeroTarjeta = document.getElementById('numero_tarjeta').value.replace(/\s+/g, '');
+        const titularTarjeta = document.getElementById('titular_tarjeta').value.trim();
+        const fechaExpiracion = document.getElementById('fecha_expiracion').value.trim();
+        const cvv = document.getElementById('cvv').value.trim();
+        
+        // Validar número de tarjeta
+        if (!numeroTarjeta || numeroTarjeta.length !== 16 || !/^\d+$/.test(numeroTarjeta)) {
+            const errorElement = document.getElementById('error-numero-tarjeta');
+            errorElement.textContent = 'Introduce un número de tarjeta válido de 16 dígitos';
+            errorElement.style.display = 'block'; // Mostrar solo este mensaje de error
+            document.getElementById('numero_tarjeta').classList.add('error');
+            esValido = false;
         }
+        
+        // Validar titular
+        if (!titularTarjeta) {
+            const errorElement = document.getElementById('error-titular-tarjeta');
+            errorElement.textContent = 'El nombre del titular es obligatorio';
+            errorElement.style.display = 'block'; // Mostrar solo este mensaje de error
+            document.getElementById('titular_tarjeta').classList.add('error');
+            esValido = false;
+        }
+        
+        // Validar fecha de expiración
+        if (!fechaExpiracion || !/^(0[1-9]|1[0-2])\/([0-9]{2})$/.test(fechaExpiracion)) {
+            const errorElement = document.getElementById('error-fecha-expiracion');
+            errorElement.textContent = 'Formato inválido. Usa MM/AA';
+            errorElement.style.display = 'block'; // Mostrar solo este mensaje de error
+            document.getElementById('fecha_expiracion').classList.add('error');
+            esValido = false;
+        } else {
+            // Verificar que la fecha no esté expirada
+            const [mes, anio] = fechaExpiracion.split('/');
+            const fechaActual = new Date();
+            const anioActual = fechaActual.getFullYear() % 100; // Últimos 2 dígitos del año
+            const mesActual = fechaActual.getMonth() + 1; // getMonth() devuelve 0-11
+            
+            if (parseInt(anio) < anioActual || (parseInt(anio) === anioActual && parseInt(mes) < mesActual)) {
+                const errorElement = document.getElementById('error-fecha-expiracion');
+                errorElement.textContent = 'La tarjeta ha expirado';
+                errorElement.style.display = 'block'; // Mostrar solo este mensaje de error
+                document.getElementById('fecha_expiracion').classList.add('error');
+                esValido = false;
+            }
+        }
+        
+        // Validar CVV
+        if (!cvv || cvv.length !== 3 || !/^\d+$/.test(cvv)) {
+            const errorElement = document.getElementById('error-cvv');
+            errorElement.textContent = 'El CVV debe tener 3 dígitos';
+            errorElement.style.display = 'block'; // Mostrar solo este mensaje de error
+            document.getElementById('cvv').classList.add('error');
+            esValido = false;
+        }
+        
+    } else if (metodoPago === 'bizum') {
+        // Validar Bizum
+        const numeroBizum = document.getElementById('numero_bizum').value.trim();
+        
+        if (!numeroBizum || numeroBizum.length !== 9 || !/^\d+$/.test(numeroBizum)) {
+            const errorElement = document.getElementById('error-numero-bizum');
+            errorElement.textContent = 'Introduce un número de teléfono válido de 9 dígitos';
+            errorElement.style.display = 'block'; // Mostrar solo este mensaje de error
+            document.getElementById('numero_bizum').classList.add('error');
+            esValido = false;
+        }
+    }
+    
+    return esValido;
+}
     </script>
 
     <?php require_once 'includes/footer.php'; ?>
