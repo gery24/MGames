@@ -110,7 +110,7 @@ $titulo = "Carrito - MGames";
                                         </select>
                                     </div>
                                     <form method="POST" action="eliminar_del_carrito.php">
-                                        <input type="hidden" name="id" value="<?php echo $producto_id; ?>">
+                                        <input type="hidden" name="id" value="<?php echo htmlspecialchars($producto_data['id']); ?>">
                                         <input type="hidden" name="tipo_producto" value="<?php echo htmlspecialchars($producto_data['tipo_producto'] ?? 'productos'); ?>">
                                         <button type="submit" class="btn">
                                             <i class="fas fa-trash-alt"></i> Eliminar
