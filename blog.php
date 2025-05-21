@@ -176,5 +176,46 @@ scrollBtn.addEventListener('click', () => {
 <!-- Si la página de eventos tenía scripts JS (como filtros), decido si mantenerlos o eliminarlos para el blog -->
 <!-- En este caso, los filtros de eventos no son directamente aplicables, así que no los copio -->
 
+<script>
+// Funcionalidad de búsqueda y filtrado para el blog
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('blog-search'); // ID del input de búsqueda del blog
+    const filtroCategoria = document.getElementById('filtro-categoria'); // ID del selector de categoría del blog
+    const articulos = document.querySelectorAll('.evento-card'); // Las tarjetas de artículo usan la clase de evento-card
+
+    function filtrarArticulos() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const categoriaSeleccionada = filtroCategoria.value.toLowerCase();
+
+        articulos.forEach(articulo => {
+            const titulo = articulo.querySelector('h3').textContent.toLowerCase();
+            const categoriaBadge = articulo.querySelector('.blog-category-badge');
+            const categoriaArticulo = categoriaBadge ? categoriaBadge.textContent.toLowerCase() : '';
+            
+            let mostrar = titulo.includes(searchTerm); // Filtrar por título
+            
+            // Filtrar por categoría si se ha seleccionado alguna
+            if (categoriaSeleccionada && categoriaSeleccionada !== '') {
+                mostrar = mostrar && categoriaArticulo === categoriaSeleccionada; // Filtrar también por categoría
+            }
+            
+            articulo.style.display = mostrar ? 'block' : 'none';
+        });
+    }
+
+    // Añadir listeners a los inputs de búsqueda y filtro
+    if (searchInput) searchInput.addEventListener('input', filtrarArticulos);
+    if (filtroCategoria) filtroCategoria.addEventListener('change', filtrarArticulos);
+
+    // --- NOTA: Si quieres que el selector de categoría se llene dinámicamente desde la base de datos, necesitarás:
+    // 1. Modificar el PHP para obtener una lista única de categorías de la tabla articulos_blog.
+    // 2. Rellenar el select con esas opciones al cargar la página.
+    // Actualmente, el select está vacío con solo la opción "Todas las categorías".
+});
+
+// No copiar los scripts JS de eventos que no son relevantes para el blog (scroll to top se mantiene si estaba)
+
+</script>
+
 </body>
 </html> 

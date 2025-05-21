@@ -483,6 +483,7 @@ body {
     cursor: pointer;
     transition: var(--transition);
     width: 100%; /* Asegurar que el botón ocupe el ancho del formulario */
+    margin-bottom: 1.5rem; /* Añadir espacio debajo del botón */
 }
 
 .newsletter-form button:hover {
