@@ -79,13 +79,23 @@ try {
                             <p><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($evento['lugar']); ?></p>
                             <p><i class="far fa-clock"></i> <?php echo date('H:i', strtotime($evento['hora_evento'])); ?></p>
                         </div>
-                        <p class="evento-descripcion"><?php echo htmlspecialchars($evento['descripcion']); ?></p>
+                        <p class="evento-descripcion">
+                            <?php
+                                // Truncar la descripción a unas 150 caracteres (ajustar según necesidad)
+                                $descripcion_corta = htmlspecialchars($evento['descripcion']);
+                                $limite_caracteres = 150;
+                                if (strlen($descripcion_corta) > $limite_caracteres) {
+                                    $descripcion_corta = substr($descripcion_corta, 0, $limite_caracteres) . '...';
+                                }
+                                echo nl2br($descripcion_corta);
+                            ?>
+                        </p>
                         <div class="evento-stats">
                             <span><i class="fas fa-users"></i> 150+ Asistentes</span>
                             <span><i class="fas fa-trophy"></i> Premios</span>
                         </div>
                         <div class="evento-actions">
-                            <a href="evento.php?id=<?php echo $evento['id']; ?>" class="btn btn-primary">Ver Detalles</a>
+                            <a href="evento.php?id=<?php echo $evento['id']; ?>" class="btn btn-primary">Ver Más</a>
                         </div>
                     </div>
                 </div>
