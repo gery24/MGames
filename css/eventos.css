@@ -194,6 +194,8 @@ body {
 
 .evento-content {
     padding: 1.5rem;
+    display: flex; /* Convertir en contenedor flex */
+    flex-direction: column; /* Apilar elementos verticalmente */
 }
 
 .evento-content h3 {
@@ -346,8 +348,7 @@ body {
     width: 100%;
     display: flex;
     flex-direction: row; /* Asegurar que por defecto sea horizontal */
-    align-items: center;
-    justify-content: space-between; /* Poner espacio entre el campo de búsqueda y los filtros */
+    align-items: flex-start; /* Alinear al inicio */
     background: white;
     border-radius: 1rem;
     box-shadow: var(--shadow);
@@ -359,8 +360,8 @@ body {
 }
 
 .search-box {
-    flex: 0 0 280px; /* No crecer, no encoger, base de 280px (ajustar si es necesario) */
-    max-width: none; /* Eliminar limitación de ancho máximo */
+    flex-grow: 1; /* Permitir que crezca y ocupe el espacio disponible */
+    max-width: 960px; /* Aumentar el ancho máximo del campo de búsqueda */
 }
 
 .filter-options {
@@ -553,7 +554,8 @@ body {
 
 /* Nuevos estilos para el botón 'Más Info' dentro del contenido */
 .evento-content .evento-actions {
-    margin-top: 1.5rem; /* Espacio superior para separarlo del texto */
+    margin-top: auto; /* Empujar este elemento hacia abajo */
+    /* Espacio superior para separarlo del texto */
     display: flex;
     justify-content: center; /* Centrar el botón */
 }
