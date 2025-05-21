@@ -59,7 +59,16 @@ if (isset($_SESSION['carrito'][$producto_id])) {
     $_SESSION['mensaje'] = "Producto añadido al carrito correctamente.";
 }
 
-// Redireccionar de vuelta a la página anterior o al carrito
-$referer = $_SERVER['HTTP_REFERER'] ?? 'carrito.php';
-header("Location: $referer");
-exit;
+// Redireccionar de vuelta a la página especificada o a la página anterior/carrito
+if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+    // Si es una solicitud AJAX, no redirigir aquí (la respuesta se maneja en JS)
+    // Puedes enviar un JSON de éxito si lo necesitas
+    echo json_encode(['success' => true, 'message' => $_SESSION['mensaje'] ?? '']);
+    unset($_SESSION['mensaje']); // Limpiar mensaje de éxito después de enviarlo
+    exit;
+} else {
+    // Si es un envío de formulario normal, redirigir
+    $redirect_url = $_POST['redirect_to'] ?? ($_SERVER['HTTP_REFERER'] ?? 'carrito.php');
+    header("Location: $redirect_url");
+    exit;
+}
