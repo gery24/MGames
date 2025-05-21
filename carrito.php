@@ -76,43 +76,45 @@ $titulo = "Carrito - MGames";
             <?php else: ?>
                 <div class="cart-content">
                     <div class="products-list">
-                        <?php foreach ($productos_en_carrito as $producto): ?>
+                        <?php foreach ($productos_en_carrito as $producto_id => $producto_data): ?>
+                            <?php if (is_array($producto_data)): ?>
                             <div class="product-card">
                                 <!-- Envuelve la imagen en un contenedor -->
                                 <div class="product-image-container">
-                                    <img src="<?php echo !empty($producto['imagen']) ? htmlspecialchars($producto['imagen']) : 'images/default.jpg'; ?>" 
-                                         alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
-                                    <?php if (isset($producto['descuento']) && $producto['descuento'] > 0): ?>
-                                        <div class="discount-badge">-<?php echo htmlspecialchars($producto['descuento']); ?>%</div>
+                                    <img src="<?php echo !empty($producto_data['imagen']) ? htmlspecialchars($producto_data['imagen']) : 'images/default.jpg'; ?>" 
+                                         alt="<?php echo htmlspecialchars($producto_data['nombre'] ?? 'Producto desconocido'); ?>">
+                                    <?php if (isset($producto_data['descuento']) && $producto_data['descuento'] > 0): ?>
+                                        <div class="discount-badge">-<?php echo htmlspecialchars($producto_data['descuento']); ?>%</div>
                                     <?php endif; ?>
                                 </div>
                                 <div class="product-card-content">
                                     <!-- Contenedor para nombre y precio -->
                                     <div class="product-header">
-                                        <h3><?php echo htmlspecialchars($producto['nombre']); ?></h3>
-                                        <p class="price">€<?php echo number_format($producto['precio'], 2); ?></p>
+                                        <h3><?php echo htmlspecialchars($producto_data['nombre'] ?? 'Producto desconocido'); ?></h3>
+                                        <p class="price">€<?php echo number_format($producto_data['precio'] ?? 0, 2); ?></p>
                                     </div>
                                     <div class="quantity">
-                                        <label for="quantity-<?php echo $producto['id']; ?>">Cantidad:</label>
-                                        <select id="quantity-<?php echo $producto['id']; ?>" 
+                                        <label for="quantity-<?php echo $producto_id; ?>">Cantidad:</label>
+                                        <select id="quantity-<?php echo $producto_id; ?>" 
                                                 name="quantity" 
-                                                onchange="actualizarCantidad(<?php echo $producto['id']; ?>, this.value)">
+                                                onchange="actualizarCantidad(<?php echo $producto_id; ?>, this.value)">
                                             <?php for ($i = 1; $i <= 10; $i++): ?>
                                                 <option value="<?php echo $i; ?>" 
-                                                    <?php echo (isset($producto['cantidad']) && $producto['cantidad'] == $i) ? 'selected' : ''; ?>>
+                                                    <?php echo (isset($producto_data['cantidad']) && $producto_data['cantidad'] == $i) ? 'selected' : ''; ?>>
                                                     <?php echo $i; ?>
                                                 </option>
                                             <?php endfor; ?>
                                         </select>
                                     </div>
                                     <form method="POST" action="eliminar_del_carrito.php">
-                                        <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
+                                        <input type="hidden" name="id" value="<?php echo $producto_id; ?>">
                                         <button type="submit" class="btn">
                                             <i class="fas fa-trash-alt"></i> Eliminar
                                         </button>
                                     </form>
                                 </div>
                             </div>
+                            <?php endif; ?>
                         <?php endforeach; ?>
                     </div>
                     <div class="cart-summary">
@@ -136,8 +138,8 @@ $titulo = "Carrito - MGames";
                         }
 
                         // --- Mostrar resumen por producto ---
-                        foreach ($productos_en_carrito as $producto_id => $producto_en_sesion) {
-                            $cantidad = isset($producto_en_sesion['cantidad']) ? $producto_en_sesion['cantidad'] : 1;
+                        foreach ($productos_en_carrito as $producto_id => $producto_data) {
+                            $cantidad = isset($producto_data['cantidad']) ? $producto_data['cantidad'] : 1;
                             
                             // Usar información de la base de datos si está disponible
                             if (isset($productos_db[$producto_id])) {
@@ -167,9 +169,9 @@ $titulo = "Carrito - MGames";
 
                             } else {
                                 // Si por alguna razón no se encuentra en DB, mostrar información básica de la sesión
-                                $nombre_producto = htmlspecialchars($producto_en_sesion['nombre'] ?? 'Producto desconocido');
-                                $precio_unitario = $producto_en_sesion['precio'] ?? 0;
-                                $cantidad = $producto_en_sesion['cantidad'] ?? 1;
+                                $nombre_producto = htmlspecialchars($producto_data['nombre'] ?? 'Producto desconocido');
+                                $precio_unitario = $producto_data['precio'] ?? 0;
+                                $cantidad = $producto_data['cantidad'] ?? 1;
                                 $precio_linea_total = $precio_unitario * $cantidad;
                                 $subtotal += $precio_linea_total;
                                 // Aquí no podemos calcular el descuento individual si no lo tenemos de la DB o sesión

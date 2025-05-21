@@ -1,4 +1,7 @@
 <?php
+
+session_start();
+
 $titulo = "Contacto - MGames";
 require_once 'includes/header.php';
 ?>
@@ -17,6 +20,14 @@ require_once 'includes/header.php';
   --dark-color: #2d3436;
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   --transition: all 0.3s ease;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.site-header {
+  border-bottom: 3px solid #ff0000; /* Añadir línea roja */
 }
 
 .content {
@@ -253,6 +264,10 @@ require_once 'includes/header.php';
     <div class="contact-container">
         <h1>Contacto</h1>
         
+        <?php if ($isLoggedIn && isset($_SESSION['usuario']['nombre'])): ?>
+            <p style="text-align: center; font-size: 1.2rem; margin-bottom: 20px;">¡Hola, <?php echo htmlspecialchars($_SESSION['usuario']['nombre']); ?>!</p>
+        <?php endif; ?>
+
         <div class="contact-info">
             <div class="contact-details">
                 <h2>Información de Contacto</h2>
@@ -294,7 +309,7 @@ require_once 'includes/header.php';
         </div>
     </div>
 </div>
-</style>
+
 <!-- Botón -->
 <!-- Botón scroll arriba -->
 <button id="scrollToTopBtn" aria-label="Volver arriba">
