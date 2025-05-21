@@ -492,7 +492,7 @@ body {
 
 /* Responsive */
 @media (max-width: 768px) {
-    .eventos-hero h1 {
+    .eventos-hero {
         font-size: 2.5rem;
     }
     .eventos-filters {
@@ -579,4 +579,125 @@ body {
     background: linear-gradient(45deg, var(--secondary), var(--primary)); /* Cambiar gradiente al pasar el ratón */
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Aumentar sombra */
     transform: translateY(-3px); /* Mover ligeramente hacia arriba */
+}
+
+/* --- Estilos de la página de detalle del artículo --- */
+.article-page {
+    /* padding se define arriba */
+}
+
+.article-content {
+    background-color: var(--bg-white, white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 2rem;
+    max-width: 900px; /* Ancho máximo del contenido del artículo */
+    margin: 0 auto; /* Centrar el contenido */
+}
+
+.article-title {
+    /* Estilos vienen de .section-title */
+    margin-bottom: 1.5rem; /* Espacio inferior después del título */
+}
+
+.article-meta {
+    font-size: 1rem; /* Tamaño de fuente */
+    color: var(--text-light, var(--gray));
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap; /* Permitir que los elementos se envuelvan */
+    gap: 1.5rem; /* Espacio entre elementos meta */
+    align-items: center;
+}
+
+.article-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.article-meta i {
+    color: var(--primary); /* Color de iconos */
+}
+
+.article-image {
+    margin-bottom: 2rem; /* Espacio debajo de la imagen */
+    border-radius: var(--radius); /* Bordes redondeados */
+    overflow: hidden;
+    max-height: 400px; /* Altura máxima para la imagen del artículo */
+    display: flex; /* Para centrar la imagen si no ocupa todo el ancho */
+    justify-content: center;
+}
+
+.article-image img {
+    display: block;
+    max-width: 100%;
+    height: auto; /* Mantener la proporción */
+    object-fit: cover; /* Ajustar la imagen */
+}
+
+.article-body p {
+    font-size: 1.125rem; /* Tamaño de fuente para el cuerpo del artículo */
+    color: var(--text-color, #333);
+    margin-bottom: 1.5rem; /* Espacio entre párrafos */
+    line-height: 1.8; /* Altura de línea para legibilidad */
+}
+
+.back-link {
+    margin-top: 2rem; /* Espacio arriba del botón de volver */
+    text-align: center; /* Centrar el botón */
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .article-content {
+        padding: 1.5rem; /* Reducir padding en pantallas pequeñas */
+    }
+
+    .article-title {
+        font-size: 1.75rem; /* Reducir tamaño del título en móvil */
+    }
+
+    .article-meta {
+        flex-direction: column; /* Apilar metadatos en móvil */
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .article-body p {
+        font-size: 1rem; /* Reducir tamaño del cuerpo en móvil */
+    }
+}
+
+@media (max-width: 600px) {
+    .blog-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .blog-content {
+        padding: 1rem;
+    }
+
+    .blog-content h3 {
+        font-size: 1em;
+    }
+
+    .blog-meta {
+        font-size: 0.8rem;
+    }
+}
+
+/* Estilos para el badge de categoría en las tarjetas de blog */
+.blog-category-badge {
+    position: absolute;
+    top: 1rem; /* Ajustar la posición vertical */
+    left: 1rem; /* Ajustar la posición horizontal */
+    background-color: var(--secondary); /* Usar un color secundario o primary */
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    z-index: 5;
+    font-weight: 700;
+    text-transform: uppercase; /* Opcional: texto en mayúsculas */
 } 
