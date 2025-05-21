@@ -326,7 +326,29 @@ $titulo = "Carrito - MGames";
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    window.location.reload();
+                    // Actualizar los elementos del resumen con los nuevos totales
+                    // Asegúrate de que los selectores CSS '.final-summary p strong' apunten a los elementos correctos
+                    const totalElement = document.querySelector('.final-summary p strong');
+                    if (totalElement) {
+                         // Eliminar el prefijo 'Total a pagar: €' antes de actualizar
+                        const totalText = totalElement.textContent;
+                        const totalValue = totalText.replace('Total a pagar: €', '').trim();
+                        
+                        // Formatear el nuevo total recibido de la respuesta JSON
+                        const newTotalFormatted = '€' + data.total; 
+
+                        // Actualizar el texto
+                        totalElement.textContent = 'Total a pagar: ' + newTotalFormatted;
+                    }
+                    
+                    // Si también tuvieras un subtotal que quisieras actualizar:
+                    // const subtotalElement = document.querySelector('.tu-selector-para-subtotal');
+                    // if (subtotalElement) {
+                    //    subtotalElement.textContent = '€' + data.subtotal;
+                    // }
+
+                    // window.location.reload(); // Eliminar recarga de página
+
                 } else {
                     alert('Error al actualizar la cantidad');
                 }

@@ -33,8 +33,15 @@ function handleSuccess($message) {
     } else {
         // Para solicitudes de formulario normales, usar sesión y redirigir
         $_SESSION['mensaje'] = $message;
-        $referer = $_SERVER['HTTP_REFERER'] ?? 'carrito.php'; // Redirigir al carrito por defecto
-        header('Location: ' . $referer);
+        
+        // Comprobar si la página de origen es producto.php o detalle_segunda_mano.php
+        $referer = $_SERVER['HTTP_REFERER'] ?? '';
+        if (strpos($referer, 'producto.php') !== false || strpos($referer, 'detalle_segunda_mano.php') !== false) {
+            header('Location: carrito.php');
+        } else {
+            // Si no viene de producto.php, redirigir a la página de origen o al carrito por defecto
+            header('Location: ' . ($referer ?: 'carrito.php'));
+        }
         exit;
     }
 }

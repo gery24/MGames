@@ -560,16 +560,8 @@ if (isset($_GET['review_error'])) {
                 <div class="button-group">
                     <form method="POST" action="agregar_al_carrito.php">
                         <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
-                        <input type="hidden" name="nombre" value="<?php echo htmlspecialchars($producto['nombre']); ?>">
-                        <input type="hidden" name="precio" value="<?php echo $producto['precio']; ?>">
                         <input type="hidden" name="tipo_producto" value="productos">
-                        
-                        <!-- Selector de cantidad -->
-                        <div class="quantity-selector">
-                            <label for="cantidad">Cantidad:</label>
-                            <input type="number" id="cantidad" name="cantidad" value="1" min="1" max="10" style="width: 60px; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
-                        </div>
-
+                        <input type="hidden" name="cantidad" value="1">
                         <button type="submit" class="btn btn-primary">Añadir al Carrito</button>
                     </form>
                     <form method="POST" action="agregar_lista_deseos.php">
@@ -778,4 +770,3 @@ if (isset($_GET['review_error'])) {
 </div>
 
 <?php require_once 'includes/footer.php'; ?>
-
