@@ -36,7 +36,7 @@ try {
 }
 
 $titulo = "Cartera - MGames";
- require_once 'includes/header.php';
+require_once 'includes/header.php';
 ?>
 
 <!DOCTYPE html>
@@ -53,6 +53,25 @@ $titulo = "Cartera - MGames";
 <body class="<?php echo $bodyClass; ?>">
     
     <div class="content">
+        <?php
+        // Mostrar mensaje de éxito si existe
+        if (isset($_GET['compra_exitosa']) && $_GET['compra_exitosa'] === 'true') {
+            echo '<div class="alert alert-success"><i class="fas fa-check-circle"></i> ¡Compra realizada con éxito!</div>';
+        }
+        
+        // Mostrar mensaje de éxito si existe en la sesión
+        if (isset($_SESSION['mensaje'])) {
+            echo '<div class="alert alert-success"><i class="fas fa-check-circle"></i> ' . $_SESSION['mensaje'] . '</div>';
+            unset($_SESSION['mensaje']); // Limpiar el mensaje después de mostrarlo
+        }
+        
+        // Mostrar mensaje de error si existe
+        if (isset($_SESSION['error'])) {
+            echo '<div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> ' . $_SESSION['error'] . '</div>';
+            unset($_SESSION['error']); // Limpiar el error después de mostrarlo
+        }
+        ?>
+        
         <h1>Cartera</h1>
         <div class="balance">Saldo actual: €<?php echo number_format($saldo, 2); ?></div>
 
@@ -88,7 +107,10 @@ $titulo = "Cartera - MGames";
             <?php else: ?>
                 <?php foreach ($transacciones as $transaccion): ?>
                     <div class="transaction-item <?php echo $transaccion['monto'] < 0 ? 'withdrawal' : 'deposit'; ?>">
-                        <p><?php echo htmlspecialchars($transaccion['descripcion']); ?></p>
+                        <div class="transaction-details">
+                            <p class="transaction-description"><?php echo htmlspecialchars($transaccion['descripcion']); ?></p>
+                            <p class="transaction-date"><?php echo date('d/m/Y H:i', strtotime($transaccion['fecha'])); ?></p>
+                        </div>
                         <p class="amount">€<?php echo number_format($transaccion['monto'], 2); ?></p>
                     </div>
                 <?php endforeach; ?>
@@ -486,30 +508,40 @@ body.admin .transaction-item.withdrawal {
 </style>
 
 <script>
-// Verificar si hay un parámetro de éxito en la URL
-if (window.location.search.includes('success=true')) {
-    // Mostrar mensaje de éxito
-    alert('Transacción realizada con éxito');
-    
-    // Limpiar la URL
-    window.history.replaceState({}, document.title, window.location.pathname);
-}
+// Verificar si hay un parámetro de éxito de compra en la URL
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.search.includes('compra_exitosa=true')) {
+        // Mostrar mensaje de éxito
+        alert('¡Compra realizada con éxito!');
+        
+        // Limpiar la URL para evitar que el mensaje aparezca de nuevo al recargar
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
 
-// Verificar si hay un parámetro de error en la URL
-if (window.location.search.includes('error=')) {
-    // Obtener el mensaje de error
-    const urlParams = new URLSearchParams(window.location.search);
-    const errorMsg = urlParams.get('error');
-    
-    // Mostrar mensaje de error
-    alert('Error: ' + decodeURIComponent(errorMsg));
-    
-    // Limpiar la URL
-    window.history.replaceState({}, document.title, window.location.pathname);
-}
+    // Verificar si hay un parámetro de éxito en la URL (transacción de cartera)
+    if (window.location.search.includes('success=true')) {
+        // Mostrar mensaje de éxito
+        alert('Transacción realizada con éxito');
+        
+        // Limpiar la URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    // Verificar si hay un parámetro de error en la URL
+    if (window.location.search.includes('error=')) {
+        // Obtener el mensaje de error
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorMsg = urlParams.get('error');
+        
+        // Mostrar mensaje de error
+        alert('Error: ' + decodeURIComponent(errorMsg));
+        
+        // Limpiar la URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+});
 </script>
-</style>
-<!-- Botón -->
+
 <!-- Botón scroll arriba -->
 <button id="scrollToTopBtn" aria-label="Volver arriba">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -520,7 +552,7 @@ if (window.location.search.includes('error=')) {
 
 <!-- Estilos CSS -->
 <style>
- #scrollToTopBtn {
+#scrollToTopBtn {
   position: fixed;
   bottom: 30px;
   right: 30px;
@@ -552,7 +584,7 @@ if (window.location.search.includes('error=')) {
 
 <!-- Script JS -->
 <script>
- const scrollBtn = document.getElementById('scrollToTopBtn');
+const scrollBtn = document.getElementById('scrollToTopBtn');
 
 window.addEventListener('scroll', () => {
   scrollBtn.style.display = window.scrollY > 300 ? 'flex' : 'none';
@@ -566,3 +598,5 @@ scrollBtn.addEventListener('click', () => {
 });
 </script>
 <?php require_once 'includes/footer.php'; ?>
+</body>
+</html>
