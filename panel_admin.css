@@ -17,6 +17,10 @@
   --radius: 0.5rem;
 }
 
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 /* Estilos generales del panel */
 .admin-panel {
   background-color: var(--bg-white);
@@ -94,8 +98,19 @@
   gap: 1.5rem;
 }
 
+.form-row {
+  display: flex;
+  gap: 1rem;
+  width: 100%; /* Asegurarse de que la fila ocupe el ancho de la columna de la cuadrícula */
+}
+
+.form-row .form-group {
+    flex: 1; /* Permitir que los grupos de formulario dentro de la fila ocupen el espacio disponible */
+    margin-bottom: 0; /* Eliminar margen inferior duplicado */
+}
+
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .form-group.full-width {

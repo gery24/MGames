@@ -201,26 +201,26 @@ require_once 'includes/header.php';
             <input type="hidden" name="action" value="add_game">
             
             <div class="form-grid">
-                <div class="form-group">
-                    <label for="nombre">Nombre:</label>
-                    <input type="text" id="nombre" name="nombre" required>
-                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="precio">Precio:</label>
-                    <input type="number" id="precio" name="precio" step="0.01" required>
+                    <div class="form-group">
+                        <label for="precio">Precio:</label>
+                        <input type="number" id="precio" name="precio" step="0.01" required>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label for="categoria">Categoría:</label>
-                    <select id="categoria" name="categoria" required align="center">
+                    <select id="categoria" name="categoria" required>
                         <?php foreach ($categorias as $categoria): ?>
                             <option value="<?php echo $categoria['id']; ?>"><?php echo $categoria['nombre']; ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
-
-                
 
                 <div class="form-group full-width">
                     <label for="descripcion">Descripción:</label>

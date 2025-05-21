@@ -596,7 +596,7 @@ body.admin .dropdown-content a:hover {
     border: none;
     cursor: pointer;
     text-decoration: none;
-    width: 100%;
+    width: auto;
     text-align: center;
 }
 
@@ -702,6 +702,20 @@ body.admin .admin-link {
 body.admin .admin-link:hover {
     background-color: var(--admin-dark);
     color: white;
+}
+
+/* Estilo específico para los botones en las acciones del producto */
+.product-actions .btn {
+    width: auto; /* Permitir que el ancho se ajuste al contenido o flexbox */
+}
+
+/* Asegurar que los botones btn-primary dentro de product-actions usen los colores primarios */
+.product-actions .btn-primary {
+    background-color: var(--primary-color);
+}
+
+.product-actions .btn-primary:hover {
+    background-color: var(--primary-hover);
 }
 </style>
 
