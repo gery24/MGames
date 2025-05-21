@@ -100,7 +100,7 @@ require_once 'includes/header.php';
                     <p class="payment-info">Por favor, ingresa tu número de teléfono asociado a Bizum.</p>
                     <div class="payment-option">
                         <label for="numero_bizum">Número de teléfono:</label>
-                        <input type="text" id="numero_bizum" name="numero_bizum" placeholder="Ej: 612345678">
+                        <input type="text" id="numero_bizum" name="numero_bizum" placeholder="Ej: 612345678" maxlength="9" oninput="validarNumeroBizum(this)" inputmode="numeric" pattern="[0-9]*">
                         <span class="error-message" id="error-numero-bizum"></span>
                     </div>
                     <button type="submit" class="btn">Pagar con Bizum</button>
@@ -191,6 +191,43 @@ require_once 'includes/header.php';
             }
             input.value = value;
         }
+
+        function validarNumeroBizum(input) {
+    const valor = input.value.trim();
+    const errorElement = document.getElementById('error-numero-bizum');
+    
+    // Limpiar mensaje de error previo
+    errorElement.textContent = '';
+    errorElement.style.display = 'none';
+    input.classList.remove('error');
+    
+    // Si el campo está vacío, no mostrar error
+    if (!valor) return;
+    
+    // Validar que solo contenga números
+    if (!/^\d*$/.test(valor)) {
+        errorElement.textContent = 'Introduce solo números, sin espacios ni caracteres especiales';
+        errorElement.style.display = 'block';
+        input.classList.add('error');
+        
+        // Eliminar caracteres no numéricos
+        input.value = valor.replace(/\D/g, '');
+        return;
+    }
+    
+    // Si ya tiene 9 dígitos, validar el prefijo
+    if (valor.length === 9) {
+        if (!/^[6789]/.test(valor)) {
+            errorElement.textContent = 'El número debe comenzar con 6, 7, 8 o 9';
+            errorElement.style.display = 'block';
+            input.classList.add('error');
+        }
+    }
+    // Si tiene más de 9 dígitos, truncar
+    else if (valor.length > 9) {
+        input.value = valor.substring(0, 9);
+    }
+}
         
         function validarFormulario() {
     // Obtener el método de pago seleccionado
@@ -267,10 +304,27 @@ require_once 'includes/header.php';
         // Validar Bizum
         const numeroBizum = document.getElementById('numero_bizum').value.trim();
         
-        if (!numeroBizum || numeroBizum.length !== 9 || !/^\d+$/.test(numeroBizum)) {
+        // Validar que sea un número
+        if (!/^\d+$/.test(numeroBizum)) {
             const errorElement = document.getElementById('error-numero-bizum');
-            errorElement.textContent = 'Introduce un número de teléfono válido de 9 dígitos';
-            errorElement.style.display = 'block'; // Mostrar solo este mensaje de error
+            errorElement.textContent = 'Introduce solo números, sin espacios ni caracteres especiales';
+            errorElement.style.display = 'block';
+            document.getElementById('numero_bizum').classList.add('error');
+            esValido = false;
+        }
+        // Validar que tenga 9 dígitos (formato estándar de teléfono español)
+        else if (numeroBizum.length !== 9) {
+            const errorElement = document.getElementById('error-numero-bizum');
+            errorElement.textContent = 'El número debe tener exactamente 9 dígitos';
+            errorElement.style.display = 'block';
+            document.getElementById('numero_bizum').classList.add('error');
+            esValido = false;
+        }
+        // Validar que comience con un prefijo válido para España (6 o 7 para móviles, 8 o 9 para fijos)
+        else if (!/^[6789]/.test(numeroBizum)) {
+            const errorElement = document.getElementById('error-numero-bizum');
+            errorElement.textContent = 'El número debe comenzar con 6, 7, 8 o 9';
+            errorElement.style.display = 'block';
             document.getElementById('numero_bizum').classList.add('error');
             esValido = false;
         }
