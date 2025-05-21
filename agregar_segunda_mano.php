@@ -27,65 +27,93 @@ $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <?php include 'includes/header.php'; ?>
 
     <div class='form-container'>
-        <div id="add-game-form">
+        <div id="add-game-form" class="modern-form">
             <h2>Añadir Juego de Segunda Mano</h2>
             <form method="POST" action="guardar_segunda_mano.php" enctype="multipart/form-data">
-                <input type="text" name="nombre" placeholder="Nombre del Juego" required>
-                <input type="text" name="descripcion" placeholder="Descripción" required>
-                <div class='form-group'>
-                    <label for='comentario'>Comentario adicional:</label>
-                    <textarea id='comentario' name='comentario' rows='4' placeholder='Añade cualquier comentario que quieras compartir sobre el juego...'></textarea>
-                </div>
-                <input type="number" name="precio" placeholder="Precio" required>
-                <select name="categoria" required>
-                    <option value="">Selecciona una categoría</option>
-                    <?php foreach ($categorias as $categoria): ?>
-                        <option value="<?php echo htmlspecialchars($categoria['id']); ?>">
-                            <?php echo htmlspecialchars($categoria['nombre']); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-                <!-- Campo de selección de plataformas como checkboxes -->
-                <div class='form-group'>
-                    <label>Plataformas:</label>
-                    <div class='checkbox-group'>
-                        <label>
-                            <input type='checkbox' name='plataformas[]' value='fotosWeb/pc.png'>
-                            PC
-                        </label>
-                        <label>
-                            <input type='checkbox' name='plataformas[]' value='fotosWeb/ps.png'>
-                            PlayStation
-                        </label>
-                        <label>
-                            <input type='checkbox' name='plataformas[]' value='fotosWeb/xbox.png'>
-                            Xbox
-                        </label>
-                        <label>
-                            <input type='checkbox' name='plataformas[]' value='fotosWeb/switch.png'>
-                            Switch
-                        </label>
+                
+                <div class="form-section">
+                    <h3>Detalles del Juego</h3>
+                    <div class="form-group">
+                        <label for="nombre">Nombre del Juego:</label>
+                        <input type="text" name="nombre" id="nombre" placeholder="Ej: The Witcher 3" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Descripción:</label>
+                        <input type="text" name="descripcion" id="descripcion" placeholder="Ej: Una aventura épica de rol..." required>
+                    </div>
+                     <div class="form-group">
+                        <label for="precio">Precio:</label>
+                        <input type="number" name="precio" id="precio" placeholder="Ej: 35.50" step="0.01" required>
+                    </div>
+                     <div class="form-group">
+                        <label for="categoria">Categoría:</label>
+                        <select name="categoria" id="categoria" required>
+                            <option value="">Selecciona una categoría</option>
+                            <?php foreach ($categorias as $categoria): ?>
+                                <option value="<?php echo htmlspecialchars($categoria['id']); ?>">
+                                    <?php echo htmlspecialchars($categoria['nombre']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                 </div>
-                <div class='form-group'>
-                    <label>Condición del juego:</label>
-                    <div class='radio-group'>
-                        <label>
-                            <input type='radio' name='condicion' value='Nuevo' required>
-                            Nuevo
-                        </label>
-                        <label>
-                            <input type='radio' name='condicion' value='Seminuevo'>
-                            Seminuevo
-                        </label>
-                        <label>
-                            <input type='radio' name='condicion' value='Usado'>
-                            Usado
-                        </label>
+
+                <div class="form-section">
+                    <h3>Comentario Adicional</h3>
+                     <div class='form-group'>
+                        <label for='comentario'>Comentario:</label>
+                        <textarea id='comentario' name='comentario' rows='4' placeholder='Añade cualquier comentario que quieras compartir sobre el juego...'></textarea>
                     </div>
                 </div>
-                <input type="file" name="imagen" accept="image/*" required>
-                <button type="submit">Añadir Juego</button>
+
+                <div class="form-section">
+                    <h3>Información Adicional</h3>
+                    <!-- Campo de selección de plataformas como checkboxes -->
+                    <div class='form-group'>
+                        <label>Plataformas:</label>
+                        <div class='checkbox-group'>
+                            <label class="checkbox-label">
+                                <input type='checkbox' name='plataformas[]' value='fotosWeb/pc.png'>
+                                PC
+                            </label>
+                            <label class="checkbox-label">
+                                <input type='checkbox' name='plataformas[]' value='fotosWeb/ps.png'>
+                                PlayStation
+                            </label>
+                            <label class="checkbox-label">
+                                <input type='checkbox' name='plataformas[]' value='fotosWeb/xbox.png'>
+                                Xbox
+                            </label>
+                            <label class="checkbox-label">
+                                <input type='checkbox' name='plataformas[]' value='fotosWeb/switch.png'>
+                                Switch
+                            </label>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <label>Condición del juego:</label>
+                        <div class='radio-group'>
+                            <label class="radio-label">
+                                <input type='radio' name='condicion' value='Nuevo' required>
+                                Nuevo
+                            </label>
+                            <label class="radio-label">
+                                <input type='radio' name='condicion' value='Seminuevo'>
+                                Seminuevo
+                            </label>
+                            <label class="radio-label">
+                                <input type='radio' name='condicion' value='Usado'>
+                                Usado
+                            </label>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <label for='imagen'>Imagen del Juego:</label>
+                        <input type="file" name="imagen" id="imagen" accept="image/*" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Añadir Juego</button>
             </form>
         </div>
     </div>

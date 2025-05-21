@@ -4,6 +4,11 @@ body {
     display: block;
     margin: 0;
     background-color: #f8fafc;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6; /* Un fondo suave */
+    color: #333;
+    line-height: 1.6;
+    padding: 20px 0;
 }
 
 .navbar {
@@ -13,100 +18,155 @@ body {
 
 /* Form Container */
 .form-container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 2rem 1rem;
+    max-width: 700px;
+    margin: 40px auto; /* Centrar y añadir espacio arriba/abajo */
+    padding: 0 20px;
 }
 
 /* Modern Form Styling */
-#add-game-form {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.modern-form {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-#add-game-form input,
-#add-game-form select,
-#add-game-form textarea {
+.modern-form h2 {
+    text-align: center;
+    color: #4f46e5; /* Usar primary-color */
+    margin-bottom: 30px;
+    font-size: 2em;
+}
+
+.form-section {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 30px;
+    background-color: #f9f9f9;
+}
+
+.form-section h3 {
+    color: #555;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.3em;
+    border-bottom: 2px solid #6366f1; /* Usar secondary-color */
+    padding-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+    font-size: 0.95em;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group textarea,
+.form-group select {
     width: 100%;
     padding: 12px;
-    margin: 8px 0 16px;
-    border: 2px solid #e2e8f0;
-    border-radius: 8px;
-    font-size: 16px;
-    transition: border-color 0.3s ease;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Incluir padding y border en el ancho */
+    font-size: 1em;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-#add-game-form input:focus,
-#add-game-form select:focus,
-#add-game-form textarea:focus {
-    border-color: #0d4d8a;
+.form-group input[type="text"]:focus,
+.form-group input[type="number"]:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: #4f46e5; /* Usar primary-color */
+    box-shadow: 0 0 8px rgba(79, 70, 229, 0.2); /* Ajustar sombra al color */
     outline: none;
 }
 
-/* Radio Button Styling */
+.checkbox-group,
 .radio-group {
     display: flex;
-    gap: 1rem;
-    margin: 1rem 0;
+    flex-wrap: wrap; /* Permitir que los elementos salten de línea */
+    gap: 15px; /* Espacio entre opciones */
 }
 
-.radio-group label {
+.checkbox-label,
+.radio-label {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    border: 2px solid #e2e8f0;
-    border-radius: 8px;
+    font-weight: normal;
     cursor: pointer;
-    transition: all 0.3s ease;
+    color: #333;
 }
 
-.radio-group label:hover {
-    border-color: #124779;
+.checkbox-label input[type="checkbox"],
+.radio-label input[type="radio"] {
+    margin-right: 8px; /* Espacio entre el input y el texto */
+    /* Personalizar apariencia si es necesario */
+    transform: scale(1.1); /* Hacerlos un poco más grandes */
+    accent-color: #a855f7; /* Usar un color lila/morado */
 }
 
-.radio-group input[type='radio'] {
-    appearance: none;
-    width: 16px;
-    height: 16px;
-    border: 2px solid #e2e8f0;
-    border-radius: 50%;
-    position: relative;
-    transition: all 0.3s ease;
+.form-group input[type="file"] {
+    display: block; /* Para que ocupe su propia línea si es necesario */
+    margin-top: 5px;
 }
 
-.radio-group input[type='radio']:checked {
-    border-color: #124779;
-}
-
-.radio-group input[type='radio']:checked::before {
-    content: '';
-    width: 8px;
-    height: 8px;
-    background: #124779;
-    border-radius: 50%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-/* Button Styling */
-#add-game-form button {
-    background-color:#124779;
+.modern-form button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    background-color: #a855f7; /* Usar un color lila/morado */
     color: white;
-    padding: 12px 24px;
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
+    border-radius: 5px;
+    font-size: 1.2em;
+    font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-#add-game-form button:hover {
-    background-color: #124779;
+.modern-form button[type="submit"]:hover {
+    background-color: #9333ea; /* Un tono lila/morado más oscuro al pasar el ratón */
+    transform: translateY(-2px); /* Efecto de elevación sutil */
+}
+
+/* Estilos responsivos básicos */
+@media (max-width: 600px) {
+    .modern-form {
+        padding: 20px;
+    }
+    
+    .modern-form h2 {
+        font-size: 1.8em;
+    }
+
+    .form-section {
+        padding: 15px;
+    }
+
+    .form-section h3 {
+        font-size: 1.1em;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group textarea,
+    .form-group select,
+    .modern-form button[type="submit"] {
+        font-size: 1em;
+        padding: 10px;
+    }
+
+    .checkbox-group,
+    .radio-group {
+        flex-direction: column; /* Apilar checkboxes/radio buttons en pantallas pequeñas */
+        gap: 10px;
+    }
 }
