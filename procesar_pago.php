@@ -93,10 +93,27 @@ try {
     // Iniciar transacción
     $pdo->beginTransaction();
     
+    // Preparar la descripción de la compra con los nombres de los juegos
+    $nombres_juegos = [];
+    foreach ($productos_en_carrito as $producto) {
+        if (is_array($producto) && isset($producto['nombre'])) {
+            $nombres_juegos[] = $producto['nombre'];
+        }
+    }
+    
+    // Si hay más de un juego, mostrar el primero y el número de juegos adicionales
+    if (count($nombres_juegos) > 1) {
+        $descripcion = $nombres_juegos[0] . " y " . (count($nombres_juegos) - 1) . " juego(s) más - Método: " . ucfirst($metodo_pago);
+    } elseif (count($nombres_juegos) == 1) {
+        $descripcion = $nombres_juegos[0] . " - Método: " . ucfirst($metodo_pago);
+    } else {
+        $descripcion = "Compra de productos - Método: " . ucfirst($metodo_pago);
+    }
+    
     // 1. Registrar la compra en la tabla de transacciones
     $stmt = $pdo->prepare("INSERT INTO transacciones (usuario_id, monto, descripcion, fecha) VALUES (?, ?, ?, NOW())");
-    $descripcion = "Compra de productos - Método: " . ucfirst($metodo_pago);
     $stmt->execute([$userId, $total, $descripcion]);
+    $transaccion_id = $pdo->lastInsertId();
     
     // 2. Actualizar el saldo de la cartera (si es necesario)
     // Esto depende de tu lógica de negocio. Si quieres descontar de la cartera:
