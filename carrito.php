@@ -111,6 +111,7 @@ $titulo = "Carrito - MGames";
                                     </div>
                                     <form method="POST" action="eliminar_del_carrito.php">
                                         <input type="hidden" name="id" value="<?php echo $producto_id; ?>">
+                                        <input type="hidden" name="tipo_producto" value="<?php echo htmlspecialchars($producto_data['tipo_producto'] ?? 'productos'); ?>">
                                         <button type="submit" class="btn">
                                             <i class="fas fa-trash-alt"></i> Eliminar
                                         </button>
@@ -230,6 +231,7 @@ $titulo = "Carrito - MGames";
                             <p class="price">€<?php echo number_format($recomendado['precio'], 2); ?></p>
                             <form method="POST" action="agregar_al_carrito.php">
                                 <input type="hidden" name="id" value="<?php echo $recomendado['id']; ?>">
+                                <input type="hidden" name="tipo_producto" value="productos">
                                 <button type="submit" class="btn">
                                     <i class="fas fa-cart-plus"></i> Añadir al carrito
                                 </button>
