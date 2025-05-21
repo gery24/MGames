@@ -69,7 +69,7 @@ $isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN
                                 ?>
                             </div>
                         </button>
-                        <div class="dropdown-content <?php echo $isAdmin ? 'admin-dropdown' : ''; ?>">
+                        <div id="profileDropdownContent" class="dropdown-content <?php echo $isAdmin ? 'admin-dropdown' : ''; ?>">
                             <a href="perfil.php"><i class="fas fa-user"></i> Mi Perfil</a>
                             <a href="pedidos.php"><i class="fas fa-box"></i> Mis Pedidos</a>
                             <a href="configuracion.php"><i class="fas fa-cog"></i> Configuración</a>
@@ -94,22 +94,56 @@ $isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN
     </header>
 </body>
 <script>
+    console.log('Script de header cargado');
+
     const searchToggle = document.getElementById('searchToggle');
     const searchDropdownContent = document.getElementById('searchDropdownContent');
     const searchInput = document.getElementById('searchInput');
+    const profileButton = document.querySelector('.profile-button');
+
+    // Obtener el desplegable del perfil por su nuevo ID
+    const profileDropdownContent = document.getElementById('profileDropdownContent');
+
+    console.log('searchToggle:', searchToggle);
+    console.log('searchDropdownContent:', searchDropdownContent);
+    console.log('profileButton:', profileButton);
+    console.log('profileDropdownContent:', profileDropdownContent);
 
     // Toggle search dropdown visibility
-    searchToggle.addEventListener('click', () => {
-        searchDropdownContent.style.display = searchDropdownContent.style.display === 'block' ? 'none' : 'block';
-        if (searchDropdownContent.style.display === 'block') {
-            searchInput.focus(); // Focus on input when shown
-        }
-    });
+    if (searchToggle && searchDropdownContent) {
+        searchToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            console.log('Botón de búsqueda clicado');
+            if (profileDropdownContent) profileDropdownContent.style.display = 'none';
+            
+            console.log('Estado de display ANTES (search):', searchDropdownContent.style.display);
+            searchDropdownContent.style.display = searchDropdownContent.style.display === 'block' ? 'none' : 'block';
+            console.log('Estado de display DESPUÉS (search):', searchDropdownContent.style.display);
+            if (searchDropdownContent.style.display === 'block') {
+                searchInput.focus();
+            }
+        });
+    }
 
-    // Close dropdown when clicking outside
-    window.addEventListener('click', (event) => {
-        if (!event.target.matches('.header-icon') && !event.target.closest('.search-dropdown')) {
-            searchDropdownContent.style.display = 'none';
+    // Profile dropdown functionality
+    if (profileButton && profileDropdownContent) {
+        profileButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            console.log('Botón de perfil clicado');
+            
+            console.log('Estado de display ANTES (profile):', profileDropdownContent.style.display);
+            profileDropdownContent.style.display = profileDropdownContent.style.display === 'block' ? 'none' : 'block';
+            console.log('Estado de display DESPUÉS (profile):', profileDropdownContent.style.display);
+        });
+    }
+
+    // Close all dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        const isClickInsideDropdownArea = e.target.closest('.search-dropdown, .profile-dropdown');
+        
+        if (!isClickInsideDropdownArea) {
+            if (searchDropdownContent) searchDropdownContent.style.display = 'none';
+            if (profileDropdownContent) profileDropdownContent.style.display = 'none';
         }
     });
 
@@ -132,7 +166,7 @@ $isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN
         { name: 'God of War', url: 'producto.php?id=7', type: 'game' },
         { name: 'Uncharted 4', url: 'producto.php?id=8', type: 'game' },
         { name: 'Tomb Raider', url: 'producto.php?id=9', type: 'game' },
-        { name: 'Assassin's Creed Valhalla', url: 'producto.php?id=10', type: 'game' },
+        { name: "Assassin's Creed Valhalla", url: 'producto.php?id=10', type: 'game' },
         { name: 'The Witcher 3', url: 'producto.php?id=11', type: 'game' },
         { name: 'Dark Souls III', url: 'producto.php?id=12', type: 'game' },
         { name: 'Elden Ring', url: 'producto.php?id=13', type: 'game' },
@@ -141,7 +175,7 @@ $isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN
         { name: 'FIFA 24', url: 'producto.php?id=16', type: 'game' },
         { name: 'Madden NFL 24', url: 'producto.php?id=17', type: 'game' },
         { name: 'Gran Turismo 7', url: 'producto.php?id=18', type: 'game' },
-        { name: 'Tony Hawk's Pro Skater 1+2', url: 'producto.php?id=19', type: 'game' },
+        { name: "Tony Hawk's Pro Skater 1+2", url: 'producto.php?id=19', type: 'game' },
         { name: 'Forza Horizon 5', url: 'producto.php?id=20', type: 'game' },
         { name: 'Tarjeta Xbox Live $25', url: 'producto.php?id=21', type: 'other' },
         { name: 'Need for Speed Heat', url: 'producto.php?id=22', type: 'game' },
@@ -165,7 +199,7 @@ $isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN
         { name: 'Age of Empires IV', url: 'producto.php?id=101', type: 'game' },
         { name: 'Power Wash Simulator', url: 'producto.php?id=102', type: 'game' },
         { name: 'Euro Truck Simulator 2', url: 'producto.php?id=103', type: 'game' },
-        { name: 'Tom Clancy's Rainbow Six Siege', url: 'producto.php?id=104', type: 'game' },
+        { name: "Tom Clancy's Rainbow Six Siege", url: 'producto.php?id=104', type: 'game' },
         { name: 'Call of Duty®: Modern Warfare', url: 'producto.php?id=105', type: 'game' },
         { name: 'UFC 5', url: 'producto.php?id=106', type: 'game' },
         { name: 'WWE 2K24', url: 'producto.php?id=107', type: 'game' },
