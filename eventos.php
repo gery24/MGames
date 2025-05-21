@@ -104,7 +104,7 @@ try {
             <p>Suscríbete para recibir notificaciones de nuevos eventos y actualizaciones</p>
             <form class="newsletter-form">
                 <input type="email" placeholder="Tu correo electrónico" required>
-                <button type="submit" class="btn btn-primary">Suscribirse</button>
+                <button type="submit" class="btn btn-primary">Suscribirse</button> <br>
             </form>
         </div>
     </section>

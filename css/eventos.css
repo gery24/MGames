@@ -451,23 +451,22 @@ body {
     /* margin-left: 50%; */
     /* transform: translateX(-50%); */
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-    padding: 4rem 0; /* Mantener padding vertical, se ajustará después si es necesario */
-    margin: 3rem auto 2rem auto !important; /* Asegurar margen superior y añadir margen inferior */
+    padding: 4rem 1.5rem; /* Añadir padding horizontal */
+    margin: 1.5rem auto 2rem auto !important; /* Reducir margen superior y mantener margen inferior */
     border-radius: 0;
     color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: block; /* Cambiar a block para que los hijos se apilen verticalmente */
+    text-align: center; /* Centrar el contenido dentro de la sección */
     box-sizing: border-box;
     padding-bottom: 0 !important; /* Eliminar padding inferior que pueda causar espacio */
 }
 
 .newsletter-content {
-    max-width: 500px;
-    margin: 0 auto;
-    text-align: center;
-    padding: 0 1rem;
-    width: 100%;
+    max-width: 500px; /* Mantener el ancho máximo del contenido */
+    margin: 0 auto; /* Centrar el contenedor de contenido */
+    text-align: center; /* Asegurar que el texto esté centrado dentro de este contenedor */
+    padding: 0; /* Eliminar padding horizontal y depender del padding de .eventos-newsletter */
+    width: 100%; /* Asegurar que el contenedor ocupe el ancho disponible */
 }
 
 .newsletter-content h2 {
@@ -483,17 +482,20 @@ body {
 
 .newsletter-form {
     display: flex;
-    gap: 1rem;
-    max-width: 400px;
-    margin: 0 auto;
+    gap: 2rem; /* Aumentar más el espacio entre inputs y botón */
+    margin: 0 auto; /* Centrar el formulario dentro de .newsletter-content */
+    width: 100%; /* Asegurar que el formulario ocupe el ancho disponible */
+    flex-direction: column; /* Apilar los inputs y el botón verticalmente */
+    max-width: 400px; /* Limitar el ancho del formulario para que no sea demasiado ancho en pantallas grandes */
 }
 
 .newsletter-form input {
-    flex: 1;
+    flex: none; /* Anular flex-grow: 1 para que no intente ocupar todo el espacio horizontal */
     padding: 1rem;
     border: none;
     border-radius: 0.5rem;
     font-size: 1rem;
+    width: 100%; /* Asegurar que el input ocupe el ancho del formulario */
 }
 
 .newsletter-form button {
@@ -505,6 +507,7 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition);
+    width: 100%; /* Asegurar que el botón ocupe el ancho del formulario */
 }
 
 .newsletter-form button:hover {
@@ -530,6 +533,13 @@ body {
     .eventos-newsletter {
         padding: 2.5rem 0.5rem;
     }
+    .newsletter-form {
+        flex-direction: column; /* Asegurar apilamiento vertical en pantallas pequeñas */
+    }
+    .newsletter-form input,
+    .newsletter-form button {
+        width: 100%; /* Inputs y botón al 100% en pantallas pequeñas */
+    }
 }
 
 @media (max-width: 480px) {
@@ -546,8 +556,9 @@ body {
     .newsletter-form {
         flex-direction: column;
     }
+    .newsletter-form input,
     .newsletter-form button {
-        width: 100%;
+        width: 100%; /* Inputs y botón al 100% en pantallas pequeñas */
     }
 }
 
