@@ -140,15 +140,15 @@ require_once 'includes/header.php';
                 <?php else: ?>
                     <?php foreach($productos as $producto): ?>
                         <div class="product-card">
-                            <div class="product-image">
+                            <a href="detalle_segunda_mano.php?id=<?php echo $producto['id']; ?>">
                                 <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" 
                                      alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
-                            </div>
+                            </a>
                             <div class="product-card-content">
                                 <h3 class="product-title"><?php echo htmlspecialchars($producto['nombre']); ?></h3>
-                                <p class="product-price"><?php echo number_format($producto['precio'], 2); ?>€</p>
-                                <p class="product-category"><?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>
-                                <a href="detalle_segunda_mano.php?id=<?php echo $producto['id']; ?>" class="btn-details">
+                                <p class="price"><?php echo number_format($producto['precio'], 2); ?>€</p>
+                                <p class="category"><?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>
+                                <a href="detalle_segunda_mano.php?id=<?php echo $producto['id']; ?>" class="btn btn-primary">
                                     Ver Detalles
                                 </a>
                             </div>

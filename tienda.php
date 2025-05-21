@@ -1785,59 +1785,56 @@ try {
             <div class="eventos-grid">
                 <div class="evento-card">
                     <div class="evento-image">
-                        <img src="FotosWeb/evento-torneo.jpg" alt="Torneo MGames">
+                        <img src="FotosWeb/Torneo MGames.png" alt="Imagen Torneo MGames 2025"> <!-- Imagen actualizada -->
                         <div class="evento-fecha">
-                            <span class="evento-dia">15</span>
-                            <span class="evento-mes">JUN</span>
+                            <span class="evento-dia">15</span> <!-- Este es el día -->
+                            <span class="evento-mes">JUN</span> <!-- Este es el mes -->
                         </div>
                     </div>
                     <div class="evento-content">
-                        <h3>Torneo MGames 2023</h3>
+                        <h3>Torneo MGames 2025</h3> <!-- Título actualizado -->
                         <div class="evento-info">
-                            <p><i class="fas fa-map-marker-alt"></i> Centro de Convenciones, Madrid</p>
-                            <p><i class="far fa-clock"></i> 10:00 AM - 8:00 PM</p>
+                            <p><i class="fas fa-map-marker-alt"></i> Centro de Convenciones, Madrid</p> <!-- Dejar texto placeholder -->
+                            <p><i class="far fa-clock"></i> 10:00 AM - 8:00 PM</p> <!-- Dejar texto placeholder -->
                         </div>
-                        <p class="evento-descripcion">Participa en el mayor torneo de gaming del año con premios de
-                            hasta 10.000€.</p>
-                        <a href="eventos.php?id=1" class="btn btn-secondary btn-sm">Más Información</a>
+                        <p class="evento-descripcion">Participa en el torneo de MGames de 2025.</p> <!-- Descripción actualizada -->
+                        <a href="eventos.php?id=torneo2025" class="btn btn-primary">Más Información</a> <!-- Enlace actualizado -->
                     </div>
                 </div>
                 <div class="evento-card">
                     <div class="evento-image">
-                        <img src="FotosWeb/evento-lanzamiento.jpg" alt="Lanzamiento Exclusivo">
+                        <img src="FotosWeb/Torrente.jpg" alt="Imagen Lanzamiento Exclusivo"> <!-- Imagen actualizada -->
                         <div class="evento-fecha">
                             <span class="evento-dia">22</span>
                             <span class="evento-mes">JUL</span>
                         </div>
                     </div>
                     <div class="evento-content">
-                        <h3>Lanzamiento Exclusivo</h3>
+                        <h3>Lanzamiento Exclusivo</h3> <!-- Título actualizado -->
                         <div class="evento-info">
-                            <p><i class="fas fa-map-marker-alt"></i> Tienda MGames, Barcelona</p>
-                            <p><i class="far fa-clock"></i> 8:00 PM - 12:00 AM</p>
+                            <p><i class="fas fa-map-marker-alt"></i> Tienda MGames, Barcelona</p> <!-- Dejar texto placeholder -->
+                            <p><i class="far fa-clock"></i> 8:00 PM - 12:00 AM</p> <!-- Dejar texto placeholder -->
                         </div>
-                        <p class="evento-descripcion">Sé el primero en probar el nuevo título de la saga más
-                            esperada del año.</p>
-                        <a href="eventos.php?id=2" class="btn btn-secondary btn-sm">Más Información</a>
+                        <p class="evento-descripcion">Sé el primero en probar el nuevo título exclusivo.</p> <!-- Descripción actualizada -->
+                        <a href="eventos.php?id=lanzamiento" class="btn btn-primary">Más Información</a> <!-- Enlace actualizado -->
                     </div>
                 </div>
                 <div class="evento-card">
                     <div class="evento-image">
-                        <img src="FotosWeb/evento-convencion.jpg" alt="Convención Gamer">
+                        <img src="FotosWeb/Convencion gamer 25.png" alt="Imagen Convención Gamer 2025"> <!-- Imagen actualizada -->
                         <div class="evento-fecha">
                             <span class="evento-dia">10</span>
                             <span class="evento-mes">AGO</span>
                         </div>
                     </div>
                     <div class="evento-content">
-                        <h3>Convención Gamer 2023</h3>
+                        <h3>Convención Gamer 2025</h3> <!-- Título actualizado -->
                         <div class="evento-info">
-                            <p><i class="fas fa-map-marker-alt"></i> IFEMA, Madrid</p>
-                            <p><i class="far fa-clock"></i> 9:00 AM - 7:00 PM</p>
+                            <p><i class="fas fa-map-marker-alt"></i> IFEMA, Madrid</p> <!-- Dejar texto placeholder -->
+                            <p><i class="far fa-clock"></i> 9:00 AM - 7:00 PM</p> <!-- Dejar texto placeholder -->
                         </div>
-                        <p class="evento-descripcion">La mayor convención de videojuegos con stands, charlas y
-                            actividades para toda la familia.</p>
-                        <a href="eventos.php?id=3" class="btn btn-secondary btn-sm">Más Información</a>
+                        <p class="evento-descripcion">La mayor convención de videojuegos de 2025.</p> <!-- Descripción actualizada -->
+                        <a href="eventos.php?id=convencion2025" class="btn btn-primary">Más Información</a> <!-- Enlace actualizado -->
                     </div>
                 </div>
             </div>
@@ -1854,7 +1851,7 @@ try {
             <div class="blog-grid">
                 <article class="blog-card">
                     <div class="blog-image">
-                        <img src="FotosWeb/blog-1.jpg" alt="Guía para principiantes">
+                        <img src="FotosWeb/guia.png" alt="Guía para principiantes">
                         <div class="blog-category">Guía</div>
                     </div>
                     <div class="blog-content">
@@ -1870,7 +1867,7 @@ try {
                 </article>
                 <article class="blog-card">
                     <div class="blog-image">
-                        <img src="FotosWeb/blog-2.jpg" alt="Análisis de juego">
+                        <img src="FotosWeb/futuro de los videojuegos.png" alt="Análisis de juego">
                         <div class="blog-category">Análisis</div>
                     </div>
                     <div class="blog-content">
@@ -1885,7 +1882,7 @@ try {
                 </article>
                 <article class="blog-card">
                     <div class="blog-image">
-                        <img src="FotosWeb/blog-3.jpg" alt="Noticias de la industria">
+                        <img src="FotosWeb/tendencias.png" alt="Noticias de la industria">
                         <div class="blog-category">Noticias</div>
                     </div>
                     <div class="blog-content">
@@ -1893,7 +1890,7 @@ try {
                             <span><i class="far fa-calendar"></i> 1 Mayo, 2023</span>
                             <span><i class="far fa-user"></i> NewsGamer</span>
                         </div>
-                        <h3>Las tendencias que definirán el futuro de los videojuegos en 2023</h3>
+                        <h3>Las tendencias que definirán el futuro de los videojuegos en 2025</h3>
                         <p>Descubre las tecnologías y tendencias que marcarán el rumbo de la industria de los
                             videojuegos este año.</p>
                         <a href="blog.php?id=3" class="btn btn-link">Leer más <i class="fas fa-arrow-right"></i></a>
@@ -1909,7 +1906,8 @@ try {
     <!-- Comunidad de Gamers -->
     <section class="comunidad-gamers">
         <div class="container">
-            <h2 class="section-title">Únete a Nuestra Comunidad</h2>
+        <h1 style="text-align: center; color: white; font-size: 36px;">Únete a Nuestra Comunidad</h1>
+<br>
             <div class="comunidad-content">
                 <div class="comunidad-info">
                     <p>Forma parte de la comunidad de MGames y disfruta de beneficios exclusivos:</p>
@@ -1921,12 +1919,12 @@ try {
                         <li><i class="fas fa-check-circle"></i> Guías y tutoriales exclusivos</li>
                     </ul>
                     <div class="comunidad-cta">
-                        <a href="registro_comunidad.php" class="btn btn-primary">Unirse Ahora</a>
-                        <a href="comunidad.php" class="btn btn-outline">Más Información</a>
+                        <a href="eventos.php" class="btn btn-primary">Unirse Ahora</a>
+                        <a href="blog.php" class="btn btn-primary">Más Información</a>
                     </div>
                 </div>
                 <div class="comunidad-imagen">
-                    <img src="FotosWeb/comunidad-gamers.jpg" alt="Comunidad de Gamers">
+                <img src="FotosWeb/logo.png" alt="Comunidad de Gamers" style="width:100px; height:100px; border-radius:50%;">
                 </div>
             </div>
         </div>
