@@ -25,6 +25,19 @@ require_once 'includes/header.php';
     <div class="content">
         <h1>Detalles de Pago</h1>
         
+        <?php
+        // Mostrar mensaje de error si existe
+        if (isset($_SESSION['error_pago'])) {
+            echo '<div class="alert alert-danger">' . htmlspecialchars($_SESSION['error_pago']) . '</div>';
+            unset($_SESSION['error_pago']); // Limpiar el error después de mostrarlo
+        }
+        // Mostrar mensaje de éxito si existe
+        if (isset($_SESSION['mensaje'])) {
+            echo '<div class="alert alert-success">' . htmlspecialchars($_SESSION['mensaje']) . '</div>';
+            unset($_SESSION['mensaje']); // Limpiar el mensaje después de mostrarlo
+        }
+        ?>
+        
         <div class="payment-container">
             <div class="payment-selector">
                 <h2>Selecciona un método de pago</h2>
@@ -108,6 +121,14 @@ require_once 'includes/header.php';
             document.querySelectorAll('.payment-form').forEach(form => {
                 form.style.display = 'none';
             });
+
+            // --- Lógica para mostrar mensaje de éxito y redirigir ---
+            const successAlert = document.querySelector('.alert-success');
+            if (successAlert) {
+                alert(successAlert.textContent);
+                window.location.href = 'index.php'; // Redirigir al índice
+            }
+             // --- Fin Lógica para mostrar mensaje de éxito y redirigir ---
         });
 
         function seleccionarMetodo(metodo) {
