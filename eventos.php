@@ -72,14 +72,6 @@ try {
                             <span class="evento-dia"><?php echo date('d', strtotime($evento['fecha_evento'])); ?></span>
                             <span class="evento-mes"><?php echo strtoupper(date('M', strtotime($evento['fecha_evento']))); ?></span>
                         </div>
-                        <div class="evento-overlay">
-                            <div class="evento-actions">
-                                <a href="evento.php?id=<?php echo $evento['id']; ?>" class="btn btn-primary">Más Info</a>
-                                <button class="btn btn-secondary btn-calendar">
-                                    <i class="far fa-calendar-plus"></i> Recordar
-                                </button>
-                            </div>
-                        </div>
                     </div>
                     <div class="evento-content">
                         <h3><?php echo htmlspecialchars($evento['nombre']); ?></h3>
@@ -91,6 +83,9 @@ try {
                         <div class="evento-stats">
                             <span><i class="fas fa-users"></i> 150+ Asistentes</span>
                             <span><i class="fas fa-trophy"></i> Premios</span>
+                        </div>
+                        <div class="evento-actions">
+                            <a href="evento.php?id=<?php echo $evento['id']; ?>" class="btn btn-primary">Ver Detalles</a>
                         </div>
                     </div>
                 </div>

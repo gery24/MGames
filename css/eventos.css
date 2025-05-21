@@ -165,31 +165,6 @@ body {
     transform: scale(1.05);
 }
 
-.evento-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.5));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: var(--transition);
-}
-
-.evento-actions {
-    display: flex;
-    gap: 1rem;
-    transform: translateY(20px);
-    transition: var(--transition);
-}
-
-.evento-card:hover .evento-actions {
-    transform: translateY(0);
-}
-
 .evento-fecha {
     position: absolute;
     bottom: 1rem;
@@ -573,4 +548,35 @@ body {
     .newsletter-content {
         max-width: 98vw;
     }
+}
+
+/* Nuevos estilos para el botón 'Más Info' dentro del contenido */
+.evento-content .evento-actions {
+    margin-top: 1.5rem; /* Espacio superior para separarlo del texto */
+    display: flex;
+    justify-content: center; /* Centrar el botón */
+}
+
+.evento-content .evento-actions .btn-primary {
+    width: 100%; /* Botón al 100% del ancho del contenedor */
+    text-align: center;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+
+    /* Estilos para un botón 'tope de guapo' */
+    background: linear-gradient(45deg, var(--primary), var(--secondary)); /* Gradiente llamativo */
+    color: white; /* Texto blanco */
+    border: none; /* Sin borde */
+    border-radius: 0.5rem; /* Bordes redondeados */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Sombra */
+    text-transform: uppercase; /* Texto en mayúsculas */
+    letter-spacing: 1px; /* Espaciado entre letras */
+    font-weight: bold; /* Negrita */
+    transition: all 0.3s ease; /* Transición suave */
+}
+
+.evento-content .evento-actions .btn-primary:hover {
+    background: linear-gradient(45deg, var(--secondary), var(--primary)); /* Cambiar gradiente al pasar el ratón */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Aumentar sombra */
+    transform: translateY(-3px); /* Mover ligeramente hacia arriba */
 } 
