@@ -244,12 +244,12 @@ require_once 'includes/header.php';
           });
 
           // Seleccionar cartera por defecto si el usuario está logueado y tiene saldo suficiente
-          if (usuarioLogueado && saldoCartera >= totalCarrito) {
-              seleccionarMetodo('cartera');
-          } else {
-              // Seleccionar Visa por defecto
-              seleccionarMetodo('visa');
-          }
+          // if (usuarioLogueado && saldoCartera >= totalCarrito) {
+          //     seleccionarMetodo('cartera');
+          // } else {
+          //     // Seleccionar Visa por defecto
+          //     seleccionarMetodo('visa');
+          // }
       });
 
       function seleccionarMetodo(metodo) {
