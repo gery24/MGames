@@ -4,6 +4,10 @@ session_start();
 require_once 'config/database.php';
 require_once 'includes/header.php';
 
+// Verificar si el usuario es admin para añadir la clase 'admin' al body
+$isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN';
+$bodyClass = $isAdmin ? 'admin' : '';
+
 // Inicializar $ofertas como un array vacío por defecto para evitar warnings
 $ofertas = [];
 
@@ -53,7 +57,7 @@ try {
     <link rel="stylesheet" href="css/tienda.css">
 </head>
 
-<body>
+<body class="<?php echo $bodyClass; ?>">
 
 <div class="content">
     <!-- Hero Section con Video de Fondo -->
@@ -83,55 +87,31 @@ try {
     <section id="categorias" class="categorias-visuales">
         <div class="container">
             <style>
-                /* Estilos específicos para la sección de Categorías Visuales */
-                .categorias-visuales .container {
+                /* Estilos para que el contenedor principal de cada sección apile sus hijos verticalmente */
+                section .container {
                     display: flex;
-                    flex-direction: column; /* Apila los elementos hijos verticalmente */
+                    flex-direction: column;
                 }
 
+                /* Estilos para la cabecera de la sección de Categorías */
                 .categories-header {
-                    /* Ya no necesitamos flexbox para el título y botón juntos */
-                    /* Eliminamos display: flex, justify-content, align-items */
-                     margin-bottom: 2rem; /* Espacio entre el encabezado y la cuadrícula */
-                     /* Eliminamos text-align: left para que section-title center funcione */
+                    margin-bottom: 2rem; /* Espacio entre el encabezado y la cuadrícula */
                 }
 
                 .categories-header .section-title {
                     margin-bottom: 0; /* Elimina el margen inferior predeterminado del título */
                 }
 
-                 /* --- Estilos para la cuadrícula de categorías (Forzamos display: grid aquí) --- */
-                .categorias-grid {
-                    display: grid; /* FORZAMOS la disposición de cuadrícula */
-                    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Columnas responsivas */
-                    gap: 1.5rem; /* Espacio entre las tarjetas */
-                    /* Eliminamos overflow-x: auto ya que es una cuadrícula, no scroll horizontal */
-                    /* overflow-x: auto; */
-                    padding-bottom: 1rem; /* Espacio inferior */
-                     margin-bottom: 2rem; /* Espacio entre la cuadrícula y el botón */
-                }
-
-                 .categoria-card {
-                    /* Aseguramos que las tarjetas puedan crecer y encoger dentro de la cuadrícula */
-                    width: auto; /* Permitimos que el ancho se ajuste a la columna del grid */
-                    /* Eliminamos flex: 0 0 auto; */
-                    /* flex: 0 0 auto; */
-                     /* Asegúrate de que otros estilos como height, border-radius, etc. sigan aplicándose */
-                 }
-
-                /* Ocultamos el contenedor del botón del encabezado ya que lo movemos */
-                .categories-header .text-center {
-                     display: none; /* Oculta el contenedor del botón original */
-                }
-
-                /* Estilo para el nuevo contenedor del botón debajo de la cuadrícula */
+                /* Estilo para el contenedor del botón debajo de la cuadrícula */
                  .categories-footer-button {
                     text-align: center; /* Centra el botón */
                     margin-top: 1rem; /* Espacio arriba del botón */
                  }
 
-                /* --- Estilos para otras secciones (Mantener en horizontal) --- */
+                /* --- Estilos para las secciones en horizontal con scroll --- */
 
+                /* Regla general restaurada para todas las secciones de grid horizontal */
+                .categorias-grid,
                 .ofertas-grid,
                 .lanzamientos-grid,
                 .valorados-grid,
@@ -141,115 +121,155 @@ try {
                     overflow-x: auto; /* Añade scroll horizontal si los elementos exceden el ancho */
                     gap: 1.5rem; /* Espacio entre los elementos */
                     padding-bottom: 1rem; /* Espacio inferior para el scrollbar si aparece */
-                    /* margin-bottom si es necesario */
+                    flex-wrap: nowrap; /* Asegurar que los elementos flex no se envuelvan */
+                    /* Animación de desplazamiento suave */
+                    scroll-behavior: smooth;
                 }
 
-                 /* Asegurar que las tarjetas individuales dentro de estas secciones no se encojan */
-                 .oferta-card,
-                 .lanzamiento-card,
-                 .valorado-card,
-                 .evento-card,
-                 .blog-card {
-                     flex: 0 0 auto; /* Evita que las tarjetas se encojan */
-                     width: 280px; /* Ancho fijo para las tarjetas (ajústalo si es necesario) */
-                     /* Asegúrate de que otros estilos como height, border-radius, etc. sigan aplicándose */
-                 }
+                /* Regla específica para la cuadrícula de categorías con recuadro blanco */
+                .categories-horizontal-scroll {
+                 display: flex;
+                 overflow-x: auto;
+                 overflow-y: hidden; /* Ocultar scroll vertical por si acaso */
+                 gap: 1.5rem;
+                 padding-bottom: 1rem;
+                 flex-wrap: nowrap;
+                 scroll-behavior: smooth;
+                 /* Estilos para el recuadro blanco */
+                 background-color: white; /* Fondo blanco */
+                 padding: 1.5rem; /* Espaciado interno */
+                 border-radius: var(--radius); /* Bordes redondeados (reutilizo la variable global si está definida) */
+                 box-shadow: var(--shadow); /* Sombra (reutilizo la variable global) */
+                 /* Asegurar que el contenedor ocupe el ancho completo y maneje su propio overflow */
+                 width: 100%; /* Ocupar el 100% del ancho del padre */
+                 box-sizing: border-box; /* Incluir padding y borde en el ancho */
+                 /* Añadir margen arriba para separarlo del container superior */
+                 margin-top: 2rem; /* Espacio entre el título/botón y el recuadro */
+             }
 
-                /* Asegurar que el contenido dentro de las tarjetas se apile verticalmente */
-                .oferta-content,
-                .lanzamiento-content,
-                .valorado-content,
-                .evento-content,
-                .blog-content {
-                    display: flex;
-                    flex-direction: column;
-                }
 
-                /* Forzar a los elementos directos dentro de los contenedores de contenido a ocupar todo el ancho */
-                .oferta-content > *,
-                .lanzamiento-content > *,
-                .valorado-content > *,
-                .evento-content > *,
-                .blog-content > * {
-                     width: 100%;
-                }
+             /* Asegurar que las tarjetas individuales dentro de estas secciones no se encojan */
+             .categoria-card,
+             .oferta-card,
+             .lanzamiento-card,
+             .valorado-card,
+             .evento-card,
+             .blog-card {
+                 flex: 0 0 auto; /* Evita que las tarjetas se encojen */
+                 width: 280px; /* Ancho fijo para las tarjetas (ajústalo si es necesario) */
+                 /* Asegúrate de que otros estilos como height, border-radius, etc. sigan aplicándose */
+             }
 
-                /* Asegurar que los contenedores de precios y acciones también apilen su contenido si es necesario */
-                .oferta-prices,
-                .lanzamiento-actions,
-                .valorado-actions,
-                .evento-info, /* El contenedor info en eventos tiene varios p */
-                .blog-meta /* El contenedor meta en blog tiene varios span */
-                {
-                    display: flex;
-                    flex-direction: column;
-                    /* Ajusta el gap o margin si necesitas espacio entre estos elementos apilados */
-                     gap: 0.5rem; /* Espacio entre elementos apilados como precios o iconos/texto en info/meta */
-                }
+            /* Asegurar que el contenido dentro de las tarjetas se apile verticalmente */
+            .oferta-content,
+            .lanzamiento-content,
+            .valorado-content,
+            .evento-content,
+            .blog-content {
+                display: flex;
+                flex-direction: column;
+            }
 
-                /* Asegurar que el contenedor principal de cada sección apile sus hijos verticalmente */
-                section .container {
-                    display: flex;
-                    flex-direction: column;
-                }
+            /* Forzar a los elementos directos dentro de los contenedores de contenido a ocupar todo el ancho */
+            .oferta-content > *,
+            .lanzamiento-content > *,
+            .valorado-content > *,
+            .evento-content > *,
+            .blog-content > * {
+                 width: 100%;
+            }
 
-            </style>
-            <div class="categories-header">
-                <h2 class="section-title">Explora por Categorías</h2>
-                <!-- El botón se moverá fuera de este div -->
-            </div>
-            <div class="categorias-grid">
-                <?php
-                $colors = [
-                    'from-red-500 to-orange-500',
-                    'from-blue-500 to-indigo-500',
-                    'from-green-500 to-emerald-500',
-                    'from-yellow-500 to-amber-500',
-                    'from-purple-500 to-pink-500',
-                    'from-indigo-500 to-purple-500'
-                ];
-                $i = 0;
+            /* Asegurar que los contenedores de precios y acciones también apilen su contenido si es necesario */
+            .oferta-prices,
+            .lanzamiento-actions,
+            .valorado-actions,
+            .evento-info, /* El contenedor info en eventos tiene varios p */
+            .blog-meta /* El contenedor meta en blog tiene varios span */
+            {
+                display: flex;
+                flex-direction: column;
+                /* Ajusta el gap o margin si necesitas espacio entre estos elementos apilados */
+                 gap: 0.5rem; /* Espacio entre elementos apilados como precios o iconos/texto en info/meta */
+            }
 
-                $first_four_categories = array_slice($categorias, 0, 3);
-                foreach ($first_four_categories as $cat):
-                    $current_cat_count = 0;
-                    if (isset($cat['id'])) {
-                        foreach ($categorias_count as $cat_count_data) {
-                            if (isset($cat_count_data['id']) && $cat_count_data['id'] == $cat['id']) {
-                                $current_cat_count = $cat_count_data['count'];
-                                break;
-                            }
-                        }
-                    }
+            /* Estilos para hacer el scrollbar más visible en Webkit (Chrome, Safari, Edge) */
+            .categories-horizontal-scroll::-webkit-scrollbar {
+              height: 10px; /* Altura del scrollbar horizontal */
+            }
 
-                    $color_class = $colors[$i % count($colors)];
-                    $i++;
-                    ?>
-                    <a href="todos_productos.php?categoria=<?php echo htmlspecialchars($cat['id'] ?? ''); ?>"
-                        class="categoria-card <?php echo htmlspecialchars($color_class); ?>"
-                        style="background-image: url('<?php echo htmlspecialchars($cat['foto'] ?? ''); ?>'); background-size: cover; background-position: center;">
-                        <div class="categoria-overlay"></div>
-                        <div class="categoria-content">
-                            <?php
-                            if (!in_array($cat['nombre'] ?? '', ['Tarjeta Play', 'Tarjeta XBOX', 'Tarjeta Nintendo'])) {
-                                echo '<h3>' . htmlspecialchars($cat['nombre'] ?? '') . '</h3>';
-                            }
-                            ?>
-                            <p><?php echo $current_cat_count; ?> juegos</p>
-                        </div>
-                    </a>
-                <?php endforeach; ?>
-                <?php
-                // Las demás categorías se añadirán vía JavaScript por toggleCategories()
-                ?>
-            </div>
-             <!-- Nuevo contenedor para el botón Mostrar Todas las Categorías -->
-             <div class="text-center categories-footer-button">
-                 <a href="#" id="toggle-categories" class="btn btn-outline"
-                     onclick="toggleCategories(); return false;">Mostrar Todas las Categorías</a>
-             </div>
+            .categories-horizontal-scroll::-webkit-scrollbar-track {
+              background: #f1f1f1; /* Color del fondo del track */
+              border-radius: 5px;
+            }
+
+            .categories-horizontal-scroll::-webkit-scrollbar-thumb {
+              background: #888; /* Color del "pulgar" del scrollbar */
+              border-radius: 5px;
+            }
+
+            .categories-horizontal-scroll::-webkit-scrollbar-thumb:hover {
+              background: #555; /* Color al pasar el ratón */
+            }
+
+            /* Estilos para hacer el scrollbar más visible en Firefox */
+            .categories-horizontal-scroll {
+              scrollbar-width: thin; /* "auto" o "thin" */
+              scrollbar-color: #888 #f1f1f1; /* color del pulgar y color del track */
+            }
+
+        </style>
+        <div class="categories-header">
+            <h2 class="section-title">Explora por Categorías</h2>
+            <!-- El botón se moverá fuera de este div -->
         </div>
-    </section>
+        
+    </div>
+    <div class="categorias-grid categories-horizontal-scroll">
+        <?php
+        $colors = [
+            'from-red-500 to-orange-500',
+            'from-blue-500 to-indigo-500',
+            'from-green-500 to-emerald-500',
+            'from-yellow-500 to-amber-500',
+            'from-purple-500 to-pink-500',
+            'from-indigo-500 to-purple-500'
+        ];
+        $i = 0;
+
+        $first_four_categories = array_slice($categorias, 0, 3);
+        foreach ($first_four_categories as $cat):
+            $current_cat_count = 0;
+            if (isset($cat['id'])) {
+                foreach ($categorias_count as $cat_count_data) {
+                    if (isset($cat_count_data['id']) && $cat_count_data['id'] == $cat['id']) {
+                        $current_cat_count = $cat_count_data['count'];
+                        break;
+                    }
+                }
+            }
+
+            $color_class = $colors[$i % count($colors)];
+            $i++;
+            ?>
+            <a href="todos_productos.php?categoria=<?php echo htmlspecialchars($cat['id'] ?? ''); ?>"
+                class="categoria-card <?php echo htmlspecialchars($color_class); ?>"
+                style="background-image: url('<?php echo htmlspecialchars($cat['foto'] ?? ''); ?>'); background-size: cover; background-position: center;">
+                <div class="categoria-overlay"></div>
+                <div class="categoria-content">
+                    <?php
+                    if (!in_array($cat['nombre'] ?? '', ['Tarjeta Play', 'Tarjeta XBOX', 'Tarjeta Nintendo'])) {
+                        echo '<h3>' . htmlspecialchars($cat['nombre'] ?? '') . '</h3>';
+                    }
+                    ?>
+                    <p><?php echo $current_cat_count; ?> juegos</p>
+                </div>
+            </a>
+        <?php endforeach; ?>
+        <?php
+        // Las demás categorías se añadirán vía JavaScript por toggleCategories()
+        ?>
+    </div>
+</section>
 
     <!-- Sección de Ofertas -->
     <section id="ofertas" class="ofertas">
@@ -262,9 +282,9 @@ try {
                     $descuento_porcentaje = $oferta['descuento'] ?? 0;
                     $precio_descuento = $precio_original * (1 - ($descuento_porcentaje / 100));
                     ?>
-                    <div class="oferta-card">
+                    <div class="oferta-card" style="position: relative;">
                         <?php if ($descuento_porcentaje > 0): ?>
-                            <div class="oferta-discount-badge">-<?php echo $descuento_porcentaje; ?>%</div>
+                            <div class="oferta-discount-badge" style="position: absolute !important; top: 0 !important; left: 0 !important; margin: 1rem !important; z-index: 10 !important;">-<?php echo $descuento_porcentaje; ?>%</div>
                         <?php endif; ?>
                         <div class="oferta-image">
                             <img src="<?php echo htmlspecialchars($oferta['imagen'] ?? ''); ?>"
@@ -330,14 +350,14 @@ try {
                 </div>
                 <div class="lanzamiento-card">
                     <div class="lanzamiento-image">
-                        <img src="FotosWeb/Torrente2.png" alt="Torrente2">
+                        <img src="FotosWeb/Torrente2.png" alt="Torrente 2">
                         <div class="lanzamiento-fecha">
                             <i class="far fa-calendar-alt"></i>
                         </div>
                     </div>
                     <div class="lanzamiento-content">
-                        <h3>Torrente2</h3>
-                        <p>orrente regresa con una misión delirante... Secuestrar a Lamine Yamal ....</p>
+                        <h3>Torrente 2</h3>
+                        <p>orrente regresa con una misión delirante...</p>
                         <div class="lanzamiento-actions">
                             <span class="lanzamiento-price">€39.99</span>
                             <a href="producto.php?id=118" class="btn btn-secondary btn-sm">Pre-ordenar</a>
@@ -595,61 +615,7 @@ try {
     var todasLasCategorias = <?php echo json_encode($categorias); ?>;
     var categoriasCount = <?php echo json_encode($categorias_count); ?>;
     var colors = <?php echo json_encode($colors); ?>;
-    var mostrandoTodas = false;
-
-    function toggleCategories() {
-        const categoriesGrid = document.querySelector('.categorias-grid');
-        const button = document.getElementById('toggle-categories');
-
-        mostrandoTodas = !mostrandoTodas;
-        categoriesGrid.innerHTML = '';
-
-        var categoriasAMostrar = mostrandoTodas ? todasLasCategorias : todasLasCategorias.slice(0, 3);
-        button.innerText = mostrandoTodas ? "Ocultar Categorías" : "Mostrar Todas las Categorías";
-
-        categoriasAMostrar.forEach(function (cat) {
-            const categoryCard = document.createElement('a');
-            categoryCard.href = "todos_productos.php?categoria=" + cat.id;
-            let current_cat_count = 0;
-            const count_data = categoriasCount.find(item => item.id === cat.id);
-            if (count_data) {
-                current_cat_count = count_data.count;
-            }
-
-            let color_class = '';
-            if (cat.color) {
-                color_class = cat.color;
-            } else {
-                let index = todasLasCategorias.findIndex(item => item.id === cat.id);
-                if (index !== -1) {
-                    color_class = colors[index % colors.length];
-                }
-            }
-            categoryCard.className = "categoria-card " + color_class;
-            categoryCard.style.backgroundImage = "url('" + (cat.foto || '') + "')";
-            categoryCard.style.backgroundSize = "cover";
-            categoryCard.style.backgroundPosition = "center";
-            categoryCard.style.minHeight = "150px";
-
-            let cardContentHTML = `
-                    <div class="categoria-content">
-                `;
-
-            if (cat.nombre !== 'Tarjeta Play' && cat.nombre !== 'Tarjeta XBOX' && cat.nombre !== 'Tarjeta Nintendo') {
-                cardContentHTML += `<h3>${cat.nombre}</h3>`;
-            }
-
-            cardContentHTML += `
-                        <p>${current_cat_count} juegos</p>
-                    </div>
-                `;
-
-            categoryCard.innerHTML = cardContentHTML;
-            categoriesGrid.appendChild(categoryCard);
-        });
-
-        return false;
-    }
+    var mostrandoTodas = true;
 
     function toggleOffers() {
         const offersGrid = document.getElementById('ofertas-grid');
@@ -677,7 +643,14 @@ try {
     document.addEventListener('DOMContentLoaded', function () {
         const categoriesGrid = document.querySelector('.categorias-grid');
         categoriesGrid.innerHTML = '';
-        todasLasCategorias.slice(0, 3).forEach(function (cat) {
+
+        // Asegurarme de que la clase categories-horizontal-scroll está presente al cargar
+         if (!categoriesGrid.classList.contains('categories-horizontal-scroll')) {
+            categoriesGrid.classList.add('categories-horizontal-scroll');
+        }
+
+        // Muestro *todas* las categorías por defecto al cargar la página
+        todasLasCategorias.forEach(function (cat) {
             const categoryCard = document.createElement('a');
             categoryCard.href = "todos_productos.php?categoria=" + cat.id;
 
@@ -700,29 +673,21 @@ try {
             categoryCard.style.backgroundImage = "url('" + (cat.foto || '') + "')";
             categoryCard.style.backgroundSize = "cover";
             categoryCard.style.backgroundPosition = "center";
-            categoryCard.style.minHeight = "150px";
-
-            let cardContentHTML = `
+            categoryCard.innerHTML = `
                     <div class="categoria-content">
                 `;
 
             if (cat.nombre !== 'Tarjeta Play' && cat.nombre !== 'Tarjeta XBOX' && cat.nombre !== 'Tarjeta Nintendo') {
-                cardContentHTML += `<h3>${cat.nombre}</h3>`;
+                categoryCard.innerHTML += `<h3>${cat.nombre}</h3>`;
             }
 
-            cardContentHTML += `
+            categoryCard.innerHTML += `
                         <p>${current_cat_count} juegos</p>
                     </div>
                 `;
 
-            categoryCard.innerHTML = cardContentHTML;
             categoriesGrid.appendChild(categoryCard);
         });
-        mostrandoTodas = false;
-        const button = document.getElementById('toggle-categories');
-        if (button) {
-            button.innerText = "Mostrar Todas las Categorías";
-        }
 
         const initialOffersButton = document.getElementById('toggle-offers');
         if (initialOffersButton) {
