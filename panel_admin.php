@@ -836,20 +836,6 @@ require_once 'includes/header.php';
                                         <i class="fas fa-chevron-down"></i>
                                     </div>
                                 </div>
-
-                                <div class="form-group">
-                                    <label for="estado">
-                                        <i class="fas fa-info-circle"></i> Estado
-                                    </label>
-                                    <div class="select-wrapper">
-                                        <select id="estado" name="estado" required>
-                                            <option value="Nuevo" <?php echo ($producto_editar['estado'] == 'Nuevo') ? 'selected' : ''; ?>>Nuevo</option>
-                                            <option value="Usado" <?php echo ($producto_editar['estado'] == 'Usado') ? 'selected' : ''; ?>>Usado</option>
-                                            <option value="Reacondicionado" <?php echo ($producto_editar['estado'] == 'Reacondicionado') ? 'selected' : ''; ?>>Reacondicionado</option>
-                                        </select>
-                                        <i class="fas fa-chevron-down"></i>
-                                    </div>
-                                </div>
                             </div>
 
                             <div class="form-group">
@@ -931,20 +917,6 @@ require_once 'includes/header.php';
                                             <?php foreach ($categorias as $categoria): ?>
                                                 <option value="<?php echo $categoria['id']; ?>"><?php echo htmlspecialchars($categoria['nombre']); ?></option>
                                             <?php endforeach; ?>
-                                        </select>
-                                        <i class="fas fa-chevron-down"></i>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="estado">
-                                        <i class="fas fa-info-circle"></i> Estado
-                                    </label>
-                                    <div class="select-wrapper">
-                                        <select id="estado" name="estado" required>
-                                            <option value="Nuevo" selected>Nuevo</option>
-                                            <option value="Usado">Usado</option>
-                                            <option value="Reacondicionado">Reacondicionado</option>
                                         </select>
                                         <i class="fas fa-chevron-down"></i>
                                     </div>
