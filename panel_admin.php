@@ -539,6 +539,25 @@ require_once 'includes/header.php';
             margin-bottom: 1rem;
         }
 
+        /* Estilos mejorados para los bloques de texto de eventos */
+        .event-description {
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+            line-height: 1.5;
+        }
+
+        .event-description p {
+            margin: 0;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            background: linear-gradient(to bottom, var(--text-color) 60%, transparent);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-fill-color: transparent;
+        }
+
         .event-actions {
             display: flex;
             gap: 0.75rem;
@@ -623,6 +642,23 @@ require_once 'includes/header.php';
             margin-bottom: 1rem;
         }
 
+        /* Estilos mejorados para los bloques de texto de blogs */
+        .blog-excerpt {
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+            line-height: 1.5;
+        }
+
+        .blog-excerpt p {
+            margin: 0;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            font-style: italic;
+            border-left: 3px solid var(--primary-color);
+            padding-left: 0.75rem;
+        }
+
         .blog-actions {
             display: flex;
             gap: 0.75rem;
@@ -677,6 +713,69 @@ require_once 'includes/header.php';
         .empty-message p {
             color: var(--text-light);
             font-size: 1.1rem;
+        }
+
+        /* Mejoras visuales para las tarjetas */
+        .event-card, .blog-card {
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .event-card:hover, .blog-card:hover {
+            border-color: var(--primary-color);
+        }
+
+        .event-title, .blog-title {
+            position: relative;
+            padding-bottom: 0.75rem;
+        }
+
+        .event-title::after, .blog-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), transparent);
+        }
+
+        /* Mejoras para los formularios de texto */
+        textarea {
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            transition: all 0.3s ease;
+            background-color: #fafafa;
+        }
+
+        textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.1);
+            background-color: white;
+        }
+
+        /* Mejoras para los campos de texto en formularios */
+        input[type="text"], 
+        input[type="number"], 
+        input[type="date"], 
+        input[type="time"] {
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+            background-color: #fafafa;
+        }
+
+        input[type="text"]:focus, 
+        input[type="number"]:focus, 
+        input[type="date"]:focus, 
+        input[type="time"]:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.1);
+            background-color: white;
         }
     </style>
 </head>
@@ -836,6 +935,20 @@ require_once 'includes/header.php';
                                         <i class="fas fa-chevron-down"></i>
                                     </div>
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="estado">
+                                        <i class="fas fa-info-circle"></i> Estado
+                                    </label>
+                                    <div class="select-wrapper">
+                                        <select id="estado" name="estado" required>
+                                            <option value="Nuevo" <?php echo ($producto_editar['estado'] == 'Nuevo') ? 'selected' : ''; ?>>Nuevo</option>
+                                            <option value="Usado" <?php echo ($producto_editar['estado'] == 'Usado') ? 'selected' : ''; ?>>Usado</option>
+                                            <option value="Reacondicionado" <?php echo ($producto_editar['estado'] == 'Reacondicionado') ? 'selected' : ''; ?>>Reacondicionado</option>
+                                        </select>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="form-group">
@@ -917,6 +1030,20 @@ require_once 'includes/header.php';
                                             <?php foreach ($categorias as $categoria): ?>
                                                 <option value="<?php echo $categoria['id']; ?>"><?php echo htmlspecialchars($categoria['nombre']); ?></option>
                                             <?php endforeach; ?>
+                                        </select>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="estado">
+                                        <i class="fas fa-info-circle"></i> Estado
+                                    </label>
+                                    <div class="select-wrapper">
+                                        <select id="estado" name="estado" required>
+                                            <option value="Nuevo" selected>Nuevo</option>
+                                            <option value="Usado">Usado</option>
+                                            <option value="Reacondicionado">Reacondicionado</option>
                                         </select>
                                         <i class="fas fa-chevron-down"></i>
                                     </div>
@@ -1206,6 +1333,9 @@ require_once 'includes/header.php';
                                             <i class="fas fa-map-marker-alt"></i> 
                                             <?php echo htmlspecialchars($evento['lugar'] ?? 'Ubicación no especificada'); ?>
                                         </div>
+                                        <div class="event-description">
+                                            <p><?php echo mb_substr(htmlspecialchars($evento['descripcion']), 0, 100) . (strlen($evento['descripcion']) > 100 ? '...' : ''); ?></p>
+                                        </div>
                                         <div class="event-actions">
                                             <form method="POST">
                                                 <input type="hidden" name="action" value="edit_event">
@@ -1411,6 +1541,9 @@ require_once 'includes/header.php';
                                                 $fecha = new DateTime($blog['fecha_publicacion']);
                                                 echo $fecha->format('d/m/Y H:i'); 
                                             ?>
+                                        </div>
+                                        <div class="blog-excerpt">
+                                            <p><?php echo mb_substr(htmlspecialchars($blog['contenido']), 0, 120) . (strlen($blog['contenido']) > 120 ? '...' : ''); ?></p>
                                         </div>
                                         <div class="blog-actions">
                                             <form method="POST">
