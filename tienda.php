@@ -289,49 +289,49 @@ try {
             <div class="lanzamientos-grid">
                 <div class="lanzamiento-card">
                     <div class="lanzamiento-image">
-                        <img src="fotosWeb/Grand Theft Auto V.png" alt="Grand Theft Auto V">
+                        <img src="fotosWeb/FINAL GTA6.png" alt="Grand Theft Auto VI">
                         <div class="lanzamiento-fecha">
                             <i class="far fa-calendar-alt"></i>
                         </div>
                     </div>
                     <div class="lanzamiento-content">
-                        <h3>Grand Theft Auto V</h3>
+                        <h3>Grand Theft Auto VI</h3>
                         <p>Juego de mundo abierto con una gran historia....</p>
                         <div class="lanzamiento-actions">
-                            <span class="lanzamiento-price">€29.99</span>
-                            <a href="producto.php?id=1" class="btn btn-secondary btn-sm">Pre-ordenar</a>
+                            <span class="lanzamiento-price">€90.00</span>
+                            <a href="producto.php?id=120" class="btn btn-secondary btn-sm">Pre-ordenar</a>
                         </div>
                     </div>
                 </div>
                 <div class="lanzamiento-card">
                     <div class="lanzamiento-image">
-                        <img src="fotosWeb/Red Dead Redemption 2.png" alt="Red Dead Redemption 2">
+                        <img src="fotosWeb/youtuberslife.png" alt="Youtubers Life 3">
                         <div class="lanzamiento-fecha">
                             <i class="far fa-calendar-alt"></i>
                         </div>
                     </div>
                     <div class="lanzamiento-content">
-                        <h3>Red Dead Redemption 2</h3>
-                        <p>Aventura en el Salvaje Oeste con gráficos impresionantes....</p>
+                        <h3>Youtubers Life 3</h3>
+                        <p>Conviértete en una estrella digital desde cero....</p>
                         <div class="lanzamiento-actions">
-                            <span class="lanzamiento-price">€49.99</span>
-                            <a href="producto.php?id=2" class="btn btn-secondary btn-sm">Pre-ordenar</a>
+                            <span class="lanzamiento-price">€29.99</span>
+                            <a href="producto.php?id=119" class="btn btn-secondary btn-sm">Pre-ordenar</a>
                         </div>
                     </div>
                 </div>
                 <div class="lanzamiento-card">
                     <div class="lanzamiento-image">
-                        <img src="fotosWeb/Cyberpunk 2077.png" alt="Cyberpunk 2077">
+                        <img src="fotosWeb/Torrente2.png" alt="Torrente2">
                         <div class="lanzamiento-fecha">
                             <i class="far fa-calendar-alt"></i>
                         </div>
                     </div>
                     <div class="lanzamiento-content">
-                        <h3>Cyberpunk 2077</h3>
-                        <p>Futurista y con mecánicas RPG....</p>
+                        <h3>Torrente2</h3>
+                        <p>orrente regresa con una misión delirante... Secuestrar a Lamine Yamal ....</p>
                         <div class="lanzamiento-actions">
                             <span class="lanzamiento-price">€39.99</span>
-                            <a href="producto.php?id=3" class="btn btn-secondary btn-sm">Pre-ordenar</a>
+                            <a href="producto.php?id=118" class="btn btn-secondary btn-sm">Pre-ordenar</a>
                         </div>
                     </div>
                 </div>
