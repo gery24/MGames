@@ -502,26 +502,38 @@ if (isset($_GET['already_in_cart'])) {
 
                     <!-- Mostrar plataformas -->
                     <?php
-                    // Mostrar las plataformas
+                    // Mostrar las plataformas con sus imágenes correspondientes
                     $plataformas = [];
                     if (!empty($producto['plataforma1'])) {
-                        $plataformas[] = htmlspecialchars($producto['plataforma1']);
+                        $plataformas['plataforma1'] = [
+                            'ruta' => htmlspecialchars($producto['plataforma1']),
+                            'nombre' => 'PC' // Asignar nombre basado en la columna
+                        ];
                     }
                     if (!empty($producto['plataforma2'])) {
-                        $plataformas[] = htmlspecialchars($producto['plataforma2']);
+                         $plataformas['plataforma2'] = [
+                            'ruta' => htmlspecialchars($producto['plataforma2']),
+                            'nombre' => 'PlayStation' // Asignar nombre basado en la columna
+                        ];
                     }
                     if (!empty($producto['plataforma3'])) {
-                        $plataformas[] = htmlspecialchars($producto['plataforma3']);
+                         $plataformas['plataforma3'] = [
+                            'ruta' => htmlspecialchars($producto['plataforma3']),
+                            'nombre' => 'Xbox' // Asignar nombre basado en la columna
+                        ];
                     }
                     if (!empty($producto['plataforma4'])) {
-                        $plataformas[] = htmlspecialchars($producto['plataforma4']);
+                         $plataformas['plataforma4'] = [
+                            'ruta' => htmlspecialchars($producto['plataforma4']),
+                            'nombre' => 'Switch' // Asignar nombre basado en la columna
+                        ];
                     }
 
                     // Mostrar las imágenes de las plataformas solo si hay plataformas disponibles
                     if (!empty($plataformas)): ?>
                     <div class="platform">
-                        <?php foreach ($plataformas as $plataforma): ?>
-                            <img src="<?php echo $plataforma; ?>" alt="Plataforma" class="platform-img">
+                        <?php foreach ($plataformas as $plataforma_data): ?>
+                            <img src="<?php echo $plataforma_data['ruta']; ?>" alt="Plataforma: <?php echo $plataforma_data['nombre']; ?>" class="platform-img">
                         <?php endforeach; ?>
                     </div>
                     <?php endif; ?>
