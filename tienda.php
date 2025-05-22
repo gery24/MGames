@@ -1803,7 +1803,7 @@ try {
                 </div>
                 <div class="evento-card">
                     <div class="evento-image">
-                        <img src="FotosWeb/Torrente.jpg" alt="Imagen Lanzamiento Exclusivo"> <!-- Imagen actualizada -->
+                        <img src="FotosWeb/Torrente2.png" alt="Imagen Lanzamiento Exclusivo"> <!-- Imagen actualizada -->
                         <div class="evento-fecha">
                             <span class="evento-dia">22</span>
                             <span class="evento-mes">JUL</span>

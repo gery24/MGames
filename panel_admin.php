@@ -24,6 +24,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
         $categoria = $_POST['categoria'] ?? '';
         $segunda_mano = isset($_POST['segunda_mano']) ? 1 : 0;
         $estado = $_POST['estado'] ?? 'Nuevo';
+        
+        // Procesar requisitos
+        $reqmin = $_POST['reqmin'] ?? '';
+        $reqmax = $_POST['reqmax'] ?? '';
+        
+        // Procesar plataformas
+        $plataformas_seleccionadas = $_POST['plataformas'] ?? [];
+        $plataforma_cols = ['plataforma1', 'plataforma2', 'plataforma3', 'plataforma4'];
+        $plataformas_rutas = array_fill(0, 4, ''); // Inicializar con valores vacíos
+        
+        $plataformas_map = [
+            'pc' => 'fotosWeb/pc.png',
+            'ps' => 'fotosWeb/ps.png',
+            'xbox' => 'fotosWeb/xbox.png',
+            'switch' => 'fotosWeb/switch.png',
+        ];
+        
+        $i = 0;
+        foreach ($plataformas_seleccionadas as $plataforma) {
+            if (isset($plataformas_map[$plataforma]) && $i < 4) {
+                $plataformas_rutas[$i] = $plataformas_map[$plataforma];
+                $i++;
+            }
+        }
 
         // Procesar imagen
         $imagen = 'images/default.jpg'; // Imagen por defecto
@@ -48,8 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
 
         // Insertar en la base de datos
         try {
-            $stmt = $pdo->prepare("INSERT INTO productos (nombre, descripcion, precio, categoria_id, segunda_mano, estado, imagen) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$nombre, $descripcion, $precio, $categoria, $segunda_mano, $estado, $imagen]);
+            $stmt = $pdo->prepare("INSERT INTO productos (nombre, descripcion, precio, categoria_id, segunda_mano, estado, imagen, plataforma1, plataforma2, plataforma3, plataforma4, reqmin, reqmax, descuento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$nombre, $descripcion, $precio, $categoria, $segunda_mano, $estado, $imagen, $plataformas_rutas[0], $plataformas_rutas[1], $plataformas_rutas[2], $plataformas_rutas[3], $reqmin, $reqmax, $_POST['descuento'] ?? 0]);
             $success = 'Juego añadido correctamente';
         } catch(PDOException $e) {
             $error = 'Error al añadir el juego: ' . $e->getMessage();
@@ -86,6 +110,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
             $segunda_mano = isset($_POST['segunda_mano']) ? 1 : 0;
             $estado = $_POST['estado'] ?? 'Nuevo';
             
+            // Procesar requisitos para edición
+            $reqmin = $_POST['reqmin'] ?? '';
+            $reqmax = $_POST['reqmax'] ?? '';
+            
+            // Procesar plataformas para edición
+            $plataformas_seleccionadas = $_POST['plataformas'] ?? [];
+            $plataforma_cols = ['plataforma1', 'plataforma2', 'plataforma3', 'plataforma4'];
+            $plataformas_rutas = array_fill(0, 4, ''); // Inicializar con valores vacíos
+            
+            $plataformas_map = [
+                'pc' => 'fotosWeb/pc.png',
+                'ps' => 'fotosWeb/ps.png',
+                'xbox' => 'fotosWeb/xbox.png',
+                'switch' => 'fotosWeb/switch.png',
+            ];
+            
+            $i = 0;
+            foreach ($plataformas_seleccionadas as $plataforma) {
+                 if (isset($plataformas_map[$plataforma]) && $i < 4) {
+                    $plataformas_rutas[$i] = $plataformas_map[$plataforma];
+                    $i++;
+                }
+            }
+
             // Verificar si se ha subido una nueva imagen
             $imagen = $_POST['imagen_actual']; // Mantener la imagen actual por defecto
             
@@ -110,13 +158,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
             
             // Actualizar en la base de datos
             try {
-                $stmt = $pdo->prepare("UPDATE productos SET nombre = ?, descripcion = ?, precio = ?, categoria_id = ?, segunda_mano = ?, estado = ?, imagen = ? WHERE id = ?");
-                $stmt->execute([$nombre, $descripcion, $precio, $categoria, $segunda_mano, $estado, $imagen, $id]);
+                $stmt = $pdo->prepare("UPDATE productos SET nombre = ?, descripcion = ?, precio = ?, categoria_id = ?, segunda_mano = ?, estado = ?, imagen = ?, plataforma1 = ?, plataforma2 = ?, plataforma3 = ?, plataforma4 = ?, reqmin = ?, reqmax = ?, descuento = ? WHERE id = ?");
+                $stmt->execute([$nombre, $descripcion, $precio, $categoria, $segunda_mano, $estado, $imagen, $plataformas_rutas[0], $plataformas_rutas[1], $plataformas_rutas[2], $plataformas_rutas[3], $reqmin, $reqmax, $_POST['descuento'] ?? 0, $id]);
                 $success = 'Juego actualizado correctamente';
                 $editando = false;
             } catch(PDOException $e) {
                 $error = 'Error al actualizar el juego: ' . $e->getMessage();
             }
+        }
+    } elseif ($_POST['action'] == 'delete_game_image') {
+        $id = $_POST['id'] ?? '';
+        try {
+            $stmt = $pdo->prepare("SELECT imagen FROM productos WHERE id = ?");
+            $stmt->execute([$id]);
+            $producto = $stmt->fetch();
+            
+            if ($producto && $producto['imagen'] !== 'images/default.jpg') {
+                // Eliminar archivo si existe y no es la imagen por defecto
+                if (file_exists($producto['imagen'])) {
+                    unlink($producto['imagen']);
+                }
+                
+                // Actualizar la base de datos para usar la imagen por defecto
+                $stmt = $pdo->prepare("UPDATE productos SET imagen = 'images/default.jpg' WHERE id = ?");
+                $stmt->execute([$id]);
+                $success = 'Imagen del juego eliminada correctamente';
+            } else {
+                $error = 'No se pudo eliminar la imagen o ya es la imagen por defecto.';
+            }
+        } catch(PDOException $e) {
+            $error = 'Error al eliminar la imagen del juego: ' . $e->getMessage();
         }
     }
 }
@@ -379,13 +450,15 @@ require_once 'includes/header.php';
     <style>
         /* Estilos adicionales para el nuevo diseño */
         .admin-modules {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            display: flex; /* Cambiado a flexbox para disposición horizontal */
+            overflow-x: auto; /* Añadir scroll horizontal si es necesario */
+            gap: 2rem; /* Espacio entre módulos */
             margin-bottom: 2rem;
+            padding-bottom: 1rem; /* Espacio inferior para el scrollbar */
         }
 
         .admin-module {
+            flex: 0 0 300px; /* Ancho fijo para los módulos y evitar que se encojan */
             background-color: var(--card-background);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
@@ -741,37 +814,244 @@ require_once 'includes/header.php';
         }
 
         /* Mejoras para los formularios de texto */
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="time"],
         textarea {
             border: 1px solid var(--border-color);
             border-radius: var(--border-radius);
-            padding: 1rem;
+            padding: 0.75rem 1rem;
             font-family: inherit;
-            resize: vertical;
+            font-size: 1rem;
             transition: all 0.3s ease;
-            background-color: #fafafa;
+            background-color: var(--input-bg, #fafafa); /* Variable para color de fondo */
+            color: var(--text-color);
+            width: 100%; /* Asegura que ocupen todo el ancho del contenedor */
+            box-sizing: border-box; /* Incluye padding y borde en el ancho */
+            max-width: 500px; /* Reducir el ancho máximo para textareas */
         }
 
-        textarea:focus {
+        textarea {
+            resize: vertical;
+            min-height: 130px; /* Aumentar altura mínima para textareas (aprox +30%) */
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        input[type="time"]:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.1);
             background-color: white;
         }
 
-        /* Mejoras para los campos de texto en formularios */
-        input[type="text"], 
-        input[type="number"], 
-        input[type="date"], 
-        input[type="time"] {
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: 0.75rem 1rem;
-            transition: all 0.3s ease;
-            background-color: #fafafa;
+        /* Estilo para checkboxes (segunda mano y plataformas) */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap; /* Permite que los checkboxes salten de línea */
+            gap: 1rem; /* Espacio entre checkboxes */
         }
 
-        input[type="text"]:focus, 
-        input[type="number"]:focus, 
-        input[type="date"]:focus, 
+        /* Ocultar el checkbox nativo */
+        .checkbox-group input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        /* Crear un checkbox personalizado */
+         .checkbox-group label {
+            margin-bottom: 0; /* Ajustar margen inferior */
+            font-weight: normal; /* Ajustar peso de fuente */
+            cursor: pointer;
+            color: var(--text-color);
+            font-size: 1rem;
+             display: flex; /* Para alinear correctamente */
+             align-items: center;
+             position: relative;
+             padding-left: 1.8rem; /* Espacio para el cuadrado personalizado */
+             user-select: none; /* Evitar selección de texto */
+        }
+
+        /* Diseño del cuadrado del checkbox personalizado */
+        .checkbox-group label::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.2rem; /* Tamaño del cuadrado */
+            height: 1.2rem; /* Tamaño del cuadrado */
+            border: 1px solid var(--border-color);
+            border-radius: 4px; /* Bordes ligeramente redondeados */
+            background-color: var(--input-bg, #fafafa);
+            transition: all 0.3s ease;
+        }
+
+        /* Estilo del checkmark cuando está marcado */
+        .checkbox-group label::after {
+            content: '\f00c'; /* Icono de Font Awesome (check) */
+            font-family: 'Font Awesome 6 Pro', 'Font Awesome 6 Free'; /* Asegúrate de tener esta fuente */
+            font-weight: 900; /* Para el icono sólido */
+            position: absolute;
+            left: 0.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color); /* Color del checkmark */
+            font-size: 0.9rem;
+            opacity: 0; /* Ocultar por defecto */
+            transition: all 0.3s ease;
+        }
+
+        /* Mostrar el checkmark y cambiar fondo cuando el input está marcado */
+        .checkbox-group input[type="checkbox"]:checked + label::before {
+             background-color: var(--primary-color-light); /* Fondo ligero al marcar */
+             border-color: var(--primary-color);
+        }
+
+         .checkbox-group input[type="checkbox"]:checked + label::after {
+            opacity: 1; /* Mostrar el checkmark */
+        }
+
+        /* Estilo al pasar el ratón sobre el label del checkbox */
+        .checkbox-group label:hover::before {
+            border-color: var(--primary-color-dark);
+            box-shadow: 0 0 0 3px var(--primary-color-light);
+        }
+
+        /* Estilo al enfocar el checkbox (accesibilidad) */
+        .checkbox-group input[type="checkbox"]:focus + label::before {
+             border-color: var(--primary-color-dark);
+             box-shadow: 0 0 0 3px var(--primary-color-light);
+        }
+
+
+        /* Estilo para la subida de archivos */
+        .file-upload-label {
+            margin-bottom: 1rem; /* Espacio debajo de los iconos */
+            display: flex;
+            gap: 5px; /* Espacio reducido entre iconos */
+            align-items: center;
+        }
+
+        .platform-icon {
+            width: 18px; /* Tamaño muy pequeño para los iconos */
+            height: 18px; /* Tamaño muy pequeño para los iconos */
+            object-fit: contain;
+            filter: grayscale(50%); /* Iconos ligeramente atenuados */
+            transition: filter 0.3s ease;
+        }
+
+        .product-card:hover .platform-icon {
+            filter: grayscale(0%); /* Iconos a color al pasar el ratón */
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: auto;
+        }
+
+        .product-actions .btn {
+            /* ... existing code ... */
+        }
+
+
+        /* Estilos específicos para el botón de eliminar imagen en el formulario de edición */
+        .delete-image-form {
+            display: inline-block; /* Importante para que no ocupe todo el ancho */
+            margin-left: 1rem; /* Espacio a la izquierda para separarlo de la imagen */
+            vertical-align: middle; /* Alinear verticalmente con la imagen si es posible */
+            margin-bottom: 1rem; /* Espacio debajo del botón */
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem; /* Padding más pequeño */
+            font-size: 0.85rem; /* Tamaño de fuente más pequeño */
+        }
+
+        .btn-danger {
+            background-color: var(--delete-color, #e74c3c); /* Color rojo para eliminar */
+            color: white;
+            border: none; /* Sin borde por defecto */
+        }
+
+        .btn-danger:hover {
+            background-color: var(--delete-color-dark, #c0392b); /* Rojo más oscuro al pasar el ratón */
+        }
+
+        /* Estilos para las tarjetas de juegos */
+        .products-grid {
+            display: flex; /* Cambiado a flexbox para disposición horizontal */
+            overflow-x: auto; /* Añadir scroll horizontal si es necesario */
+            gap: 1.5rem; /* Espacio entre tarjetas */
+            padding-bottom: 1rem; /* Espacio inferior para el scrollbar */
+        }
+
+        .product-card {
+            flex: 0 0 280px; /* Ancho fijo para las tarjetas y evitar que se encojan */
+            /* ... existing code ... */
+        }
+
+        .product-card:hover {
+            /* ... existing code ... */
+        }
+
+        /* Estilos para el buscador de juegos */
+        .card-actions .search-container {
+            margin-left: auto; /* Empujar el buscador a la derecha */
+             display: flex;
+             align-items: center;
+             gap: 0.75rem; /* Aumentar espacio entre icono y input */
+        }
+
+        .search-container input[type="text"] {
+            padding: 0.5rem 0.75rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+             width: 150px; /* Reducir ancho del campo de búsqueda */
+             transition: width 0.3s ease;
+        }
+
+         .search-container input[type="text"]:focus {
+             width: 200px; /* Expandir al enfocar */
+             border-color: var(--primary-color);
+             box-shadow: 0 0 0 2px var(--primary-color-light);
+         }
+
+        .search-container i.fas {
+            color: var(--text-light);
+        }
+
+
+        /* Estilos para el formulario de eventos */
+        .event-form-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: var(--input-bg, #fafafa); /* Variable para color de fondo */
+            color: var(--text-color);
+            width: 100%; /* Asegura que ocupen todo el ancho del contenedor */
+            box-sizing: border-box; /* Incluye padding y borde en el ancho */
+            max-width: 600px; /* Establecer ancho máximo para textareas */
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 130px; /* Aumentar altura mínima para textareas (aprox +30%) */
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
         input[type="time"]:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.1);
@@ -905,7 +1185,7 @@ require_once 'includes/header.php';
                                     <label for="nombre">
                                         <i class="fas fa-tag"></i> Nombre del juego
                                     </label>
-                                    <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($producto_editar['nombre']); ?>" required>
+                                    <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($producto_editar['nombre']); ?>" required style="width: 70%;"> <!-- Ajuste de ancho aquí -->
                                 </div>
 
                                 <div class="form-group">
@@ -913,7 +1193,7 @@ require_once 'includes/header.php';
                                         <i class="fas fa-euro-sign"></i> Precio
                                     </label>
                                     <div class="input-with-icon">
-                                        <input type="number" id="precio" name="precio" step="0.01" value="<?php echo htmlspecialchars($producto_editar['precio']); ?>" required>
+                                        <input type="number" id="precio" name="precio" step="0.01" value="<?php echo htmlspecialchars($producto_editar['precio']); ?>" required style="width: 80px;"> <!-- Ajuste de ancho aquí -->
                                         <span class="input-icon">€</span>
                                     </div>
                                 </div>
@@ -965,6 +1245,34 @@ require_once 'includes/header.php';
                                 </div>
                             </div>
 
+                            <!-- Selección de plataformas -->
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-gamepad"></i> Plataformas
+                                </label>
+                                <div class="checkbox-group">
+                                    <?php 
+                                        $plataformas_juego = [
+                                            $producto_editar['plataforma1'],
+                                            $producto_editar['plataforma2'],
+                                            $producto_editar['plataforma3'],
+                                            $producto_editar['plataforma4']
+                                        ];
+                                        $plataformas_disponibles = [
+                                            'pc' => 'PC',
+                                            'ps' => 'PlayStation',
+                                            'xbox' => 'Xbox',
+                                            'switch' => 'Switch',
+                                        ];
+                                        foreach ($plataformas_disponibles as $value => $label): 
+                                            $checked = in_array('fotosWeb/' . $value . '.png', $plataformas_juego) ? 'checked' : '';
+                                    ?>
+                                        <input type="checkbox" id="plataforma_<?php echo $value; ?>" name="plataformas[]" value="<?php echo $value; ?>" <?php echo $checked; ?>>
+                                        <label for="plataforma_<?php echo $value; ?>"><?php echo $label; ?></label>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label>
                                     <i class="fas fa-image"></i> Imagen actual
@@ -972,6 +1280,17 @@ require_once 'includes/header.php';
                                 <div class="current-image">
                                     <img src="<?php echo htmlspecialchars($producto_editar['imagen']); ?>" alt="Imagen actual">
                                 </div>
+                                <?php if ($producto_editar['imagen'] !== 'images/default.jpg'): ?>
+                                    <form method="POST" class="delete-image-form" onsubmit="return confirm('¿Estás seguro de que deseas eliminar la imagen actual?');">
+                                        <input type="hidden" name="action" value="delete_game_image">
+                                        <input type="hidden" name="id" value="<?php echo $producto_editar['id']; ?>">
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash-alt"></i> Borrar Imagen 
+                                        </button>
+                                       
+                                    </form>
+                                    <br> <br> 
+                                <?php endif; ?>
                                 <label for="imagen" class="file-upload-label">
                                     <i class="fas fa-upload"></i> Cambiar imagen (opcional)
                                 </label>
@@ -1005,7 +1324,7 @@ require_once 'includes/header.php';
                                     <label for="nombre">
                                         <i class="fas fa-tag"></i> Nombre del juego
                                     </label>
-                                    <input type="text" id="nombre" name="nombre" placeholder="Ej: God of War" required>
+                                    <input type="text" id="nombre" name="nombre" placeholder="Ej: God of War" required style="width: 70%;"> <!-- Ajuste de ancho aquí -->
                                 </div>
 
                                 <div class="form-group">
@@ -1013,7 +1332,7 @@ require_once 'includes/header.php';
                                         <i class="fas fa-euro-sign"></i> Precio
                                     </label>
                                     <div class="input-with-icon">
-                                        <input type="number" id="precio" name="precio" step="0.01" placeholder="49.99" required>
+                                        <input type="number" id="precio" name="precio" step="0.01" placeholder="49.99" required style="width: 80px;"> <!-- Ajuste de ancho aquí -->
                                         <span class="input-icon">€</span>
                                     </div>
                                 </div>
@@ -1057,10 +1376,60 @@ require_once 'includes/header.php';
                                 <textarea id="descripcion" name="descripcion" rows="5" placeholder="Describe el juego aquí..." required></textarea>
                             </div>
 
+                            <!-- Campos de requisitos -->
                             <div class="form-group">
+                                <label for="reqmin">
+                                    <i class="fas fa-list"></i> Requisitos Mínimos
+                                </label>
+                                <textarea id="reqmin" name="reqmin" rows="4" placeholder="Introduce los requisitos mínimos del juego..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="reqmax">
+                                    <i class="fas fa-list-alt"></i> Requisitos Máximos
+                                </label>
+                                <textarea id="reqmax" name="reqmax" rows="4" placeholder="Introduce los requisitos máximos del juego..."></textarea>
+                            </div>
+
+                            <!-- Campo de descuento -->
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-percent"></i> Descuento
+                                </label>
+                                <div class="form-row align-items-center">
+                                    <div class="form-group" style="flex: 0 0 auto; margin-right: 1rem;">
+                                        <div class="checkbox-group">
+                                            <input type="checkbox" id="en_descuento" name="en_descuento" value="1">
+                                            <label for="en_descuento">Aplicar descuento</label>
+                                        </div>
+                                    </div>
+                                     <div class="form-group" style="flex: 1;">
+                                        <div class="input-with-icon">
+                                             <input type="number" id="descuento_valor" name="descuento" step="0.01" placeholder="Ej: 15.50" style="width: 80px;">
+                                             <span class="input-icon">%</span>
+                                         </div>
+                                     </div>
+                                </div>
+                            </div>
+
+                            <!-- Selección de plataformas -->
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-gamepad"></i> Plataformas
+                                </label>
                                 <div class="checkbox-group">
-                                    <input type="checkbox" id="segunda_mano" name="segunda_mano">
-                                    <label for="segunda_mano">Producto de segunda mano</label>
+                                    <?php 
+                                        $plataformas_disponibles = [
+                                            'pc' => 'PC',
+                                            'ps' => 'PlayStation',
+                                            'xbox' => 'Xbox',
+                                            'switch' => 'Switch',
+                                        ];
+                                        foreach ($plataformas_disponibles as $value => $label): 
+                                    ?>
+                                        <input type="checkbox" id="plataforma_<?php echo $value; ?>" name="plataformas[]" value="<?php echo $value; ?>">
+                                        <label for="plataforma_<?php echo $value; ?>"><?php echo $label; ?></label>
+                                    <?php endforeach; ?>
                                 </div>
                             </div>
 
@@ -1113,7 +1482,39 @@ require_once 'includes/header.php';
                                             <span class="product-category">
                                                 <i class="fas fa-folder"></i> <?php echo htmlspecialchars($producto['categoria_nombre'] ?? 'Sin categoría'); ?>
                                             </span>
+                                            <?php if ($producto['descuento'] > 0): ?>
+                                                 <span class="product-discount"><?php echo htmlspecialchars($producto['descuento']); ?>% Dto.</span>
+                                            <?php endif; ?>
                                         </div>
+                                        <!-- Mostrar plataformas -->
+                                        <div class="product-platforms">
+                                            <?php 
+                                                $plataformas_iconos = [
+                                                    $producto['plataforma1'],
+                                                    $producto['plataforma2'],
+                                                    $producto['plataforma3'],
+                                                    $producto['plataforma4']
+                                                ];
+                                                foreach ($plataformas_iconos as $icono_url): 
+                                                    if (!empty($icono_url)):
+                                            ?>
+                                                <img src="<?php echo htmlspecialchars($icono_url); ?>" alt="Plataforma" class="platform-icon">
+                                            <?php 
+                                                    endif;
+                                                endforeach; 
+                                            ?>
+                                        </div>
+                                        <!-- Mostrar requisitos si existen -->
+                                        <?php if (!empty($producto['reqmin']) || !empty($producto['reqmax'])): ?>
+                                            <div class="product-requirements">
+                                                <?php if (!empty($producto['reqmin'])): ?>
+                                                    <p><strong>Mínimos:</strong> <?php echo nl2br(htmlspecialchars($producto['reqmin'])); ?></p>
+                                                <?php endif; ?>
+                                                <?php if (!empty($producto['reqmax'])): ?>
+                                                    <p><strong>Máximos:</strong> <?php echo nl2br(htmlspecialchars($producto['reqmax'])); ?></p>
+                                                <?php endif; ?>
+                                            </div>
+                                        <?php endif; ?>
                                         <div class="product-actions">
                                             <form method="POST">
                                                 <input type="hidden" name="action" value="edit_game">
@@ -1207,7 +1608,7 @@ require_once 'includes/header.php';
                                 <?php if (!empty($evento_editar['imagen_url'])): ?>
                                 <div class="current-image">
                                     <img src="<?php echo htmlspecialchars($evento_editar['imagen_url']); ?>" alt="Imagen actual">
-                                </div>
+                                        </div>
                                 <?php else: ?>
                                 <p>No hay imagen actual</p>
                                 <?php endif; ?>
@@ -1216,7 +1617,7 @@ require_once 'includes/header.php';
                                 </label>
                                 <input type="file" id="imagen_evento" name="imagen_evento" accept="image/*" class="file-upload">
                                 <div class="file-name" id="event-file-name-display">Ningún archivo seleccionado</div>
-                            </div>
+                                    </div>
 
                             <div class="form-actions">
                                 <button type="submit" class="btn btn-primary">
@@ -1225,10 +1626,10 @@ require_once 'includes/header.php';
                                 <a href="panel_admin.php" class="btn btn-secondary">
                                     <i class="fas fa-times"></i> Cancelar
                                 </a>
-                            </div>
+                                         </div>
                         </form>
-                    </div>
-                </div>
+                                     </div>
+                                </div>
             <?php else: ?>
                 <!-- Formulario para añadir evento -->
                 <div class="admin-card">
@@ -1645,7 +2046,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Asignar eventos de clic a los módulos
     gamesModule.addEventListener('click', function() {
-        showModule(gamesModule, gamesContent);
+        // Redirigir a la página principal del panel para mostrar el formulario de añadir (resetea la edición)
+        // Luego, el script en la carga manejará mostrar el contenido de juegos.
+        window.location.href = 'panel_admin.php'; 
     });
     
     eventsModule.addEventListener('click', function() {
@@ -1672,6 +2075,11 @@ document.addEventListener('DOMContentLoaded', function() {
         <?php elseif (strpos($success, 'blog') !== false || strpos($error, 'blog') !== false || strpos($success, 'artículo') !== false || strpos($error, 'artículo') !== false): ?>
             showModule(blogsModule, blogsContent);
         <?php endif; ?>
+    <?php endif; ?>
+    
+    // Mostrar el módulo de juegos por defecto si no hay edición o mensajes de estado específicos
+    <?php if (!$editando && empty($error) && empty($success)): ?>
+        showModule(gamesModule, gamesContent);
     <?php endif; ?>
     
     // Vista previa de imágenes para juegos

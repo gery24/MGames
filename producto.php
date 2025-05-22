@@ -581,24 +581,32 @@ if (isset($_GET['review_error'])) {
 
     <!-- Acerca del juego -->
     <div class="card">
-        <h2 class="section-title">Acerca del juego</h2>
-        <p><?php echo !empty($producto['acerca_de']) ? htmlspecialchars($producto['acerca_de']) : 'No hay descripción disponible para este juego.'; ?></p>
+        <h2 class="section-title">Acerca del Juego</h2>
+        <div class="product-description">
+             <?php echo nl2br(htmlspecialchars($producto['descripcion'] ?? '')); ?>
+        </div>
     </div>
 
     <!-- Requisitos del sistema -->
+    <?php if (!empty($producto['reqmin']) || !empty($producto['reqmax'])): ?>
     <div class="card">
         <h2 class="section-title">Requisitos del Sistema</h2>
         <div class="requirements-grid">
+            <?php if (!empty($producto['reqmin'])): ?>
             <div>
-                <h3 class="requirements-title">Requisitos Mínimos</h3>
-                <p><?php echo !empty($producto['reqmin']) ? htmlspecialchars($producto['reqmin']) : 'No se han especificado los requisitos mínimos para este juego.'; ?></p>
+                <h3 class="requirements-title">Mínimos</h3>
+                <p><?php echo nl2br(htmlspecialchars($producto['reqmin'])); ?></p>
             </div>
+            <?php endif; ?>
+            <?php if (!empty($producto['reqmax'])): ?>
             <div>
-                <h3 class="requirements-title">Requisitos Recomendados</h3>
-                <p><?php echo !empty($producto['reqmax']) ? htmlspecialchars($producto['reqmax']) : 'No se han especificado los requisitos recomendados para este juego.'; ?></p>
+                <h3 class="requirements-title">Requisitos Máximos</h3>
+                <p><?php echo nl2br(htmlspecialchars($producto['reqmax'])); ?></p>
             </div>
+            <?php endif; ?>
         </div>
     </div>
+    <?php endif; ?>
 
     <!-- Valoración -->
     <?php if ($reseñas['total'] > 0): ?>
