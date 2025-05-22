@@ -78,6 +78,26 @@ if ($metodo_pago === 'visa') {
 } elseif ($metodo_pago === 'paypal') {
     // Para PayPal solo verificamos que se haya seleccionado
     // En un caso real, aquí iría la redirección a PayPal
+} elseif ($metodo_pago === 'cartera') {
+    // Validar pago con cartera
+    $saldo_cartera = 0;
+    // Obtener el saldo actual del usuario desde la base de datos
+    try {
+        $stmt = $pdo->prepare("SELECT cartera FROM usuarios WHERE id = ?");
+        $stmt->execute([$userId]);
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($usuario) {
+            $saldo_cartera = $usuario['cartera'];
+        }
+    } catch (PDOException $e) {
+        // Manejar el error de base de datos si es necesario
+        $errores[] = "Error al verificar el saldo de la cartera.";
+    }
+
+    // Verificar si el saldo es suficiente
+    if ($saldo_cartera < $total) {
+        $errores[] = "Saldo insuficiente en la cartera digital.";
+    }
 } else {
     $errores[] = "Debes seleccionar un método de pago válido.";
 }
@@ -122,6 +142,15 @@ try {
     $stmt->execute([$total, $userId]);
     */
     
+    // Si el método de pago es cartera, descontar el monto
+    if ($metodo_pago === 'cartera') {
+        $stmt = $pdo->prepare("UPDATE usuarios SET cartera = cartera - ? WHERE id = ?");
+        $stmt->execute([$total, $userId]);
+        
+        // Actualizar también el saldo en la sesión
+        $_SESSION['usuario']['cartera'] -= $total;
+    }
+
     // 3. Registrar los productos comprados (opcional)
     foreach ($productos_en_carrito as $producto_id => $producto) {
         if (is_array($producto) && isset($producto['nombre'], $producto['precio'])) {
