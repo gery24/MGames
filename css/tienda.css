@@ -598,11 +598,13 @@ section {
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 0.25rem;
+    color: white !important;
 }
 
 .categoria-content p {
     font-size: 0.875rem;
     opacity: 0.9;
+    color: white !important;
 }
 
 /* ===== OFERTAS ===== */
@@ -1399,4 +1401,146 @@ section {
 #scrollToTopBtn svg {
     width: 24px;
     height: 24px;
+}
+
+/* Estilos para que el contenedor principal de cada sección apile sus hijos verticalmente */
+section .container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilos para la cabecera de la sección de Categorías */
+.categories-header {
+    margin-bottom: 2rem; /* Espacio entre el encabezado y la cuadrícula */
+}
+
+.categories-header .section-title {
+    margin-bottom: 0; /* Elimina el margen inferior predeterminado del título */
+}
+
+/* Estilo para el contenedor del botón debajo de la cuadrícula */
+.categories-footer-button {
+    text-align: center; /* Centra el botón */
+    margin-top: 1rem; /* Espacio arriba del botón */
+}
+
+/* --- Estilos para las secciones en horizontal con scroll --- */
+
+/* Regla general restaurada para todas las secciones de grid horizontal */
+.categorias-grid,
+.ofertas-grid,
+.lanzamientos-grid,
+.valorados-grid,
+.eventos-grid,
+.blog-grid {
+    display: flex; /* Muestra los elementos en una fila horizontal */
+    overflow-x: auto; /* Añade scroll horizontal si los elementos exceden el ancho */
+    gap: 1.5rem; /* Espacio entre los elementos */
+    padding-bottom: 1rem; /* Espacio inferior para el scrollbar si aparece */
+    flex-wrap: nowrap; /* Asegurar que los elementos flex no se envuelvan */
+    /* Animación de desplazamiento suave */
+    scroll-behavior: smooth;
+}
+
+/* Regla específica para la cuadrícula de categorías con recuadro blanco */
+.categories-horizontal-scroll {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden; /* Ocultar scroll vertical por si acaso */
+    gap: 1.5rem;
+    padding-bottom: 1rem;
+    flex-wrap: nowrap;
+    scroll-behavior: smooth;
+    /* Estilos para el recuadro blanco */
+    background-color: white; /* Fondo blanco */
+    padding: 1.5rem; /* Espaciado interno */
+    border-radius: var(--radius); /* Bordes redondeados (reutilizo la variable global si está definida) */
+    box-shadow: var(--shadow); /* Sombra (reutilizo la variable global) */
+    /* Asegurar que el contenedor ocupe el ancho completo y maneje su propio overflow */
+    width: 100%; /* Ocupar el 100% del ancho del padre */
+    box-sizing: border-box; /* Incluir padding y borde en el ancho */
+    /* Añadir margen arriba para separarlo del container superior */
+    margin-top: 2rem; /* Espacio entre el título/botón y el recuadro */
+}
+
+
+/* Asegurar que las tarjetas individuales dentro de estas secciones no se encojen */
+.categoria-card,
+.oferta-card,
+.lanzamiento-card,
+.valorado-card,
+.evento-card,
+.blog-card {
+    flex: 0 0 auto; /* Evita que las tarjetas se encojen */
+    width: 280px; /* Ancho fijo para las tarjetas (ajústalo si es necesario) */
+    /* Asegúrate de que otros estilos como height, border-radius, etc. sigan aplicándose */
+}
+
+/* Asegurar que el contenido dentro de las tarjetas se apile verticalmente */
+.oferta-content,
+.lanzamiento-content,
+.valorado-content,
+.evento-content,
+.blog-content {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Añado estilos para que el texto dentro de categoria-content sea blanco */
+.categoria-content h3,
+.categoria-content p {
+    color: white !important; /* Establecer el color del texto a blanco */
+}
+
+/* Regla CSS más específica para asegurar el color blanco en las tarjetas de categoría con scroll horizontal */
+.categories-horizontal-scroll .categoria-content h3,
+.categories-horizontal-scroll .categoria-content p {
+    color: white !important;
+}
+
+/* Forzar a los elementos directos dentro de los contenedores de contenido a ocupar todo el ancho */
+.oferta-content > *,
+.lanzamiento-content > *,
+.valorado-content > *,
+.evento-content > *,
+.blog-content > * {
+    width: 100%;
+}
+
+/* Asegurar que los contenedores de precios y acciones también apilen su contenido si es necesario */
+.oferta-prices,
+.lanzamiento-actions,
+.valorado-actions,
+.evento-info, /* El contenedor info en eventos tiene varios p */
+.blog-meta /* El contenedor meta en blog tiene varios span */
+{
+    display: flex;
+    flex-direction: column;
+    /* Ajusta el gap o margin si necesitas espacio entre estos elementos apilados */
+    gap: 0.5rem; /* Espacio entre elementos apilados como precios o iconos/texto en info/meta */
+}
+
+/* Estilos para hacer el scrollbar más visible en Webkit (Chrome, Safari, Edge) */
+.categories-horizontal-scroll::-webkit-scrollbar {
+    height: 10px; /* Altura del scrollbar horizontal */
+}
+
+.categories-horizontal-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Color del fondo del track */
+    border-radius: 5px;
+}
+
+.categories-horizontal-scroll::-webkit-scrollbar-thumb {
+    background: #888; /* Color del "pulgar" del scrollbar */
+    border-radius: 5px;
+}
+
+.categories-horizontal-scroll::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color al pasar el ratón */
+}
+
+/* Estilos para hacer el scrollbar más visible en Firefox */
+.categories-horizontal-scroll {
+    scrollbar-width: thin; /* "auto" o "thin" */
+    scrollbar-color: #888 #f1f1f1; /* color del pulgar y color del track */
 } 

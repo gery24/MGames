@@ -170,6 +170,12 @@ try {
                 flex-direction: column;
             }
 
+            /* Añado estilos para que el texto dentro de categoria-content sea blanco */
+            .categoria-content h3,
+            .categoria-content p {
+                color: white; /* Establecer el color del texto a blanco */
+            }
+
             /* Forzar a los elementos directos dentro de los contenedores de contenido a ocupar todo el ancho */
             .oferta-content > *,
             .lanzamiento-content > *,
@@ -218,58 +224,48 @@ try {
             }
 
         </style>
-        <div class="categories-header">
-            <h2 class="section-title">Explora por Categorías</h2>
-            <!-- El botón se moverá fuera de este div -->
+            <div class="categories-header">
+                <h2 class="section-title">Explora por Categorías</h2>
+            </div>
         </div>
-        
-    </div>
-    <div class="categorias-grid categories-horizontal-scroll">
-        <?php
-        $colors = [
-            'from-red-500 to-orange-500',
-            'from-blue-500 to-indigo-500',
-            'from-green-500 to-emerald-500',
-            'from-yellow-500 to-amber-500',
-            'from-purple-500 to-pink-500',
-            'from-indigo-500 to-purple-500'
-        ];
-        $i = 0;
+        <div class="categorias-grid categories-horizontal-scroll">
+            <?php
+            $colors = [
+                'from-red-500 to-orange-500',
+                'from-blue-500 to-indigo-500',
+                'from-green-500 to-emerald-500',
+                'from-yellow-500 to-amber-500',
+                'from-purple-500 to-pink-500',
+                'from-indigo-500 to-purple-500'
+            ];
+            $i = 0;
 
-        $first_four_categories = array_slice($categorias, 0, 3);
-        foreach ($first_four_categories as $cat):
-            $current_cat_count = 0;
-            if (isset($cat['id'])) {
-                foreach ($categorias_count as $cat_count_data) {
-                    if (isset($cat_count_data['id']) && $cat_count_data['id'] == $cat['id']) {
-                        $current_cat_count = $cat_count_data['count'];
-                        break;
+            $first_four_categories = array_slice($categorias, 0, 3);
+            foreach ($first_four_categories as $cat):
+                $current_cat_count = 0;
+                if (isset($cat['id'])) {
+                    foreach ($categorias_count as $cat_count_data) {
+                        if (isset($cat_count_data['id']) && $cat_count_data['id'] == $cat['id']) {
+                            $current_cat_count = $cat_count_data['count'];
+                            break;
+                        }
                     }
                 }
-            }
 
-            $color_class = $colors[$i % count($colors)];
-            $i++;
+                $color_class = $colors[$i % count($colors)];
+                $i++;
+                ?>
+                <a href="todos_productos.php?categoria=<?php echo htmlspecialchars($cat['id'] ?? ''); ?>"
+                    class="categoria-card <?php echo htmlspecialchars($color_class); ?>"
+                    style="background-image: url('<?php echo htmlspecialchars($cat['foto'] ?? ''); ?>'); background-size: cover; background-position: center;">
+                    <div class="categoria-overlay"></div>
+                </a>
+            <?php endforeach; ?>
+            <?php
+            // Las demás categorías se añadirán vía JavaScript por toggleCategories()
             ?>
-            <a href="todos_productos.php?categoria=<?php echo htmlspecialchars($cat['id'] ?? ''); ?>"
-                class="categoria-card <?php echo htmlspecialchars($color_class); ?>"
-                style="background-image: url('<?php echo htmlspecialchars($cat['foto'] ?? ''); ?>'); background-size: cover; background-position: center;">
-                <div class="categoria-overlay"></div>
-                <div class="categoria-content">
-                    <?php
-                    if (!in_array($cat['nombre'] ?? '', ['Tarjeta Play', 'Tarjeta XBOX', 'Tarjeta Nintendo'])) {
-                        echo '<h3>' . htmlspecialchars($cat['nombre'] ?? '') . '</h3>';
-                    }
-                    ?>
-                    <p><?php echo $current_cat_count; ?> juegos</p>
-                </div>
-            </a>
-        <?php endforeach; ?>
-        <?php
-        // Las demás categorías se añadirán vía JavaScript por toggleCategories()
-        ?>
-    </div>
-</section>
+        </div>
+    </section>
 
     <!-- Sección de Ofertas -->
     <section id="ofertas" class="ofertas">
@@ -674,16 +670,7 @@ try {
             categoryCard.style.backgroundSize = "cover";
             categoryCard.style.backgroundPosition = "center";
             categoryCard.innerHTML = `
-                    <div class="categoria-content">
-                `;
-
-            if (cat.nombre !== 'Tarjeta Play' && cat.nombre !== 'Tarjeta XBOX' && cat.nombre !== 'Tarjeta Nintendo') {
-                categoryCard.innerHTML += `<h3>${cat.nombre}</h3>`;
-            }
-
-            categoryCard.innerHTML += `
-                        <p>${current_cat_count} juegos</p>
-                    </div>
+                    <div class="categoria-overlay"></div>
                 `;
 
             categoriesGrid.appendChild(categoryCard);
