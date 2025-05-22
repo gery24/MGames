@@ -102,6 +102,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
             }
         } else {
             // Estamos procesando el formulario de edición
+            // Añadir depuración inicial
+            error_log("Procesando formulario de edición para ID: " . ($_POST['id'] ?? 'N/A'));
+            error_log("Reqmin recibido: " . ($_POST['reqmin'] ?? 'Vacio'));
+            error_log("Reqmax recibido: " . ($_POST['reqmax'] ?? 'Vacio'));
+            error_log("Descuento recibido: " . ($_POST['descuento'] ?? 'Vacio'));
+
             $id = $_POST['id'] ?? '';
             $nombre = $_POST['nombre'] ?? '';
             $descripcion = $_POST['descripcion'] ?? '';
@@ -1238,6 +1244,42 @@ require_once 'includes/header.php';
                                 <textarea id="descripcion" name="descripcion" rows="5" required><?php echo htmlspecialchars($producto_editar['descripcion']); ?></textarea>
                             </div>
 
+                            <!-- Campos de requisitos para edición -->
+                             <div class="form-group">
+                                <label for="reqmin">
+                                    <i class="fas fa-list"></i> Requisitos Mínimos
+                                </label>
+                                 <textarea id="reqmin" name="reqmin" rows="4" placeholder="Introduce los requisitos mínimos del juego..."><?php echo htmlspecialchars($producto_editar['reqmin'] ?? ''); ?></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="reqmax">
+                                    <i class="fas fa-list-alt"></i> Requisitos Máximos
+                                </label>
+                                 <textarea id="reqmax" name="reqmax" rows="4" placeholder="Introduce los requisitos máximos del juego..."><?php echo htmlspecialchars($producto_editar['reqmax'] ?? ''); ?></textarea>
+                            </div>
+
+                            <!-- Campo de descuento para edición -->
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-percent"></i> Descuento
+                                </label>
+                                <div class="form-row align-items-center">
+                                    <div class="form-group" style="flex: 0 0 auto; margin-right: 1rem;">
+                                        <div class="checkbox-group">
+                                            <input type="checkbox" id="en_descuento_edit" name="en_descuento" value="1" <?php echo ($producto_editar['descuento'] > 0) ? 'checked' : ''; ?>>
+                                            <label for="en_descuento_edit">Aplicar descuento</label>
+                                        </div>
+                                    </div>
+                                     <div class="form-group" style="flex: 1;">
+                                        <div class="input-with-icon">
+                                             <input type="number" id="descuento_valor_edit" name="descuento" step="0.01" placeholder="Ej: 15.50" value="<?php echo htmlspecialchars($producto_editar['descuento'] ?? ''); ?>" style="width: 80px;">
+                                             <span class="input-icon">%</span>
+                                         </div>
+                                     </div>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <div class="checkbox-group">
                                     <input type="checkbox" id="segunda_mano" name="segunda_mano" <?php echo ($producto_editar['segunda_mano'] == 1) ? 'checked' : ''; ?>>
@@ -1245,7 +1287,7 @@ require_once 'includes/header.php';
                                 </div>
                             </div>
 
-                            <!-- Selección de plataformas -->
+                            <!-- Selección de plataformas para edición -->
                             <div class="form-group">
                                 <label>
                                     <i class="fas fa-gamepad"></i> Plataformas
@@ -1272,7 +1314,21 @@ require_once 'includes/header.php';
                                     <?php endforeach; ?>
                                 </div>
                             </div>
+                            <!-- Campos de requisitos -->
+                            <div class="form-group">
+                                <label for="reqmin">
+                                    <i class="fas fa-list"></i> Requisitos Mínimos
+                                </label>
+                                <textarea id="reqmin" name="reqmin" rows="4" placeholder="Introduce los requisitos mínimos del juego..."></textarea>
+                            </div>
 
+                            <div class="form-group">
+                                <label for="reqmax">
+                                    <i class="fas fa-list-alt"></i> Requisitos Máximos
+                                </label>
+                                <textarea id="reqmax" name="reqmax" rows="4" placeholder="Introduce los requisitos máximos del juego..."></textarea>
+                            </div>
+                            
                             <div class="form-group">
                                 <label>
                                     <i class="fas fa-image"></i> Imagen actual
@@ -1679,6 +1735,8 @@ require_once 'includes/header.php';
                                 <textarea id="descripcion_evento" name="descripcion" rows="5" placeholder="Describe el evento aquí..." required></textarea>
                             </div>
 
+                            
+
                             <div class="form-group">
                                 <label for="imagen_evento" class="file-upload-label">
                                     <i class="fas fa-upload"></i> Subir imagen
@@ -2046,9 +2104,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Asignar eventos de clic a los módulos
     gamesModule.addEventListener('click', function() {
-        // Redirigir a la página principal del panel para mostrar el formulario de añadir (resetea la edición)
-        // Luego, el script en la carga manejará mostrar el contenido de juegos.
-        window.location.href = 'panel_admin.php'; 
+        showModule(gamesModule, gamesContent);
     });
     
     eventsModule.addEventListener('click', function() {
@@ -2066,20 +2122,6 @@ document.addEventListener('DOMContentLoaded', function() {
         showModule(eventsModule, eventsContent);
     <?php elseif ($editando && $blog_editar): ?>
         showModule(blogsModule, blogsContent);
-    <?php else: ?>
-        // Si hay un mensaje de éxito o error, mostrar el módulo correspondiente
-        <?php if (strpos($success, 'juego') !== false || strpos($error, 'juego') !== false): ?>
-            showModule(gamesModule, gamesContent);
-        <?php elseif (strpos($success, 'evento') !== false || strpos($error, 'evento') !== false): ?>
-            showModule(eventsModule, eventsContent);
-        <?php elseif (strpos($success, 'blog') !== false || strpos($error, 'blog') !== false || strpos($success, 'artículo') !== false || strpos($error, 'artículo') !== false): ?>
-            showModule(blogsModule, blogsContent);
-        <?php endif; ?>
-    <?php endif; ?>
-    
-    // Mostrar el módulo de juegos por defecto si no hay edición o mensajes de estado específicos
-    <?php if (!$editando && empty($error) && empty($success)): ?>
-        showModule(gamesModule, gamesContent);
     <?php endif; ?>
     
     // Vista previa de imágenes para juegos
