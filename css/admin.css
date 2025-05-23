@@ -275,3 +275,195 @@ body.admin {
         padding: 3px 6px;
     }
 }
+
+/* Estilos específicos para el modo administrador (cuando el body tiene la clase 'admin') */
+
+body.admin {
+    /* Puedes añadir estilos generales para el body si es necesario, aunque quizás no para el color */
+}
+
+/* Sobrescribir variables de color primario y secundario a rojo para admin */
+/* Esta regla intenta cambiar las variables CSS dentro del contexto de body.admin */
+/* Es una técnica avanzada y puede no ser 100% compatible con todos los selectores de variables,
+   pero debería funcionar para la mayoría de los casos donde las variables se usan en elementos descendientes. */
+body.admin :root,
+body.admin { /* Aplico también al body por si algunas variables se usan directamente allí */
+     --primary: #ef4444; /* Rojo primario */
+     --primary-dark: #dc2626; /* Rojo más oscuro para hover */
+     --primary-light: #f87171; /* Rojo más claro */
+     --secondary: #ef4444; /* También rojo */
+     --secondary-dark: #dc2626; /* También rojo más oscuro */
+     --primary-color: #ef4444; /* Variables de style.css */
+     --secondary-color: #dc2626; /* Variables de style.css */
+     /* Asegúrate de que cualquier otra variable de color que quieras cambiar a rojo esté aquí */
+     --danger: #dc2626; /* Aseguramos que danger sea un rojo oscuro */
+}
+
+/* Asegurar que los botones usen las variables sobrescritas o colores rojos directos */
+
+/* Estilos generales para botones en admin */
+body.admin .btn {
+    background-color: var(--primary, #ef4444); /* Usar variable o fallback a rojo */
+    color: white;
+}
+
+body.admin .btn:hover {
+    background-color: var(--primary-dark, #dc2626);
+}
+
+/* Estilos específicos para diferentes tipos de botones en admin */
+body.admin .btn-primary {
+    background-color: var(--primary, #ef4444);
+    color: white;
+}
+
+body.admin .btn-primary:hover {
+    background-color: var(--primary-dark, #dc2626);
+}
+
+body.admin .btn-secondary {
+    background-color: var(--secondary, #ef4444);
+    color: white;
+}
+
+body.admin .btn-secondary:hover {
+    background-color: var(--secondary-dark, #dc2626);
+}
+
+body.admin .btn-outline { /* Estilo base del outline button en admin */
+    background-color: transparent;
+    color: var(--primary, #ef4444); /* Color del texto y borde rojo */
+    border: 2px solid var(--primary, #ef4444); /* Borde rojo */
+}
+
+body.admin .btn-outline:hover {
+    border-color: var(--primary-dark, #dc2626);
+    color: var(--primary-dark, #dc2626);
+}
+
+body.admin .btn-link {
+    color: var(--primary, #ef4444);
+}
+
+body.admin .btn-link::after {
+    background-color: var(--primary, #ef4444);
+}
+
+/* Botón específico en la sección de newsletter */
+body.admin .newsletter .btn {
+    background-color: var(--dark, #0f172a); /* Mantener color oscuro o definir uno específico si se desea */
+    color: white;
+}
+
+body.admin .newsletter .btn:hover {
+    background-color: var(--dark-light, #1e293b);
+}
+
+
+/* Otros elementos que usan colores primarios/secundarios y deberían ser rojos en admin */
+body.admin .section-title::after {
+    background: linear-gradient(135deg, var(--primary-light, #f87171) 0%, var(--secondary, #ef4444) 100%);
+}
+
+body.admin .logo span {
+     background: linear-gradient(135deg, var(--primary, #ef4444) 0%, var(--secondary, #ef4444) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+}
+
+body.admin .footer-logo h3 {
+    background: linear-gradient(135deg, var(--primary-light, #f87171) 0%, var(--secondary, #ef4444) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+}
+
+body.admin .social-icons a:hover {
+    background-color: var(--primary, #ef4444);
+}
+
+body.admin .categoria-card:hover .categoria-overlay {
+    background: linear-gradient(to top, rgba(239, 68, 68, 0.9), rgba(239, 68, 68, 0.5)); /* Rojos con transparencia */
+}
+
+body.admin .evento-fecha {
+    background-color: var(--primary, #ef4444);
+}
+
+body.admin .blog-category {
+    background-color: var(--primary, #ef4444);
+}
+
+body.admin #scrollToTopBtn {
+    background-color: var(--primary, #ef4444); /* Botón scroll arriba en rojo */
+    color: white; /* Texto blanco en el botón de scroll */
+}
+
+body.admin #scrollToTopBtn:hover {
+    background-color: var(--primary-dark, #dc2626);
+}
+
+/* Asegurar que el botón .btn-transparent en el hero se vea como .btn-primary en admin */
+body.admin .hero-buttons .btn-transparent {
+    background-color: var(--primary, #ef4444);
+    color: white;
+    border: none;
+    box-shadow: var(--shadow); /* Añadir sombra */
+    transition: var(--transition); /* Asegurar transición */
+    /* Asegurarse de que los paddings, font-size, etc. sean iguales a .btn-primary si hay diferencias */
+     padding: 0.75rem 1.5rem;
+     font-size: 0.875rem;
+     text-transform: uppercase;
+     letter-spacing: 0.025em;
+     font-weight: 600;
+     border-radius: 0.375rem; /* O var(--border-radius) si quieres que coincida */
+}
+
+body.admin .hero-buttons .btn-transparent:hover {
+    background-color: var(--primary-dark, #dc2626);
+    transform: translateY(-2px);
+}
+
+/* Estilos específicos para botones dentro del panel de administración */
+/* Estos pueden necesitar ser más específicos si las reglas generales .btn no los afectan */
+.admin .admin-panel .product-card .btn {
+     background-color: var(--primary, #ef4444);
+     color: white;
+}
+.admin .admin-panel .product-card .btn:hover {
+     background-color: var(--primary-dark, #dc2626);
+}
+
+.admin .admin-panel .product-card .ver-detalles { /* Específico si 'ver-detalles' es una clase separada */
+     background-color: var(--primary, #ef4444);
+     color: white;
+}
+.admin .admin-panel .product-card .ver-detalles:hover {
+     background-color: var(--primary-dark, #dc2626);
+}
+
+
+.admin .admin-panel .product-card .eliminar {
+     background-color: var(--danger, #dc2626); /* Botón de eliminar rojo oscuro */
+     color: white;
+}
+
+.admin .admin-panel .product-card .eliminar:hover {
+    background-color: #b91c1c; /* Rojo aún más oscuro al pasar el ratón */
+}
+
+.admin .submit-button { /* Botón de submit en formularios admin */
+    background-color: var(--primary, #ef4444);
+    color: white;
+}
+
+.admin .submit-button:hover {
+    background-color: var(--primary-dark, #dc2626);
+}
+
+
+/* Si hay otros elementos que cambian de color con --primary o --secondary,
+   es posible que necesites añadir reglas específicas aquí. */

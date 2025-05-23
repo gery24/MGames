@@ -1,7 +1,7 @@
 /* Reset y variables */
 :root {
-    --primary-color: #2563eb;
-    --secondary-color: #1e2caf;
+    --primary-color: #2563eb; /* Color primario original (Azul) */
+    --secondary-color: #1e2caf; /* Azul más oscuro */
     --background-color: #f3f4f6;
     --card-background: #ffffff;
     --text-color: #1f2937;
@@ -896,16 +896,24 @@ textarea {
 
 /* Estilos para el botón de Lista de Deseos */
 .btn-transparent {
-    background-color: transparent;
+    background-color: transparent; /* Revierto al estilo original transparente */
     color: var(--primary-color);
     border: 2px solid white;
     padding: 0.75rem 1.5rem;
     border-radius: var(--border-radius);
     transition: background-color 0.3s ease;
+    font-weight: 600; /* Mantengo algunos estilos base que pueden ser comunes */
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    cursor: pointer;
+    /* transition ya está */
+    box-shadow: none; /* Elimino la sombra por defecto */
 }
 
 .btn-transparent:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1); /* Revierto al hover original */
+    color: var(--primary-color); /* Mantengo el color en hover */
     transform: translateY(-2px);
 }
 
