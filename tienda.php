@@ -1,7 +1,12 @@
 <?php
-
+session_start();
 // Incluir archivo de configuración de la base de datos
 require_once 'config/database.php';
+require_once 'includes/header.php';
+
+// Verificar si el usuario es admin para añadir la clase 'admin' al body
+$isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN';
+$bodyClass = $isAdmin ? 'admin' : '';
 
 // Inicializar $ofertas como un array vacío por defecto para evitar warnings
 $ofertas = [];
@@ -21,13 +26,6 @@ try {
                         GROUP BY c.id");
     $categorias_count = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Definir los IDs de los productos específicos que SIEMPRE deben estar en ofertas
-    // Incluimos los IDs 20, 13, 5 y el nuevo ID 16
-    // $oferta_ids_especificos = [20, 13, 5, 16]; // Ya no necesitamos IDs específicos para obtener la lista completa
-
-    // Crear placeholders para la consulta IN()
-    // $placeholders_especificos = implode(',', array_fill(0, count($oferta_ids_especificos), '?')); // Ya no necesitamos placeholders para IDs específicos
-
     // Obtener productos para la sección de ofertas (TODOS los productos con descuento > 0)
     $query_ofertas = "SELECT p.*, c.nombre as categoria_nombre 
                       FROM productos p 
@@ -35,30 +33,13 @@ try {
                       WHERE p.descuento > 0"; // Filtrar por productos con descuento > 0
 
     $stmt_ofertas = $pdo->prepare($query_ofertas);
-    // Ya no pasamos IDs específicos a la ejecución
     $stmt_ofertas->execute();
     $ofertas = $stmt_ofertas->fetchAll(PDO::FETCH_ASSOC);
 
-    // --- Lógica para añadir un producto aleatorio (ELIMINADA) ---
-
-    // Aplicar descuento fijo del 30% al producto con ID 16 manualmente (siempre que exista en la lista de ofertas) (ELIMINADO)
-    // Esta lógica la mantenemos por si quieres que el ID 16 SIEMPRE tenga 30% en esta sección, independientemente de su valor en la DB (ELIMINADO)
-    // foreach ($ofertas as &$oferta) { // Usar & para modificar el array por referencia (ELIMINADO)
-    //     if (isset($oferta['id']) && $oferta['id'] == 16) { // ELIMINADO
-    //         $oferta['descuento'] = 30; // Aplicar 30% de descuento fijo (ELIMINADO)
-    // No usamos break aquí porque puede que el ID 16 no sea el primero, y queremos aplicar el descuento si aparece. Aunque solo debería aparecer una vez. Si aparece más de una vez, el descuento se aplicará a cada aparición. Si solo quieres que se aplique una vez a la primera aparición, puedes añadir break. Lo dejo sin break por si acaso la consulta trae duplicados (aunque no debería). (ELIMINADO)
-    //     } // ELIMINADO
-    // } // ELIMINADO
-    // unset($oferta); // Romper la referencia del último elemento (ELIMINADO)
-
 } catch (PDOException $e) {
-    // Mostrar información detallada del error en un entorno de desarrollo
-    // En producción, se debería registrar el error y mostrar un mensaje genérico al usuario.
     echo "Error en la base de datos: " . $e->getMessage();
-    // Opcional: mostrar detalles adicionales solo si es un entorno de desarrollo
-    if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] == '127.0.0.1') { // Ejemplo simple de verificación de entorno local
+    if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] == '127.0.0.1') {
         echo "<br>SQL State: " . $e->getCode();
-        // echo "<br>Query: " . $query; // Si $query estuviera definida antes del prepare/execute
     }
     die();
 }
@@ -72,82 +53,12 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MGames - Tienda de Videojuegos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/tienda.css">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
 
-<!-- Header Mejorado -->
-<header class="site-header">
-    <div class="container header-container">
-        <a href="index.php" class="logo">
-            <span>MGames</span>
-        </a>
-
-        <nav>
-            <ul class="nav-links">
-                <li><a href="index.php">Inicio</a></li>
-                <li><a href="tienda.php">Tienda</a></li>
-                <li><a href="contacto.php">Contacto</a></li>
-            </ul>
-        </nav>
-
-        <div class="header-actions">
-            <div class="search-container">
-                <button class="search-button" id="search-toggle">
-                    <i class="fas fa-search"></i>
-                </button>
-                <form class="search-form" method="GET" action="index.php" id="search-form" style="display: none;">
-                    <select name="categoria" class="filter-select">
-                        <option value="">Todas las categorías</option>
-                        <option value="1">
-                            Acción </option>
-                        <option value="2">
-                            Aventura </option>
-                        <option value="5">
-                            Carreras </option>
-                        <option value="4">
-                            Deportes </option>
-                        <option value="6">
-                            Estrategia </option>
-                        <option value="9">
-                            Lucha </option>
-                        <option value="3">
-                            Rol </option>
-                        <option value="8">
-                            Shooter </option>
-                        <option value="7">
-                            Simulación </option>
-                        <option value="13">
-                            Tarjeta Nintendo </option>
-                        <option value="11">
-                            Tarjeta Play </option>
-                        <option value="12">
-                            Tarjeta XBOX </option>
-                        <option value="10">
-                            Terror </option>
-                    </select>
-                </form>
-            </div>
-            <a href="lista_deseos.php" class="header-icon">
-                <i class="fas fa-heart"></i>
-            </a>
-            <a href="carrito.php" class="header-icon">
-                <i class="fas fa-shopping-cart"></i>
-            </a>
-            <a href="cartera.php" class="header-icon">
-                <i class="fas fa-wallet"></i>
-            </a>
-            <div class="user-profile">
-                <div class="auth-buttons">
-                    <a href="login.php" class="btn btn-sm btn-outline">Iniciar Sesión</a>
-                    <a href="register.php" class="btn btn-sm btn-primary">Registrarse</a>
-                </div>
-            </div>
-            <button id="menuToggle" class="mobile-menu-toggle">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-    </div>
-</header>
+<body class="<?php echo $bodyClass; ?>">
 
 <div class="content">
     <!-- Hero Section con Video de Fondo -->
@@ -176,61 +87,184 @@ try {
     <!-- Categorías Visuales -->
     <section id="categorias" class="categorias-visuales">
         <div class="container">
-            <h2 class="section-title">Categorías de Juegos</h2>
-            <div class="categorias-grid">
-                <?php
-                // Colores para las categorías (reutilizamos si es necesario, o definimos aquí si no existen)
-                $colors = [
-                    'from-red-500 to-orange-500',
-                    'from-blue-500 to-indigo-500',
-                    'from-green-500 to-emerald-500',
-                    'from-yellow-500 to-amber-500',
-                    'from-purple-500 to-pink-500',
-                    'from-indigo-500 to-purple-500'
-                ];
-                $i = 0;
+            <style>
+                /* Estilos para que el contenedor principal de cada sección apile sus hijos verticalmente */
+                section .container {
+                    display: flex;
+                    flex-direction: column;
+                }
 
-                // Generar tarjetas de categoría dinámicamente
-                // Mostrar solo las primeras 3 categorías inicialmente
-                $first_four_categories = array_slice($categorias, 0, 3);
-                foreach ($first_four_categories as $cat):
-                    // Encontrar el conteo para esta categoría desde $categorias_count
-                    $current_cat_count = 0;
-                    if (isset($cat['id'])) { // Asegurarse de que el ID existe antes de buscar el conteo
-                        foreach ($categorias_count as $cat_count_data) {
-                            if (isset($cat_count_data['id']) && $cat_count_data['id'] == $cat['id']) {
-                                $current_cat_count = $cat_count_data['count'];
-                                break;
-                            }
+                /* Estilos para la cabecera de la sección de Categorías */
+                .categories-header {
+                    margin-bottom: 2rem; /* Espacio entre el encabezado y la cuadrícula */
+                }
+
+                .categories-header .section-title {
+                    margin-bottom: 0; /* Elimina el margen inferior predeterminado del título */
+                }
+
+                /* Estilo para el contenedor del botón debajo de la cuadrícula */
+                 .categories-footer-button {
+                    text-align: center; /* Centra el botón */
+                    margin-top: 1rem; /* Espacio arriba del botón */
+                 }
+
+                /* --- Estilos para las secciones en horizontal con scroll --- */
+
+                /* Regla general restaurada para todas las secciones de grid horizontal */
+                .categorias-grid,
+                .ofertas-grid,
+                .lanzamientos-grid,
+                .valorados-grid,
+                .eventos-grid,
+                .blog-grid {
+                    display: flex; /* Muestra los elementos en una fila horizontal */
+                    overflow-x: auto; /* Añade scroll horizontal si los elementos exceden el ancho */
+                    gap: 1.5rem; /* Espacio entre los elementos */
+                    padding-bottom: 1rem; /* Espacio inferior para el scrollbar si aparece */
+                    flex-wrap: nowrap; /* Asegurar que los elementos flex no se envuelvan */
+                    /* Animación de desplazamiento suave */
+                    scroll-behavior: smooth;
+                }
+
+                /* Regla específica para la cuadrícula de categorías con recuadro blanco */
+                .categories-horizontal-scroll {
+                 display: flex;
+                 overflow-x: auto;
+                 overflow-y: hidden; /* Ocultar scroll vertical por si acaso */
+                 gap: 1.5rem;
+                 padding-bottom: 1rem;
+                 flex-wrap: nowrap;
+                 scroll-behavior: smooth;
+                 /* Estilos para el recuadro blanco */
+                 background-color: white; /* Fondo blanco */
+                 padding: 1.5rem; /* Espaciado interno */
+                 border-radius: var(--radius); /* Bordes redondeados (reutilizo la variable global si está definida) */
+                 box-shadow: var(--shadow); /* Sombra (reutilizo la variable global) */
+                 /* Asegurar que el contenedor ocupe el ancho completo y maneje su propio overflow */
+                 width: 100%; /* Ocupar el 100% del ancho del padre */
+                 box-sizing: border-box; /* Incluir padding y borde en el ancho */
+                 /* Añadir margen arriba para separarlo del container superior */
+                 margin-top: 2rem; /* Espacio entre el título/botón y el recuadro */
+             }
+
+
+             /* Asegurar que las tarjetas individuales dentro de estas secciones no se encojan */
+             .categoria-card,
+             .oferta-card,
+             .lanzamiento-card,
+             .valorado-card,
+             .evento-card,
+             .blog-card {
+                 flex: 0 0 auto; /* Evita que las tarjetas se encojen */
+                 width: 280px; /* Ancho fijo para las tarjetas (ajústalo si es necesario) */
+                 /* Asegúrate de que otros estilos como height, border-radius, etc. sigan aplicándose */
+             }
+
+            /* Asegurar que el contenido dentro de las tarjetas se apile verticalmente */
+            .oferta-content,
+            .lanzamiento-content,
+            .valorado-content,
+            .evento-content,
+            .blog-content {
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* Añado estilos para que el texto dentro de categoria-content sea blanco */
+            .categoria-content h3,
+            .categoria-content p {
+                color: white; /* Establecer el color del texto a blanco */
+            }
+
+            /* Forzar a los elementos directos dentro de los contenedores de contenido a ocupar todo el ancho */
+            .oferta-content > *,
+            .lanzamiento-content > *,
+            .valorado-content > *,
+            .evento-content > *,
+            .blog-content > * {
+                 width: 100%;
+            }
+
+            /* Asegurar que los contenedores de precios y acciones también apilen su contenido si es necesario */
+            .oferta-prices,
+            .lanzamiento-actions,
+            .valorado-actions,
+            .evento-info, /* El contenedor info en eventos tiene varios p */
+            .blog-meta /* El contenedor meta en blog tiene varios span */
+            {
+                display: flex;
+                flex-direction: column;
+                /* Ajusta el gap o margin si necesitas espacio entre estos elementos apilados */
+                 gap: 0.5rem; /* Espacio entre elementos apilados como precios o iconos/texto en info/meta */
+            }
+
+            /* Estilos para hacer el scrollbar más visible en Webkit (Chrome, Safari, Edge) */
+            .categories-horizontal-scroll::-webkit-scrollbar {
+              height: 10px; /* Altura del scrollbar horizontal */
+            }
+
+            .categories-horizontal-scroll::-webkit-scrollbar-track {
+              background: #f1f1f1; /* Color del fondo del track */
+              border-radius: 5px;
+            }
+
+            .categories-horizontal-scroll::-webkit-scrollbar-thumb {
+              background: #888; /* Color del "pulgar" del scrollbar */
+              border-radius: 5px;
+            }
+
+            .categories-horizontal-scroll::-webkit-scrollbar-thumb:hover {
+              background: #555; /* Color al pasar el ratón */
+            }
+
+            /* Estilos para hacer el scrollbar más visible en Firefox */
+            .categories-horizontal-scroll {
+              scrollbar-width: thin; /* "auto" o "thin" */
+              scrollbar-color: #888 #f1f1f1; /* color del pulgar y color del track */
+            }
+
+        </style>
+            <div class="categories-header">
+                <h2 class="section-title">Explora por Categorías</h2>
+            </div>
+        </div>
+        <div class="categorias-grid categories-horizontal-scroll">
+            <?php
+            $colors = [
+                'from-red-500 to-orange-500',
+                'from-blue-500 to-indigo-500',
+                'from-green-500 to-emerald-500',
+                'from-yellow-500 to-amber-500',
+                'from-purple-500 to-pink-500',
+                'from-indigo-500 to-purple-500'
+            ];
+            $i = 0;
+
+            $first_four_categories = array_slice($categorias, 0, 3);
+            foreach ($first_four_categories as $cat):
+                $current_cat_count = 0;
+                if (isset($cat['id'])) {
+                    foreach ($categorias_count as $cat_count_data) {
+                        if (isset($cat_count_data['id']) && $cat_count_data['id'] == $cat['id']) {
+                            $current_cat_count = $cat_count_data['count'];
+                            break;
                         }
                     }
+                }
 
-                    $color_class = $colors[$i % count($colors)];
-                    $i++;
-                    ?>
-                    <a href="todos_productos.php?categoria=<?php echo htmlspecialchars($cat['id'] ?? ''); ?>"
-                        class="categoria-card <?php echo htmlspecialchars($color_class); ?>"
-                        style="background-image: url('<?php echo htmlspecialchars($cat['foto'] ?? ''); ?>'); background-size: cover; background-position: center;">
-                        <div class="categoria-overlay"></div>
-                        <div class="categoria-content">
-                            <?php
-                            // Mostrar el nombre de la categoría solo si no es una de las tarjetas
-                            if (!in_array($cat['nombre'] ?? '', ['Tarjeta Play', 'Tarjeta XBOX', 'Tarjeta Nintendo'])) {
-                                echo '<h3>' . htmlspecialchars($cat['nombre'] ?? '') . '</h3>';
-                            }
-                            ?>
-                            <p><?php echo $current_cat_count; ?> juegos</p>
-                        </div>
-                    </a>
-                <?php endforeach; ?>
-                <?php
-                // Las demás categorías se añadirán vía JavaScript por toggleCategories()
+                $color_class = $colors[$i % count($colors)];
+                $i++;
                 ?>
-            </div>
-            <div class="text-center mt-6">
-                <a href="#" id="toggle-categories" class="btn btn-outline"
-                    onclick="toggleCategories(); return false;">Mostrar Todas las Categorías</a>
-            </div>
+                <a href="todos_productos.php?categoria=<?php echo htmlspecialchars($cat['id'] ?? ''); ?>"
+                    class="categoria-card <?php echo htmlspecialchars($color_class); ?>"
+                    style="background-image: url('<?php echo htmlspecialchars($cat['foto'] ?? ''); ?>'); background-size: cover; background-position: center;">
+                    <div class="categoria-overlay"></div>
+                </a>
+            <?php endforeach; ?>
+            <?php
+            // Las demás categorías se añadirán vía JavaScript por toggleCategories()
+            ?>
         </div>
     </section>
 
@@ -240,21 +274,14 @@ try {
             <h2 class="section-title">Ofertas Imperdibles</h2>
             <div class="ofertas-grid" id="ofertas-grid">
                 <?php
-                // lo obtenemos del campo 'descuento' de cada oferta.
-                // $descuento_porcentaje = 10;
-                // $initial_offers_to_show = 4; // Ya no limitamos la visualización inicial
-                // $i = 0; // Ya no necesitamos contador para ocultar
                 foreach ($ofertas as $oferta):
                     $precio_original = $oferta['precio'];
-                    $descuento_porcentaje = $oferta['descuento'] ?? 0; // Obtener el descuento del campo
+                    $descuento_porcentaje = $oferta['descuento'] ?? 0;
                     $precio_descuento = $precio_original * (1 - ($descuento_porcentaje / 100));
-
-                    // Añadir clase para ocultar si no está entre los primeros $initial_offers_to_show (ELIMINADO)
-                    // $hidden_class = ($i >= $initial_offers_to_show) ? 'hidden-offer-item' : '';
                     ?>
-                    <div class="oferta-card">
+                    <div class="oferta-card" style="position: relative;">
                         <?php if ($descuento_porcentaje > 0): ?>
-                            <div class="oferta-discount-badge">-<?php echo $descuento_porcentaje; ?>%</div>
+                            <div class="oferta-discount-badge" style="position: absolute !important; top: 0 !important; left: 0 !important; margin: 1rem !important; z-index: 10 !important;">-<?php echo $descuento_porcentaje; ?>%</div>
                         <?php endif; ?>
                         <div class="oferta-image">
                             <img src="<?php echo htmlspecialchars($oferta['imagen'] ?? ''); ?>"
@@ -269,16 +296,15 @@ try {
                             <div class="oferta-actions">
                                 <a href="producto.php?id=<?php echo htmlspecialchars($oferta['id'] ?? ''); ?>"
                                     class="btn btn-primary btn-sm">Ver Detalles</a>
-                                <!-- Aquí podrías añadir un botón de "Añadir al Carrito" si tienes esa funcionalidad -->
                             </div>
                         </div>
                     </div>
-                    <?php // $i++; // Contador eliminado ?>
                 <?php endforeach; ?>
             </div>
-            <?php // if (count($ofertas) > $initial_offers_to_show): // Mostrar el botón solo si hay más de $initial_offers_to_show ofertas (ELIMINADO) ?>
-            <?php // Botón "Mostrar Todas las Ofertas" (ELIMINADO) ?>
-            <?php // endif; // Fin de la condición PHP (ELIMINADO) ?>
+             <!-- Nuevo contenedor para el botón Mostrar Todas las Ofertas -->
+             <div class="text-center categories-footer-button">
+                 <a href="todos_productos.php?descuento=true" class="btn btn-outline">Ver Todas las Ofertas</a>
+             </div>
         </div>
     </section>
 
@@ -289,52 +315,56 @@ try {
             <div class="lanzamientos-grid">
                 <div class="lanzamiento-card">
                     <div class="lanzamiento-image">
-                        <img src="fotosWeb/Grand Theft Auto V.png" alt="Grand Theft Auto V">
+                        <img src="FotosWeb/FINAL GTA6.png" alt="Grand Theft Auto VI">
                         <div class="lanzamiento-fecha">
                             <i class="far fa-calendar-alt"></i>
                         </div>
                     </div>
                     <div class="lanzamiento-content">
-                        <h3>Grand Theft Auto V</h3>
+                        <h3>Grand Theft Auto VI</h3>
                         <p>Juego de mundo abierto con una gran historia....</p>
                         <div class="lanzamiento-actions">
-                            <span class="lanzamiento-price">€29.99</span>
-                            <a href="producto.php?id=1" class="btn btn-secondary btn-sm">Pre-ordenar</a>
+                            <span class="lanzamiento-price">€90.00</span>
+                            <a href="producto.php?id=120" class="btn btn-secondary btn-sm">Pre-ordenar</a>
                         </div>
                     </div>
                 </div>
                 <div class="lanzamiento-card">
                     <div class="lanzamiento-image">
-                        <img src="fotosWeb/Red Dead Redemption 2.png" alt="Red Dead Redemption 2">
+                        <img src="FotosWeb/youtuberslife.png" alt="Youtubers Life 3">
                         <div class="lanzamiento-fecha">
                             <i class="far fa-calendar-alt"></i>
                         </div>
                     </div>
                     <div class="lanzamiento-content">
-                        <h3>Red Dead Redemption 2</h3>
-                        <p>Aventura en el Salvaje Oeste con gráficos impresionantes....</p>
+                        <h3>Youtubers Life 3</h3>
+                        <p>Conviértete en una estrella digital desde cero....</p>
                         <div class="lanzamiento-actions">
-                            <span class="lanzamiento-price">€49.99</span>
-                            <a href="producto.php?id=2" class="btn btn-secondary btn-sm">Pre-ordenar</a>
+                            <span class="lanzamiento-price">€29.99</span>
+                            <a href="producto.php?id=119" class="btn btn-secondary btn-sm">Pre-ordenar</a>
                         </div>
                     </div>
                 </div>
                 <div class="lanzamiento-card">
                     <div class="lanzamiento-image">
-                        <img src="fotosWeb/Cyberpunk 2077.png" alt="Cyberpunk 2077">
+                        <img src="FotosWeb/Torrente2.png" alt="Torrente 2">
                         <div class="lanzamiento-fecha">
                             <i class="far fa-calendar-alt"></i>
                         </div>
                     </div>
                     <div class="lanzamiento-content">
-                        <h3>Cyberpunk 2077</h3>
-                        <p>Futurista y con mecánicas RPG....</p>
+                        <h3>Torrente 2</h3>
+                        <p>orrente regresa con una misión delirante...</p>
                         <div class="lanzamiento-actions">
                             <span class="lanzamiento-price">€39.99</span>
-                            <a href="producto.php?id=3" class="btn btn-secondary btn-sm">Pre-ordenar</a>
+                            <a href="producto.php?id=118" class="btn btn-secondary btn-sm">Pre-ordenar</a>
                         </div>
                     </div>
                 </div>
+            </div>
+            <!-- Nuevo contenedor para el botón Ver Todos los Lanzamientos -->
+            <div class="text-center categories-footer-button">
+                 <a href="todos_productos.php?lanzamiento=true" class="btn btn-outline">Ver Próximos Lanzamientos</a>
             </div>
         </div>
     </section>
@@ -388,1453 +418,70 @@ try {
                     </div>
                 </div>
             </div>
+             <!-- Nuevo contenedor para el botón Ver Todos los Mejor Valorados -->
+             <div class="text-center categories-footer-button">
+                 <a href="todos_productos.php?valorado=true" class="btn btn-outline">Ver Los Mejor Valorados</a>
+             </div>
         </div>
-
     </section>
 
-
-    <style>
-        /* ===== GLOBAL STYLES ===== */
-        :root {
-            --primary: #7e22ce;
-            --primary-dark: #6b21a8;
-            --primary-light: #a855f7;
-            --secondary: #2563eb;
-            --secondary-dark: #1d4ed8;
-            --accent: #f97316;
-            --dark: #0f172a;
-            --dark-light: #1e293b;
-            --light: #f8fafc;
-            --gray: #64748b;
-            --gray-light: #cbd5e1;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --info: #3b82f6;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --transition: all 0.3s ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-
-
-        .video-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-        }
-
-        #hero-video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 150%;
-            object-fit: cover;
-        }
-
-        .video-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            /*background: linear-gradient(to right, rgba(79, 70, 229, 0.8), rgba(99, 102, 241, 0.7));*/
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: white;
-            text-align: center;
-            padding: 0 20px;
-        }
-
-        .hero-content h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            animation: fadeInDown 1s ease-out;
-        }
-
-        .hero-content p {
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-            max-width: 600px;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-            animation: fadeInUp 1s ease-out 0.3s;
-            animation-fill-mode: both;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-            animation: fadeInUp 1s ease-out 0.6s;
-            animation-fill-mode: both;
-        }
-
-        .categorias-visuales {
-            padding: 4rem 0 2rem 0; /* Reducido padding-bottom */
-            position: relative;
-            z-index: 20;
-            margin-top: 10rem; /* Duplicado el margen superior */
-        }
-
-        body {
-            font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
-                "Helvetica Neue", sans-serif;
-            color: var(--dark);
-            background-color: #f1f5f9;
-            line-height: 1.6;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-            transition: var(--transition);
-        }
-
-        ul {
-            list-style: none;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .mt-6 {
-            margin-top: 1.5rem;
-        }
-
-        /* ===== BUTTONS ===== */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.375rem;
-            font-weight: 600;
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.025em;
-            cursor: pointer;
-            transition: var(--transition);
-            border: none;
-            box-shadow: var(--shadow);
-        }
-
-
-
-
-
-        .btn-sm {
-            padding: 0.5rem 1rem;
-            font-size: 0.75rem;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background-color: var(--secondary);
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--secondary-dark);
-            transform: translateY(-2px);
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            color: var(--dark);
-            border: 2px solid var(--gray-light);
-        }
-
-        .btn-outline:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .btn-link {
-            background: none;
-            box-shadow: none;
-            padding: 0.5rem 0;
-            color: var(--primary);
-            position: relative;
-            font-weight: 600;
-        }
-
-        .btn-link::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--primary);
-            transition: var(--transition);
-        }
-
-        .btn-link:hover::after {
-            width: 100%;
-        }
-
-        .btn-link i {
-            margin-left: 0.5rem;
-            transition: var(--transition);
-        }
-
-        .btn-link:hover i {
-            transform: translateX(4px);
-        }
-
-        /* ===== HEADER ===== */
-        .site-header {
-            background-color: white;
-            box-shadow: var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem 0;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-        }
-
-        .logo span {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-fill-color: transparent;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-        }
-
-        .nav-links a {
-            font-weight: 600;
-            color: var(--dark);
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: "";
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--primary);
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover::after,
-        .nav-links a.active::after {
-            width: 100%;
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .header-icon {
-            position: relative;
-            font-size: 1.25rem;
-            color: var(--dark);
-            padding: 0.5rem;
-            border-radius: 50%;
-            transition: var(--transition);
-        }
-
-        .header-icon:hover {
-            color: var(--primary);
-            background-color: rgba(126, 34, 206, 0.1);
-        }
-
-        .badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background-color: var(--danger);
-            color: white;
-            font-size: 0.625rem;
-            font-weight: 700;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .balance-indicator {
-            background-color: var(--success);
-            color: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        .search-container {
-            position: relative;
-        }
-
-        .search-button {
-            background: none;
-            border: none;
-            font-size: 1.25rem;
-            color: var(--dark);
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 50%;
-            transition: var(--transition);
-        }
-
-        .search-button:hover {
-            color: var(--primary);
-            background-color: rgba(126, 34, 206, 0.1);
-        }
-
-        .search-form {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            width: 300px;
-            background-color: white;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            box-shadow: var(--shadow-lg);
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            z-index: 10;
-        }
-
-        .search-form input,
-        .search-form select {
-            padding: 0.5rem;
-            border: 1px solid var(--gray-light);
-            border-radius: 0.25rem;
-            font-size: 0.875rem;
-        }
-
-        .search-form button {
-            margin-top: 0.5rem;
-        }
-
-        .user-profile {
-            position: relative;
-        }
-
-        .profile-button {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 0.375rem;
-            transition: var(--transition);
-        }
-
-        .profile-button:hover {
-            background-color: rgba(126, 34, 206, 0.1);
-        }
-
-        .avatar-circle {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background-color: var(--primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-        }
-
-        .username {
-            font-weight: 600;
-            font-size: 0.875rem;
-        }
-
-        .dropdown-content {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            width: 200px;
-            background-color: white;
-            border-radius: 0.5rem;
-            box-shadow: var(--shadow-lg);
-            padding: 0.5rem 0;
-            z-index: 10;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(10px);
-            transition: var(--transition);
-        }
-
-        .profile-dropdown:hover .dropdown-content {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .dropdown-content a {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1rem;
-            font-size: 0.875rem;
-            color: var(--dark);
-            transition: var(--transition);
-        }
-
-        .dropdown-content a:hover {
-            background-color: rgba(126, 34, 206, 0.1);
-            color: var(--primary);
-        }
-
-        .auth-buttons {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .mobile-menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--dark);
-            cursor: pointer;
-        }
-
-        /* ===== TIENDA HERO ===== */
-        .tienda-hero {
-            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url("../FotosWeb/hero-bg.jpg");
-            background-size: cover;
-            background-position: center;
-            color: white;
-            padding: 5rem 0;
-            text-align: center;
-        }
-
-        .tienda-hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .tienda-hero h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-fill-color: transparent;
-        }
-
-        .tienda-hero p {
-            font-size: 1.25rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-
-        .tienda-hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        /* ===== SECTION STYLES ===== */
-        section {
-            padding: 4rem 0;
-        }
-
-        .section-title {
-            font-size: 2rem;
-            font-weight: 800;
-            text-align: center;
-            margin-bottom: 2rem;
-            position: relative;
-            color: var(--dark);
-        }
-
-        .section-title::after {
-            content: "";
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            border-radius: 2px;
-        }
-
-        /* ===== CATEGORIAS VISUALES ===== */
-        .categorias-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2.5rem; /* Aumentado el espacio entre tarjetas */
-        }
-
-        .categoria-card {
-            height: 200px;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            position: relative;
-            background-size: cover;
-            background-position: center;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-
-        .categoria-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .categoria-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to top, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.5));
-            transition: var(--transition);
-        }
-
-        .categoria-card:hover .categoria-overlay {
-            background: linear-gradient(to top, rgba(126, 34, 206, 0.9), rgba(126, 34, 206, 0.5));
-        }
-
-        .categoria-content {
-            position: absolute;
-            bottom: 1.5rem;
-            left: 1.5rem;
-            color: white;
-            z-index: 1;
-        }
-
-        .categoria-content h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
-        }
-
-        .categoria-content p {
-            font-size: 0.875rem;
-            opacity: 0.9;
-        }
-
-        /* ===== OFERTAS ===== */
-        .ofertas {
-            padding-top: 2rem; /* Reducido padding-top */
-        }
-
-        .ofertas-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .oferta-card {
-            background-color: white;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .oferta-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .oferta-discount-badge {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            background-color: var(--danger);
-            color: white;
-            font-weight: 700;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            z-index: 1;
-        }
-
-        .oferta-image {
-            height: 180px;
-            overflow: hidden;
-        }
-
-        .oferta-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition);
-        }
-
-        .oferta-card:hover .oferta-image img {
-            transform: scale(1.05);
-        }
-
-        .oferta-content {
-            padding: 1.5rem;
-        }
-
-        .oferta-content h3 {
-            font-size: 1.125rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--dark);
-        }
-
-        .oferta-prices {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .original-price {
-            text-decoration: line-through;
-            color: var(--gray);
-            font-size: 0.875rem;
-        }
-
-        .discount-price {
-            color: var(--danger);
-            font-weight: 700;
-            font-size: 1.125rem;
-        }
-
-        .oferta-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* ===== PROXIMOS LANZAMIENTOS ===== */
-        .lanzamientos-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .lanzamiento-card {
-            background-color: white;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-
-        .lanzamiento-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .lanzamiento-image {
-            height: 200px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .lanzamiento-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition);
-        }
-
-        .lanzamiento-card:hover .lanzamiento-image img {
-            transform: scale(1.05);
-        }
-
-        .lanzamiento-fecha {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background-color: var(--dark);
-            color: white;
-            padding: 0.5rem;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .lanzamiento-content {
-            padding: 1.5rem;
-        }
-
-        .lanzamiento-content h3 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--dark);
-        }
-
-        .lanzamiento-content p {
-            color: var(--gray);
-            font-size: 0.875rem;
-            margin-bottom: 1rem;
-        }
-
-        .lanzamiento-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .lanzamiento-price {
-            font-weight: 700;
-            font-size: 1.125rem;
-            color: var(--dark);
-        }
-
-        /* ===== MEJOR VALORADOS ===== */
-        .valorados-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .valorado-card {
-            background-color: white;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .valorado-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .valorado-rating {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background-color: var(--dark);
-            color: white;
-            padding: 0.5rem;
-            border-radius: 0.25rem;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .rating-number {
-            font-weight: 700;
-            font-size: 1.125rem;
-        }
-
-        .stars {
-            color: var(--warning);
-            font-size: 0.75rem;
-        }
-
-        .valorado-image {
-            height: 180px;
-            overflow: hidden;
-        }
-
-        .valorado-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition);
-        }
-
-        .valorado-card:hover .valorado-image img {
-            transform: scale(1.05);
-        }
-
-        .valorado-content {
-            padding: 1.5rem;
-        }
-
-        .valorado-content h3 {
-            font-size: 1.125rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
-            color: var(--dark);
-        }
-
-        .valorado-category {
-            display: inline-block;
-            background-color: var(--primary-light);
-            color: white;
-            font-size: 0.75rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .valorado-price {
-            font-weight: 700;
-            font-size: 1.125rem;
-            color: var(--dark);
-            margin-bottom: 1rem;
-        }
-
-        /* ===== EVENTOS GAMING ===== */
-        .eventos-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .evento-card {
-            background-color: white;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-
-        .evento-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .evento-image {
-            height: 200px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .evento-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition);
-        }
-
-        .evento-card:hover .evento-image img {
-            transform: scale(1.05);
-        }
-
-        .evento-fecha {
-            position: absolute;
-            bottom: 0;
-            left: 1rem;
-            transform: translateY(50%);
-            background-color: var(--primary);
-            color: white;
-            padding: 0.5rem;
-            border-radius: 0.25rem;
-            text-align: center;
-            min-width: 60px;
-        }
-
-        .evento-dia {
-            display: block;
-            font-size: 1.25rem;
-            font-weight: 700;
-        }
-
-        .evento-mes {
-            display: block;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-        }
-
-        .evento-content {
-            padding: 1.5rem;
-            padding-top: 2rem;
-        }
-
-        .evento-content h3 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--dark);
-        }
-
-        .evento-info {
-            margin-bottom: 1rem;
-        }
-
-        .evento-info p {
-            font-size: 0.875rem;
-            color: var(--gray);
-            margin-bottom: 0.25rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .evento-descripcion {
-            font-size: 0.875rem;
-            color: var(--dark);
-            margin-bottom: 1rem;
-        }
-
-        /* ===== BLOG Y GUIAS ===== */
-        .blog-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .blog-card {
-            background-color: white;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-
-        .blog-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .blog-image {
-            height: 200px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .blog-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition);
-        }
-
-        .blog-card:hover .blog-image img {
-            transform: scale(1.05);
-        }
-
-        .blog-category {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            background-color: var(--primary);
-            color: white;
-            font-size: 0.75rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            z-index: 1;
-        }
-
-        .blog-content {
-            padding: 1.5rem;
-        }
-
-        .blog-meta {
-            display: flex;
-            gap: 1rem;
-            font-size: 0.75rem;
-            color: var(--gray);
-            margin-bottom: 0.5rem;
-        }
-
-        .blog-meta span {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        .blog-content h3 {
-            font-size: 1.125rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--dark);
-        }
-
-        .blog-content p {
-            font-size: 0.875rem;
-            color: var(--gray);
-            margin-bottom: 1rem;
-        }
-
-        /* ===== COMUNIDAD GAMERS ===== */
-        .comunidad-gamers {
-            background-color: var(--dark);
-            color: white;
-        }
-
-        .comunidad-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .comunidad-info p {
-            font-size: 1.125rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .comunidad-beneficios {
-            margin-bottom: 2rem;
-        }
-
-        .comunidad-beneficios li {
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .comunidad-beneficios i {
-            color: var(--success);
-        }
-
-        .comunidad-cta {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .comunidad-imagen img {
-            border-radius: 0.5rem;
-            box-shadow: var(--shadow-lg);
-        }
-
-        /* ===== NEWSLETTER ===== */
-        .newsletter {
-            background-color: var(--primary);
-            color: white;
-            padding: 3rem 0;
-        }
-
-        .newsletter-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .newsletter-info h2 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .newsletter-form {
-            flex: 1;
-            max-width: 500px;
-        }
-
-        .form-group {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .newsletter-form input {
-            flex: 1;
-            padding: 0.75rem 1rem;
-            border: none;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-        }
-
-        .newsletter-form button {
-            background-color: var(--dark);
-        }
-
-        .newsletter-form button:hover {
-            background-color: var(--dark-light);
-        }
-
-        /* ===== FOOTER ===== */
-        .site-footer {
-            background-color: var(--dark);
-            color: white;
-            padding: 4rem 0 2rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-logo {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .footer-logo img {
-            width: 40px;
-            height: 40px;
-        }
-
-        .footer-logo h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-fill-color: transparent;
-        }
-
-        .footer-links h4,
-        .footer-contact h4,
-        .footer-social h4 {
-            font-size: 1.125rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: white;
-        }
-
-        .footer-links ul li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-links ul li a {
-            color: var(--gray-light);
-            transition: var(--transition);
-        }
-
-        .footer-links ul li a:hover {
-            color: var(--primary-light);
-        }
-
-        .footer-contact p {
-            margin-bottom: 0.5rem;
-            color: var(--gray-light);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .social-icons {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .social-icons a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-            transition: var(--transition);
-        }
-
-        .social-icons a:hover {
-            background-color: var(--primary);
-            transform: translateY(-3px);
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--gray-light);
-            font-size: 0.875rem;
-        }
-
-        /* ===== RESPONSIVE STYLES ===== */
-        @media (max-width: 1024px) {
-
-            .comunidad-content {
-                grid-template-columns: 1fr;
-            }
-
-            .newsletter-content {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .newsletter-form {
-                max-width: 100%;
-            }
-        }
-
-        @media (max-width: 768px) {
-
-
-            .tienda-hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .tienda-hero p {
-                font-size: 1rem;
-            }
-
-            .tienda-hero-buttons {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-
-            .header-container {
-                padding: 0.75rem 0;
-            }
-
-            nav {
-                display: none;
-            }
-
-            .mobile-menu-toggle {
-                display: block;
-            }
-
-            .search-form {
-                width: 250px;
-            }
-
-            .section-title {
-                font-size: 1.75rem;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .header-actions {
-                gap: 0.5rem;
-            }
-
-            .auth-buttons {
-                display: none;
-            }
-
-            .username {
-                display: none;
-            }
-
-            .categorias-grid,
-            .ofertas-grid,
-            .lanzamientos-grid,
-            .valorados-grid,
-            .eventos-grid,
-            .blog-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .form-group {
-                flex-direction: column;
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-
-            .footer-logo {
-                justify-content: center;
-            }
-
-            .social-icons {
-                justify-content: center;
-            }
-
-            .footer-contact p {
-                justify-content: center;
-            }
-        }
-
-        /* ===== ANIMATIONS ===== */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-
-        .tienda-hero-content,
-        .section-title,
-        .categorias-grid,
-        .ofertas-grid,
-        .lanzamientos-grid,
-        .valorados-grid,
-        .eventos-grid,
-        .blog-grid,
-        .comunidad-content,
-        .newsletter-content {
-            animation: fadeIn 0.8s ease-out forwards;
-        }
-
-        /* ===== CUSTOM SCROLLBAR ===== */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--light);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 5px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-dark);
-        }
-
-        /* Clase para ocultar ofertas */
-        .hidden-offer-item {
-            display: none;
-            /* Ocultar elementos por defecto */
-        }
-
-        /* Estilos CSS para el botón scroll arriba */
-        #scrollToTopBtn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background-color: #0d6efd; /* Azul Bootstrap */
-            color: white;
-            border: none;
-            border-radius: 50%;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-            z-index: 1000;
-        }
-
-        #scrollToTopBtn:hover {
-            background-color: #0b5ed7;
-            transform: scale(1.1);
-        }
-
-        #scrollToTopBtn svg {
-            width: 24px;
-            height: 24px;
-        }
-    </style>
-        <!-- Eventos de Gaming -->
+    <!-- Eventos de Gaming -->
     <section class="eventos-gaming">
         <div class="container">
             <h2 class="section-title">Eventos de Gaming</h2>
             <div class="eventos-grid">
                 <div class="evento-card">
                     <div class="evento-image">
-                        <img src="FotosWeb/Torneo MGames.png" alt="Imagen Torneo MGames 2025"> <!-- Imagen actualizada -->
+                        <img src="FotosWeb/Torneo MGames.png" alt="Imagen Torneo MGames 2025">
                         <div class="evento-fecha">
-                            <span class="evento-dia">15</span> <!-- Este es el día -->
-                            <span class="evento-mes">JUN</span> <!-- Este es el mes -->
+                            <span class="evento-dia">15</span>
+                            <span class="evento-mes">JUN</span>
                         </div>
                     </div>
                     <div class="evento-content">
-                        <h3>Torneo MGames 2025</h3> <!-- Título actualizado -->
+                        <h3>Torneo MGames 2025</h3>
                         <div class="evento-info">
-                            <p><i class="fas fa-map-marker-alt"></i> Centro de Convenciones, Madrid</p> <!-- Dejar texto placeholder -->
-                            <p><i class="far fa-clock"></i> 10:00 AM - 8:00 PM</p> <!-- Dejar texto placeholder -->
+                            <p><i class="fas fa-map-marker-alt"></i> Centro de Convenciones, Madrid</p>
+                            <p><i class="far fa-clock"></i> 10:00 AM - 8:00 PM</p>
                         </div>
-                        <p class="evento-descripcion">Participa en el torneo de MGames de 2025.</p> <!-- Descripción actualizada -->
-                        <a href="eventos.php?id=torneo2025" class="btn btn-primary">Más Información</a> <!-- Enlace actualizado -->
+                        <p class="evento-descripcion">Participa en el torneo de MGames de 2025.</p>
+                        <a href="eventos.php?id=torneo2025" class="btn btn-primary">Más Información</a>
                     </div>
                 </div>
                 <div class="evento-card">
                     <div class="evento-image">
-                        <img src="FotosWeb/Torrente2.png" alt="Imagen Lanzamiento Exclusivo"> <!-- Imagen actualizada -->
+                        <img src="FotosWeb/Torrente2.png" alt="Imagen Lanzamiento Exclusivo">
                         <div class="evento-fecha">
                             <span class="evento-dia">22</span>
                             <span class="evento-mes">JUL</span>
                         </div>
                     </div>
                     <div class="evento-content">
-                        <h3>Lanzamiento Exclusivo</h3> <!-- Título actualizado -->
+                        <h3>Lanzamiento Exclusivo</h3>
                         <div class="evento-info">
-                            <p><i class="fas fa-map-marker-alt"></i> Tienda MGames, Barcelona</p> <!-- Dejar texto placeholder -->
-                            <p><i class="far fa-clock"></i> 8:00 PM - 12:00 AM</p> <!-- Dejar texto placeholder -->
+                            <p><i class="fas fa-map-marker-alt"></i> Tienda MGames, Barcelona</p>
+                            <p><i class="far fa-clock"></i> 8:00 PM - 12:00 AM</p>
                         </div>
-                        <p class="evento-descripcion">Sé el primero en probar el nuevo título exclusivo.</p> <!-- Descripción actualizada -->
-                        <a href="eventos.php?id=lanzamiento" class="btn btn-primary">Más Información</a> <!-- Enlace actualizado -->
+                        <p class="evento-descripcion">Sé el primero en probar el nuevo título exclusivo.</p>
+                        <a href="eventos.php?id=lanzamiento" class="btn btn-primary">Más Información</a>
                     </div>
                 </div>
                 <div class="evento-card">
                     <div class="evento-image">
-                        <img src="FotosWeb/Convencion gamer 25.png" alt="Imagen Convención Gamer 2025"> <!-- Imagen actualizada -->
+                        <img src="FotosWeb/Convencion gamer 25.png" alt="Imagen Convención Gamer 2025">
                         <div class="evento-fecha">
                             <span class="evento-dia">10</span>
                             <span class="evento-mes">AGO</span>
                         </div>
                     </div>
                     <div class="evento-content">
-                        <h3>Convención Gamer 2025</h3> <!-- Título actualizado -->
+                        <h3>Convención Gamer 2025</h3>
                         <div class="evento-info">
-                            <p><i class="fas fa-map-marker-alt"></i> IFEMA, Madrid</p> <!-- Dejar texto placeholder -->
-                            <p><i class="far fa-clock"></i> 9:00 AM - 7:00 PM</p> <!-- Dejar texto placeholder -->
+                            <p><i class="fas fa-map-marker-alt"></i> IFEMA, Madrid</p>
+                            <p><i class="far fa-clock"></i> 9:00 AM - 7:00 PM</p>
                         </div>
-                        <p class="evento-descripcion">La mayor convención de videojuegos de 2025.</p> <!-- Descripción actualizada -->
-                        <a href="eventos.php?id=convencion2025" class="btn btn-primary">Más Información</a> <!-- Enlace actualizado -->
+                        <p class="evento-descripcion">La mayor convención de videojuegos de 2025.</p>
+                        <a href="eventos.php?id=convencion2025" class="btn btn-primary">Más Información</a>
                     </div>
                 </div>
             </div>
@@ -1962,206 +609,90 @@ try {
 </button>
 
 <script>
-    // Guardar todas las categorías en variables JavaScript
     var todasLasCategorias = <?php echo json_encode($categorias); ?>;
     var categoriasCount = <?php echo json_encode($categorias_count); ?>;
-    var colors = <?php echo json_encode($colors); ?>; // Pasamos también los colores si no están definidos en JS
+    var colors = <?php echo json_encode($colors); ?>;
+    var mostrandoTodas = true;
 
-    // Variable para controlar el estado
-    var mostrandoTodas = false;
-
-    // Función para alternar la visualización de categorías
-    function toggleCategories() {
-        const categoriesGrid = document.querySelector('.categorias-grid'); // Usamos el selector CSS
-        const button = document.getElementById('toggle-categories');
-
-        // Cambiar el estado
-        mostrandoTodas = !mostrandoTodas;
-
-        // Limpiar el grid actual
-        categoriesGrid.innerHTML = '';
-
-        // Determinar qué categorías mostrar
-        var categoriasAMostrar = mostrandoTodas ? todasLasCategorias : todasLasCategorias.slice(0, 3);
-
-        // Actualizar el texto del botón
-        button.innerText = mostrandoTodas ? "Ocultar Categorías" : "Mostrar Todas las Categorías";
-
-        // Añadir/Quitar clase para estilos condicionales (si es necesario, adaptar estilos CSS)
-        if (mostrandoTodas) {
-            // categoriesGrid.classList.remove('initial-four'); // Si usaste esta clase en index.php
-        } else {
-            // categoriesGrid.classList.add('initial-four'); // Si usaste esta clase en index.php
-        }
-
-        // Crear y añadir las tarjetas de categoría
-        categoriasAMostrar.forEach(function (cat) {
-            const categoryCard = document.createElement('a');
-            categoryCard.href = "todos_productos.php?categoria=" + cat.id;
-            // Buscamos el conteo de juegos para esta categoría
-            let current_cat_count = 0;
-            const count_data = categoriasCount.find(item => item.id === cat.id);
-            if (count_data) {
-                current_cat_count = count_data.count;
-            }
-
-            // Asignamos la clase de color. Aquí podrías necesitar lógica más avanzada si los colores se asignan por índice en PHP
-            // Por simplicidad, si los colores se corresponden 1 a 1 con el orden de las categorías, podrías hacer algo así:
-            // let color_class = colors[categoriasAMostrar.indexOf(cat) % colors.length];
-            // O si el color ya viene en el objeto cat desde PHP (como en index.php):
-            let color_class = ''// Aquí deberías obtener la clase de color si no viene en el objeto cat
-            // Si la clase de color ya está en el objeto cat (como en index.php después de la edición):
-            if (cat.color) { // Asegúrate de que la columna color se obtenga en la consulta PHP si la necesitas aquí
-                color_class = cat.color;
-            } else { // Si no se obtiene la clase de color, puedes asignarla basado en el índice o id si tienes un mapeo
-                // Lógica para asignar color si no viene en el objeto cat
-                // Ejemplo simple basado en índice (puede no coincidir con PHP si el orden cambia)
-                let index = todasLasCategorias.findIndex(item => item.id === cat.id);
-                if (index !== -1) {
-                    color_class = colors[index % colors.length];
-                }
-            }
-
-            categoryCard.className = "categoria-card " + color_class;
-
-            // Añadir estilo de fondo para la imagen y centrarlo
-            categoryCard.style.backgroundImage = "url('" + (cat.foto || '') + "')"; // Usar cat.foto y manejar si es nulo/vacío
-            categoryCard.style.backgroundSize = "cover";
-            categoryCard.style.backgroundPosition = "center";
-            categoryCard.style.minHeight = "150px"; // Asegurar una altura mínima como en el CSS
-
-            let cardContentHTML = `
-                    <div class="categoria-content">
-                `;
-
-            // Mostrar el nombre de la categoría solo si no es una de las tarjetas
-            if (cat.nombre !== 'Tarjeta Play' && cat.nombre !== 'Tarjeta XBOX' && cat.nombre !== 'Tarjeta Nintendo') {
-                cardContentHTML += `<h3>${cat.nombre}</h3>`;
-            }
-
-            cardContentHTML += `
-                        <p>${current_cat_count} juegos</p>
-                    </div>
-                `;
-
-            categoryCard.innerHTML = cardContentHTML;
-            categoriesGrid.appendChild(categoryCard);
-        });
-
-        // Prevenir que la página se desplace
-        return false;
-    }
-
-    // --- Nueva función para alternar la visualización de ofertas ---
     function toggleOffers() {
-        const offersGrid = document.getElementById('ofertas-grid'); // Asegúrate de que el div tenga este ID
-        const button = document.getElementById('toggle-offers'); // Asegúrate de que el botón tenga este ID
-        const offerItems = offersGrid.querySelectorAll('.oferta-card'); // Seleccionar todas las tarjetas de oferta
-
-        const initialOffersToShow = 4; // Coincidir con la variable PHP
-
-        let showingAll = button.innerText.includes("Ocultar"); // Verificar el estado actual del botón
+        const offersGrid = document.getElementById('ofertas-grid');
+        const button = document.getElementById('toggle-offers');
+        const offerItems = offersGrid.querySelectorAll('.oferta-card');
+        const initialOffersToShow = 4;
+        
+        let showingAll = button.innerText.includes("Ocultar");
 
         if (!showingAll) {
-            // Si no está mostrando todas, mostrar todos los elementos ocultos
             offerItems.forEach(item => {
                 item.classList.remove('hidden-offer-item');
             });
-            button.innerText = "Ocultar Ofertas"; // Cambiar texto del botón
+            button.innerText = "Ocultar Ofertas";
         } else {
-            // Si está mostrando todas, ocultar los elementos más allá de los iniciales
             offerItems.forEach((item, index) => {
                 if (index >= initialOffersToShow) {
                     item.classList.add('hidden-offer-item');
                 }
             });
-            button.innerText = "Mostrar Todas las Ofertas"; // Cambiar texto del botón
+            button.innerText = "Mostrar Todas las Ofertas";
         }
-
-        // Prevenir el comportamiento predeterminado del enlace
         return false;
     }
 
-    // Ejecutar al cargar la página para mostrar solo las 3 primeras inicialmente (para categorías)
     document.addEventListener('DOMContentLoaded', function () {
-        // Si quieres que al cargar la página ya se genere la vista de 3 con el script JS:
         const categoriesGrid = document.querySelector('.categorias-grid');
-        categoriesGrid.innerHTML = ''; // Limpiar el contenido generado por PHP
-        todasLasCategorias.slice(0, 3).forEach(function (cat) { // Usar slice(0, 3) aquí
+        categoriesGrid.innerHTML = '';
+
+        // Asegurarme de que la clase categories-horizontal-scroll está presente al cargar
+         if (!categoriesGrid.classList.contains('categories-horizontal-scroll')) {
+            categoriesGrid.classList.add('categories-horizontal-scroll');
+        }
+
+        // Muestro *todas* las categorías por defecto al cargar la página
+        todasLasCategorias.forEach(function (cat) {
             const categoryCard = document.createElement('a');
             categoryCard.href = "todos_productos.php?categoria=" + cat.id;
 
-            // Buscamos el conteo de juegos para esta categoría
             let current_cat_count = 0;
             const count_data = categoriasCount.find(item => item.id === cat.id);
             if (count_data) {
                 current_cat_count = count_data.count;
             }
 
-            // Asignamos la clase de color (adaptar según cómo obtengas el color en PHP)
             let color_class = '';
-            if (cat.color) { // Si la clase de color ya está en el objeto cat (como en index.php después de la edición)
+            if (cat.color) {
                 color_class = cat.color;
-            } else { // Si no se obtiene la clase de color, puedes asignarla basado en el índice o id si tienes un mapeo
+            } else {
                 let index = todasLasCategorias.findIndex(item => item.id === cat.id);
                 if (index !== -1) {
                     color_class = colors[index % colors.length];
                 }
             }
             categoryCard.className = "categoria-card " + color_class;
-
-            // Añadir estilo de fondo para la imagen y centrarlo
             categoryCard.style.backgroundImage = "url('" + (cat.foto || '') + "')";
             categoryCard.style.backgroundSize = "cover";
             categoryCard.style.backgroundPosition = "center";
-            categoryCard.style.minHeight = "150px";
-
-            let cardContentHTML = `
-                    <div class="categoria-content">
+            categoryCard.innerHTML = `
+                    <div class="categoria-overlay"></div>
                 `;
 
-            // Mostrar el nombre de la categoría solo si no es una de las tarjetas
-            if (cat.nombre !== 'Tarjeta Play' && cat.nombre !== 'Tarjeta XBOX' && cat.nombre !== 'Tarjeta Nintendo') {
-                cardContentHTML += `<h3>${cat.nombre}</h3>`;
-            }
-
-            cardContentHTML += `
-                        <p>${current_cat_count} juegos</p>
-                    </div>
-                `;
-
-            categoryCard.innerHTML = cardContentHTML;
             categoriesGrid.appendChild(categoryCard);
         });
-        // Asegurarse de que el estado inicial sea false (mostrando solo 3)
-        mostrandoTodas = false;
-        const button = document.getElementById('toggle-categories');
-        if (button) { // Asegurarse de que el botón exista
-            button.innerText = "Mostrar Todas las Categorías";
-        }
 
-        // --- Código para manejar la carga inicial de Ofertas (si quieres que JS controle la visibilidad inicial) ---
-        // Si PHP ya está ocultando los elementos con la clase hidden-offer-item, este paso no es estrictamente necesario
-        // pero asegura que JS tenga el control y que el texto del botón sea correcto si hay más de 4 ofertas.
         const initialOffersButton = document.getElementById('toggle-offers');
-        if (initialOffersButton) { // Asegurarse de que el botón de ofertas exista
+        if (initialOffersButton) {
             const offersGrid = document.getElementById('ofertas-grid');
             const offerItems = offersGrid.querySelectorAll('.oferta-card');
-            const initialOffersToShow = 4; // Coincidir con la variable PHP
+            const initialOffersToShow = 4;
 
-            // Ocultar los elementos que deben estar ocultos inicialmente si JavaScript toma el control
-            // Si PHP ya añade la clase 'hidden-offer-item', esta parte solo asegura que la clase se aplica si JS es el que controla la visibilidad.
             offerItems.forEach((item, index) => {
                 if (index >= initialOffersToShow) {
                     item.classList.add('hidden-offer-item');
                 }
             });
 
-            // Asegurarse de que el texto del botón sea correcto al cargar si hay más ofertas de las iniciales
             if (offerItems.length > initialOffersToShow) {
                 initialOffersButton.innerText = "Mostrar Todas las Ofertas";
             } else {
-                // Si no hay más ofertas de las iniciales, ocultar el botón (PHP ya lo hace, esto es una doble verificación JS)
                 initialOffersButton.style.display = 'none';
             }
         }
@@ -2171,7 +702,6 @@ try {
 </script>
 
 <script>
- // Script JS para el botón scroll arriba
  const scrollBtn = document.getElementById('scrollToTopBtn');
 
  window.addEventListener('scroll', () => {

@@ -237,12 +237,12 @@ body.admin .dropdown-content a:hover {
   color: white;
 }
 
-.auth-buttons {
+.site-header .auth-buttons {
   display: flex;
   gap: 10px;
 }
 
-.auth-buttons .btn {
+.site-header .auth-buttons .btn {
   padding: 6px 20px;
   border-radius: 4px;
   font-weight: 600;
@@ -256,26 +256,26 @@ body.admin .dropdown-content a:hover {
   width: auto;
 }
 
-.auth-buttons .btn-primary {
-  background-color: #7e22ce;
-  color: white;
-  border: none;
+.site-header .auth-buttons .btn-primary {
+  background-color: #7e22ce !important; /* Fondo lila */
+  color: white !important; /* Texto blanco */
+  border: 2px solid white !important; /* Borde blanco */
   transition: all 0.3s ease;
 }
 
-.auth-buttons .btn-primary:hover {
-  background-color: #6b21a8;
+.site-header .auth-buttons .btn-primary:hover {
+  background-color: #6b21a8 !important;
 }
 
-.auth-buttons .btn-outline {
-  background-color: transparent;
-  color: #7e22ce;
-  border: 1px solid #7e22ce;
+.site-header .auth-buttons .btn-outline {
+  background-color: transparent !important;
+  color: #7e22ce !important;
+  border: 1px solid #7e22ce !important;
   transition: all 0.3s ease;
 }
 
-.auth-buttons .btn-outline:hover {
-  background-color: rgba(126, 34, 206, 0.1);
+.site-header .auth-buttons .btn-outline:hover {
+  background-color: rgba(126, 34, 206, 0.1) !important;
 }
 
 .mobile-menu-toggle {
