@@ -71,7 +71,6 @@ $isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN
                         </button>
                         <div id="profileDropdownContent" class="dropdown-content <?php echo $isAdmin ? 'admin-dropdown' : ''; ?>">
                             <a href="perfil.php"><i class="fas fa-user"></i> Mi Perfil</a>
-                            <a href="configuracion.php"><i class="fas fa-cog"></i> Configuración</a>
                             <?php if($isAdmin): ?>
                                 <a href="panel_admin.php" class="admin-link"><i class="fas fa-shield-alt"></i> Panel Admin</a>
                             <?php endif; ?>
