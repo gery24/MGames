@@ -26,10 +26,6 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.site-header {
-  border-bottom: 3px solid #ff0000; /* Añadir línea roja */
-}
-
 .content {
   max-width: 1200px;
   margin: 0 auto;
@@ -85,8 +81,8 @@ body {
 }
 
 .contact-details {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  color: white;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* Fondo degradado */
+  color: white; /* Color de texto blanco */
   position: relative;
   overflow: hidden;
 }
@@ -137,7 +133,7 @@ body {
   font-size: 1.2rem;
   margin-right: 15px;
   margin-top: 5px;
-  color: var(--light-color);
+  color: white; /* Cambiar color de icono a blanco para el fondo degradado */
 }
 
 .info-item p {
@@ -184,7 +180,7 @@ body {
   resize: vertical;
 }
 
-.btn {
+.contact-form .btn { /* Estilo específico para el botón del formulario de contacto */
   background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
   color: white;
   border: none;
@@ -200,12 +196,12 @@ body {
   box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3);
 }
 
-.btn:hover {
+.contact-form .btn:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 15px rgba(108, 92, 231, 0.4);
 }
 
-.btn:active {
+.contact-form .btn:active {
   transform: translateY(1px);
 }
 
@@ -277,7 +273,7 @@ body {
                 </div>
                 <div class="info-item">
                     <i class="fas fa-phone"></i>
-                    <p>+34 123 456 789</p>
+                    <p>+34 618491819</p>
                 </div>
                 <div class="info-item">
                     <i class="fas fa-envelope"></i>
