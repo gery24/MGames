@@ -40,123 +40,6 @@ body.admin {
     margin: 20px 0;
 }
 
-/* Grid de productos */
-.products-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    padding: 10px;
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-.product-card {
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
-    width: 100%;
-    max-width: 200px;
-    margin: 0 auto;
-}
-
-.product-card:hover {
-    transform: translateY(-3px);
-}
-
-.product-card img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-}
-
-.product-card-content {
-    padding: 10px;
-}
-
-.product-card h3 {
-    margin: 0;
-    font-size: 0.9em;
-    color: #333;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.admin-panel .product-card .price {
-    color: #ff0000;
-    font-weight: bold;
-    font-size: 1.1em;
-    margin: 8px 0;
-}
-
-.admin-panel .product-card .category {
-    color: #666;
-    font-size: 0.9em;
-    margin-bottom: 12px;
-    background-color: #f3f4f6;
-    padding: 4px 8px;
-    border-radius: 4px;
-    display: inline-block;
-    max-width: 80px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.admin-panel .product-card .btn {
-    display: inline-block;
-    padding: 8px 12px;
-    background-color: #ff0000;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-    border: none;
-    cursor: pointer;
-    font-size: 0.95em;
-    text-align: center;
-    width: 100%;
-}
-
-.admin-panel .product-card .btn:hover {
-    background-color: #cc0000;
-}
-
-.admin-panel .product-card .btn.delete {
-    background-color: #dc2626;
-    margin-bottom: 0;
-}
-
-.admin-panel .product-card .btn.delete:hover {
-    background-color: #b91c1c;
-}
-
-.admin-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.admin-buttons .btn {
-    flex: 1;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .products-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
-}
-
-@media (max-width: 480px) {
-    .products-grid {
-        grid-template-columns: repeat(1, 1fr);
-    }
-}
-
 /* Formulario */
 .form-grid {
     display: grid;
@@ -225,7 +108,7 @@ body.admin {
 
 /* Responsive */
 @media (max-width: 992px) {
-    .products-grid {
+    .products-grid { /* Esto debería estar en style.css, pero si es específico del panel admin se anida */
         grid-template-columns: repeat(3, 1fr);
     }
 }
@@ -240,37 +123,37 @@ body.admin {
         grid-template-columns: 1fr;
     }
 
-    .products-grid {
+    .products-grid { /* Esto debería estar en style.css, pero si es específico del panel admin se anida */
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
         padding: 10px;
     }
-    
-    .product-card {
+
+    .product-card { /* Esto debería estar en style.css, pero si es específico del panel admin se anida */
         width: 100%;
     }
-    
-    .product-card img {
+
+    .product-card img { /* Esto debería estar en style.css, pero si es específico del panel admin se anida */
         height: 110px;
     }
-    
-    .product-card-content {
+
+    .product-card-content { /* Esto debería estar en style.css, pero si es específico del panel admin se anida */
         padding: 6px;
     }
-    
-    .product-card h3 {
+
+    .product-card h3 { /* Esto debería estar en style.css, pero si es específico del panel admin se anida */
         font-size: 0.85em;
     }
-    
-    .product-card .price {
+
+    .product-card .price { /* Esto debería estar en style.css, pero si es específico del panel admin se anida */
         font-size: 0.85em;
     }
-    
-    .product-card .category {
+
+    .product-card .category { /* Esto debería estar en style.css, pero si es específico del panel admin se anida */
         font-size: 0.75em;
     }
-    
-    .product-card .btn {
+
+    .product-card .btn { /* Esto debería estar en style.css, pero si es específico del panel admin se anida */
         font-size: 0.75em;
         padding: 3px 6px;
     }
@@ -284,8 +167,6 @@ body.admin {
 
 /* Sobrescribir variables de color primario y secundario a rojo para admin */
 /* Esta regla intenta cambiar las variables CSS dentro del contexto de body.admin */
-/* Es una técnica avanzada y puede no ser 100% compatible con todos los selectores de variables,
-   pero debería funcionar para la mayoría de los casos donde las variables se usan en elementos descendientes. */
 body.admin :root,
 body.admin { /* Aplico también al body por si algunas variables se usan directamente allí */
      --primary: #ef4444; /* Rojo primario */
@@ -299,68 +180,96 @@ body.admin { /* Aplico también al body por si algunas variables se usan directa
      --danger: #dc2626; /* Aseguramos que danger sea un rojo oscuro */
 }
 
-/* Asegurar que los botones usen las variables sobrescritas o colores rojos directos */
+/* === Estilos específicos para tarjetas de productos en MODO ADMIN (en cualquier página) === */
+/* Estos estilos se aplicarán a las tarjetas de producto en la tienda o en index cuando eres admin */
+body.admin .product-card .price {
+    color: var(--primary, #ef4444); /* Precio en rojo */
+}
 
-/* Estilos generales para botones en admin */
-body.admin .btn {
-    background-color: var(--primary, #ef4444); /* Usar variable o fallback a rojo */
+body.admin .product-card .btn {
+    background-color: var(--primary, #ef4444); /* Botón en rojo */
     color: white;
 }
 
-body.admin .btn:hover {
-    background-color: var(--primary-dark, #dc2626);
+body.admin .product-card .btn:hover {
+    background-color: var(--primary-dark, #dc2626); /* Botón rojo oscuro en hover */
 }
 
-/* Estilos específicos para diferentes tipos de botones en admin */
-body.admin .btn-primary {
+body.admin .product-card .category {
+    /* Si quieres cambiar el estilo del badge de categoría en modo admin, añádelo aquí */
+    /* background-color: var(--primary, #ef4444); */
+    /* color: white; */
+}
+
+body.admin .wishlist-icon i {
+     color: var(--primary, #ef4444); /* Corazón en rojo en admin */
+}
+
+body.admin .wishlist-icon:hover i {
+     color: var(--primary-dark, #dc2626); /* Corazón rojo oscuro en hover en admin */
+}
+
+body.admin .wishlist-icon.active i {
+     color: var(--danger, #dc2626); /* Corazón rojo oscuro si está activo en admin */
+}
+
+
+/* === Estilos específicos para el PANEL DE ADMINISTRACIÓN (si hay un contenedor principal como .admin-panel) === */
+/* Estos estilos se aplican a elementos *dentro* del panel admin */
+.admin .admin-panel { /* Asegura que estos estilos solo se apliquen dentro del contenedor del panel */
+    /* ... existing admin panel styles ... */
+}
+
+.admin .admin-panel .products-grid {
+    /* ... estilos de grid específicos del panel admin ... */
+}
+
+.admin .admin-panel .product-card { /* Estilos de la tarjeta dentro del panel admin */
+    /* Si hay estilos específicos que solo deben aplicar a las tarjetas *dentro* del panel admin, ponlos aquí. */
+    /* Por ejemplo: */
+    /* width: 200px; */
+    /* margin: 0 auto; */
+}
+
+/* Asegurar que los botones dentro del panel admin usen los estilos rojos */
+/* Estas reglas ya existían y parecen correctas, aseguran que los botones en el panel sean rojos */
+.admin .admin-panel .product-card .btn {
+     background-color: var(--primary, #ef4444);
+     color: white;
+}
+.admin .admin-panel .product-card .btn:hover {
+     background-color: var(--primary-dark, #dc2626);
+}
+
+.admin .admin-panel .product-card .ver-detalles { /* Específico si 'ver-detalles' es una clase separada */
+     background-color: var(--primary, #ef4444);
+     color: white;
+}
+.admin .admin-panel .product-card .ver-detalles:hover {
+     background-color: var(--primary-dark, #dc2626);
+}
+
+
+.admin .admin-panel .product-card .eliminar {
+     background-color: var(--danger, #dc2626); /* Botón de eliminar rojo oscuro */
+     color: white;
+}
+
+.admin .admin-panel .product-card .eliminar:hover {
+    background-color: #b91c1c; /* Rojo aún más oscuro al pasar el ratón */
+}
+
+.admin .submit-button { /* Botón de submit en formularios admin */
     background-color: var(--primary, #ef4444);
     color: white;
 }
 
-body.admin .btn-primary:hover {
+.admin .submit-button:hover {
     background-color: var(--primary-dark, #dc2626);
 }
-
-body.admin .btn-secondary {
-    background-color: var(--secondary, #ef4444);
-    color: white;
-}
-
-body.admin .btn-secondary:hover {
-    background-color: var(--secondary-dark, #dc2626);
-}
-
-body.admin .btn-outline { /* Estilo base del outline button en admin */
-    background-color: transparent;
-    color: var(--primary, #ef4444); /* Color del texto y borde rojo */
-    border: 2px solid var(--primary, #ef4444); /* Borde rojo */
-}
-
-body.admin .btn-outline:hover {
-    border-color: var(--primary-dark, #dc2626);
-    color: var(--primary-dark, #dc2626);
-}
-
-body.admin .btn-link {
-    color: var(--primary, #ef4444);
-}
-
-body.admin .btn-link::after {
-    background-color: var(--primary, #ef4444);
-}
-
-/* Botón específico en la sección de newsletter */
-body.admin .newsletter .btn {
-    background-color: var(--dark, #0f172a); /* Mantener color oscuro o definir uno específico si se desea */
-    color: white;
-}
-
-body.admin .newsletter .btn:hover {
-    background-color: var(--dark-light, #1e293b);
-}
-
 
 /* Otros elementos que usan colores primarios/secundarios y deberían ser rojos en admin */
+/* Estas reglas ya existían y parecen estar bien para aplicar colores rojos en admin */
 body.admin .section-title::after {
     background: linear-gradient(135deg, var(--primary-light, #f87171) 0%, var(--secondary, #ef4444) 100%);
 }
@@ -427,43 +336,22 @@ body.admin .hero-buttons .btn-transparent:hover {
     transform: translateY(-2px);
 }
 
-/* Estilos específicos para botones dentro del panel de administración */
-/* Estos pueden necesitar ser más específicos si las reglas generales .btn no los afectan */
-.admin .admin-panel .product-card .btn {
-     background-color: var(--primary, #ef4444);
-     color: white;
-}
-.admin .admin-panel .product-card .btn:hover {
-     background-color: var(--primary-dark, #dc2626);
-}
-
-.admin .admin-panel .product-card .ver-detalles { /* Específico si 'ver-detalles' es una clase separada */
-     background-color: var(--primary, #ef4444);
-     color: white;
-}
-.admin .admin-panel .product-card .ver-detalles:hover {
-     background-color: var(--primary-dark, #dc2626);
-}
-
-
-.admin .admin-panel .product-card .eliminar {
-     background-color: var(--danger, #dc2626); /* Botón de eliminar rojo oscuro */
-     color: white;
-}
-
-.admin .admin-panel .product-card .eliminar:hover {
-    background-color: #b91c1c; /* Rojo aún más oscuro al pasar el ratón */
-}
-
-.admin .submit-button { /* Botón de submit en formularios admin */
-    background-color: var(--primary, #ef4444);
-    color: white;
-}
-
-.admin .submit-button:hover {
-    background-color: var(--primary-dark, #dc2626);
-}
-
-
 /* Si hay otros elementos que cambian de color con --primary o --secondary,
    es posible que necesites añadir reglas específicas aquí. */
+
+/* Limpiar reglas genéricas de productos que estaban aquí por error */
+/* Este bloque asegura que estas reglas no estén duplicadas o mal ubicadas */
+/* Si alguna de estas reglas es *realmente* específica del panel admin, debe estar anidada bajo .admin .admin-panel */
+/* .products-grid { ... } */
+/* .product-card { ... } */
+/* .product-card:hover { ... } */
+/* .product-card img { ... } */
+/* .product-card-content { ... } */
+/* .product-card h3 { ... } */
+/* .product-card .category { ... } */
+/* .product-card .btn { ... } */
+/* .wishlist-icon { ... } */
+/* .wishlist-icon i { ... } */
+/* .wishlist-icon:hover { ... } */
+/* .wishlist-icon:active { ... } */
+/* .wishlist-icon.active i { ... } */
