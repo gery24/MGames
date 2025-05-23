@@ -162,14 +162,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
                 }
             }
             
+            // Procesar descuento para edición - Asegurarse de que solo se guarde si el checkbox está marcado
+            $descuento_valor = 0; // Valor por defecto si no hay descuento
+            if (isset($_POST['en_descuento']) && $_POST['en_descuento'] == '1') {
+                $descuento_valor = $_POST['descuento'] ?? 0; // Obtener el valor solo si el checkbox está marcado
+            }
+
             // Actualizar en la base de datos
             try {
                 $stmt = $pdo->prepare("UPDATE productos SET nombre = ?, descripcion = ?, precio = ?, categoria_id = ?, segunda_mano = ?, estado = ?, imagen = ?, plataforma1 = ?, plataforma2 = ?, plataforma3 = ?, plataforma4 = ?, reqmin = ?, reqmax = ?, descuento = ? WHERE id = ?");
-                $stmt->execute([$nombre, $descripcion, $precio, $categoria, $segunda_mano, $estado, $imagen, $plataformas_rutas[0], $plataformas_rutas[1], $plataformas_rutas[2], $plataformas_rutas[3], $reqmin, $reqmax, $_POST['descuento'] ?? 0, $id]);
-                $success = 'Juego actualizado correctamente';
+                // Usar $descuento_valor en lugar de $_POST['descuento'] ?? 0
+                $stmt->execute([$nombre, $descripcion, $precio, $categoria, $segunda_mano, $estado, $imagen, $plataformas_rutas[0], $plataformas_rutas[1], $plataformas_rutas[2], $plataformas_rutas[3], $reqmin, $reqmax, $descuento_valor, $id]);
+                // Mensaje de éxito más detallado
+                $success = '¡Éxito! El producto "' . htmlspecialchars($nombre) . '" (ID: ' . htmlspecialchars($id) . ') ha sido actualizado correctamente.';
                 $editando = false;
             } catch(PDOException $e) {
-                $error = 'Error al actualizar el juego: ' . $e->getMessage();
+                // Mensaje de error más detallado
+                $error = 'Error al actualizar el producto (ID: ' . htmlspecialchars($id) . '): ' . $e->getMessage();
             }
         }
     } elseif ($_POST['action'] == 'delete_game_image') {
@@ -1180,7 +1189,7 @@ require_once 'includes/header.php';
                         <h2><i class="fas fa-edit"></i> Editar Juego</h2>
                     </div>
                     <div class="card-body">
-                        <form method="POST" enctype="multipart/form-data" class="admin-form">
+                        <form method="POST" enctype="multipart/form-data" class="admin-form" id="edit-game-form">
                             <input type="hidden" name="action" value="edit_game">
                             <input type="hidden" name="id" value="<?php echo $producto_editar['id']; ?>">
                             <input type="hidden" name="submit_edit" value="1">
@@ -2310,6 +2319,18 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.target === modal) {
                 modal.style.display = 'none';
             }
+        });
+    }
+
+    // Añadir listener para el formulario de edición de juegos para depuración
+    const editGameForm = document.getElementById('edit-game-form');
+    if (editGameForm) {
+        editGameForm.addEventListener('submit', function(event) {
+            console.log('Evento submit del formulario de edición de juego activado.');
+            // Esto NO previene el comportamiento por defecto.
+            // Si este mensaje aparece en la consola pero el formulario NO se envía,
+            // significa que algún otro script está llamando a event.preventDefault().
+            // Para forzar el envío, tendrías que encontrar y modificar ese otro script.
         });
     }
 });
