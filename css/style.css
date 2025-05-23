@@ -1,8 +1,8 @@
 /* Reset y variables */
 :root {
-    --primary-color: #2563eb; /* Color primario original (Azul) */
-    --secondary-color: #1e2caf; /* Azul más oscuro */
-    --background-color: #f3f4f6;
+    --primary-color: #4f46e5; /* Vuelve al azul primario original */
+    --secondary-color: #6366f1; /* Vuelve al azul secundario original */
+    --background-color: #ffffff; /* Mantenemos el fondo blanco */
     --card-background: #ffffff;
     --text-color: #1f2937;
     --footer-color: #fdfdfd;
@@ -896,24 +896,26 @@ textarea {
 
 /* Estilos para el botón de Lista de Deseos */
 .btn-transparent {
-    background-color: transparent; /* Revierto al estilo original transparente */
-    color: var(--primary-color);
-    border: 2px solid white;
+    background-color: var(--primary-color); /* Cambiado a color primario */
+    color: white; /* Cambiado a texto blanco */
+    /* border: 2px solid white; */ /* Eliminado el borde transparente */
+    border: none; /* Aseguramos que no haya borde */
     padding: 0.75rem 1.5rem;
     border-radius: var(--border-radius);
-    transition: background-color 0.3s ease;
-    font-weight: 600; /* Mantengo algunos estilos base que pueden ser comunes */
+    transition: all 0.3s ease; /* Transición para todas las propiedades */
+    font-weight: 600;
     font-size: 0.875rem;
     text-transform: uppercase;
     letter-spacing: 0.025em;
     cursor: pointer;
-    /* transition ya está */
-    box-shadow: none; /* Elimino la sombra por defecto */
+    box-shadow: none; /* Mantenemos sin sombra por defecto */
 }
 
 .btn-transparent:hover {
-    background-color: rgba(255, 255, 255, 0.1); /* Revierto al hover original */
-    color: var(--primary-color); /* Mantengo el color en hover */
+    background-color: var(--secondary-color); /* Cambiado al color secundario en hover */
+    color: white; /* Mantenemos texto blanco en hover */
+    /* background-color: rgba(255, 255, 255, 0.1); */ /* Eliminado el hover original */
+    /* color: var(--primary-color); */ /* Eliminado el color original en hover */
     transform: translateY(-2px);
 }
 
