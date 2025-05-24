@@ -224,7 +224,23 @@ try {
               scrollbar-color: #888 #f1f1f1; /* color del pulgar y color del track */
             }
 
+            /* Estilo específico para el logo en tienda.php */
+            .site-header .logo span {
+                color: var(--primary-color) !important; /* Usar el color primario de tienda.php y asegurar que se aplique */
+                background-image: none !important; /* Eliminar cualquier degradado de fondo */
+                -webkit-background-clip: unset !important; /* Deshacer clipping */
+                -webkit-text-fill-color: var(--primary-color) !important; /* Asegurar que el color de relleno sea sólido */
+            }
+
         </style>
+
+<style>
+    /* Estilo específico para el logo en tienda.php */
+    .site-header .logo {
+        color: var(--primary-color); /* Usar el color primario de tienda.php */
+    }
+</style>
+
             <div class="categories-header">
                 <h2 class="section-title">Explora por Categorías</h2>
             </div>
