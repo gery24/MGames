@@ -782,3 +782,8 @@ if (isset($_GET['review_error'])) {
 </div>
 
 <?php require_once 'includes/footer.php'; ?>
+
+<script src="wishlist.js" defer></script>
+
+</body>
+</html>

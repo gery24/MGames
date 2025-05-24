@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault()
   
       // Verificar si el usuario está logueado
-      const isLoggedIn = document.querySelector(".user-avatar, .user-menu") !== null
+      const isLoggedIn = document.querySelector(".profile-dropdown") !== null
   
       if (!isLoggedIn) {
         // Redirigir al login si no está logueado
