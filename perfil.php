@@ -1447,11 +1447,11 @@ $titulo = "Mi Perfil - MGames";
   right: 30px;
   width: 50px;
   height: 50px;
-  background-color: #0d6efd; /* Azul Bootstrap */
+  background-color: var(--primary-color); /* Usa la variable CSS primaria */
   color: white;
   border: none;
   border-radius: 50%;
-  display: none;
+  display: none; /* Oculto por defecto */
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -1461,7 +1461,7 @@ $titulo = "Mi Perfil - MGames";
 }
 
 #scrollToTopBtn:hover {
-  background-color: #0b5ed7;
+  background-color: var(--primary-dark); /* Usa la variable CSS primaria oscura */
   transform: scale(1.1);
 }
 
