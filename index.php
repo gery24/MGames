@@ -931,6 +931,10 @@ body.admin .categories-section h2:after {
     background: linear-gradient(to right, var(--admin-color), var(--admin-dark));
 }
 
+body.admin .featured-products h2 {
+    color: #000;
+}
+
 .products-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

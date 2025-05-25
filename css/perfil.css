@@ -1,939 +1,1576 @@
-/* Variables de colores */
-:root {
-    --primary-color: #6d28d9;
-    --primary-hover: #5b21b6;
-    --secondary-color: #8b5cf6;
-    --accent-color: #c4b5fd;
-    --danger-color: #dc2626;
-    --danger-hover: #b91c1c;
-    --success-color: #10b981;
-    --warning-color: #f59e0b;
-    --info-color: #3b82f6;
-    --text-color: #1f2937;
-    --text-light: #6b7280;
-    --bg-light: #f9fafb;
-    --bg-white: #ffffff;
-    --border-color: #e5e7eb;
-    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --radius: 0.5rem;
-    --transition: all 0.3s ease;
-  }
-  
-  /* Estilos para administradores */
-  body.admin {
-    --primary-color: #ff0000;
-    --primary-hover: #cc0000;
-    --secondary-color: #ff4d4d;
-    --accent-color: #ffcccc;
-  }
-  
-  /* Estilos generales */
-  .content {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1rem;
-  }
-  
-  h1 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    color: var(--text-color);
-    border-bottom: 2px solid var(--accent-color);
-    padding-bottom: 0.5rem;
-  }
-  
-  h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 1.5rem 0 1rem;
-    color: var(--text-color);
-  }
-  
-  h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin: 1rem 0 0.75rem;
-    color: var(--text-color);
-  }
-  
-  /* Contenedor principal del perfil */
-  .profile-container {
-    display: flex;
-    gap: 2rem;
-    min-height: 600px;
-  }
-  
-  /* Sidebar */
-  .sidebar {
-    width: 280px;
-    background-color: var(--bg-white);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 1.5rem;
-    flex-shrink: 0;
-  }
-  
-  .user-info {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-  }
-  
-  .profile-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: var(--primary-color);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 1.5rem;
-  }
-  
-  .profile-avatar.large {
-    width: 80px;
-    height: 80px;
-    font-size: 2rem;
-  }
-  
-  .user-details {
-    flex-grow: 1;
-    min-width: 0;
-  }
-  
-  .user-details h3 {
-    margin: 0 0 0.25rem;
-    font-size: 1rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .user-role {
-    display: inline-block;
-    font-size: 0.75rem;
-    padding: 0.2rem 0.5rem;
-    border-radius: 1rem;
-    background-color: var(--accent-color);
-    color: var(--primary-color);
-    font-weight: 600;
-  }
-  
-  .user-role.admin {
-    background-color: var(--accent-color);
-    color: var(--primary-color);
-  }
-  
-  /* Navegación del perfil */
-  .profile-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .profile-nav li {
-    margin-bottom: 0.5rem;
-  }
-  
-  .profile-nav li.divider {
-    height: 1px;
-    background-color: var(--border-color);
-    margin: 1rem 0;
-  }
-  
-  .menu-option {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    border-radius: var(--radius);
-    color: var(--text-color);
-    text-decoration: none;
-    transition: var(--transition);
-    font-weight: 500;
-  }
-  
-  .menu-option:hover {
-    background-color: var(--bg-light);
-    color: var(--primary-color);
-  }
-  
-  .menu-option.active {
-    background-color: var(--primary-color);
-    color: white;
-  }
-  
-  .menu-option.danger {
-    color: var(--danger-color);
-  }
-  
-  .menu-option.danger:hover {
-    background-color: rgba(220, 38, 38, 0.1);
-    color: var(--danger-color);
-  }
-  
-  .menu-option i {
-    width: 20px;
-    text-align: center;
-    font-size: 1rem;
-  }
-  
-  /* Contenido principal */
-  .profile-content {
-    flex-grow: 1;
-    background-color: var(--bg-white);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 2rem;
-    min-height: 600px;
-  }
-  
-  /* Tarjetas */
-  .card {
-    background-color: var(--bg-white);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid var(--border-color);
-  }
-  
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-  
-  .card-header h3 {
-    margin: 0;
-  }
-  
-  /* Formularios */
-  .form-row {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
-  
-  .form-group {
-    margin-bottom: 1.25rem;
-    flex: 1;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: var(--text-color);
-  }
-  
-  .input-container {
-    position: relative;
-  }
-  
-  .input-container i {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-light);
-  }
-  
-  .input-container input,
-  .input-container select,
-  .input-container textarea {
-    width: 100%;
-    padding: 0.75rem 1rem 0.75rem 2.5rem;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius);
-    font-size: 1rem;
-    transition: var(--transition);
-  }
-  
-  .input-container input:focus,
-  .input-container select:focus,
-  .input-container textarea:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.2);
-  }
-  
-  body.admin .input-container input:focus,
-  body.admin .input-container select:focus,
-  body.admin .input-container textarea:focus {
-    box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.2);
-  }
-  
-  .input-container input[readonly] {
-    background-color: var(--bg-light);
-    cursor: not-allowed;
-  }
-  
-  /* Botones */
-  .button-group {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
-  }
-  
-  .btn-primary,
-  .btn-secondary,
-  .btn-danger {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--radius);
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    border: none;
-    text-decoration: none;
-  }
-  
-  .btn-sm {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-  }
-  
-  .btn-primary {
-    background-color: var(--primary-color);
-    color: white;
-  }
-  
-  .btn-primary:hover {
-    background-color: var(--primary-hover);
-    transform: translateY(-2px);
-  }
-  
-  .btn-secondary {
-    background-color: var(--bg-light);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
-  }
-  
-  .btn-secondary:hover {
-    background-color: var(--border-color);
-    transform: translateY(-2px);
-  }
-  
-  .btn-danger {
-    background-color: var(--danger-color);
-    color: white;
-  }
-  
-  .btn-danger:hover {
-    background-color: var(--danger-hover);
-    transform: translateY(-2px);
-  }
-  
-  .btn-link {
-    color: var(--primary-color);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: var(--transition);
-  }
-  
-  .btn-link:hover {
-    color: var(--primary-hover);
-    text-decoration: underline;
-  }
-  
-  .btn-link.danger {
-    color: var(--danger-color);
-  }
-  
-  .btn-link.danger:hover {
-    color: var(--danger-hover);
-  }
-  
-  /* Alertas */
-  .alert {
-    padding: 1rem;
-    border-radius: var(--radius);
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-  
-  .alert i {
-    font-size: 1.25rem;
-  }
-  
-  .alert-success {
-    background-color: rgba(16, 185, 129, 0.1);
-    color: var(--success-color);
-    border-left: 4px solid var(--success-color);
-  }
-  
-  .alert-error {
-    background-color: rgba(220, 38, 38, 0.1);
-    color: var(--danger-color);
-    border-left: 4px solid var(--danger-color);
-  }
-  
-  .alert-info {
-    background-color: rgba(59, 130, 246, 0.1);
-    color: var(--info-color);
-    border-left: 4px solid var(--info-color);
-  }
-  
-  /* Cabecera del perfil */
-  .profile-header {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-  }
-  
-  .profile-details {
-    flex-grow: 1;
-  }
-  
-  .profile-details h2 {
-    margin: 0 0 0.5rem;
-    font-size: 1.5rem;
-  }
-  
-  .user-email {
-    color: var(--text-light);
-    margin: 0 0 0.75rem;
-  }
-  
-  .profile-badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 1rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    background-color: var(--accent-color);
-    color: var(--primary-color);
-  }
-  
-  .profile-badge.admin {
-    background-color: var(--accent-color);
-    color: var(--primary-color);
-  }
-  
-  /* Tablas */
-  .table-container {
-    overflow-x: auto;
-    margin-bottom: 1.5rem;
-  }
-  
-  .data-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .data-table th,
-  .data-table td {
-    padding: 0.75rem 1rem;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color);
-  }
-  
-  .data-table th {
-    background-color: var(--bg-light);
-    font-weight: 600;
-    color: var(--text-color);
-  }
-  
-  .data-table tr:hover td {
-    background-color: var(--bg-light);
-  }
-  
-  /* Badges de estado */
-  .status-badge {
-    display: inline-block;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-  }
-  
-  .status-pendiente {
-    background-color: rgba(245, 158, 11, 0.1);
-    color: var(--warning-color);
-  }
-  
-  .status-completado {
-    background-color: rgba(16, 185, 129, 0.1);
-    color: var(--success-color);
-  }
-  
-  .status-cancelado {
-    background-color: rgba(220, 38, 38, 0.1);
-    color: var(--danger-color);
-  }
-  
-  .status-enviado {
-    background-color: rgba(59, 130, 246, 0.1);
-    color: var(--info-color);
-  }
-  
-  /* Cuadrícula de tarjetas */
-  .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-    min-height: 400px; /* Altura mínima para que se vea más amplio */
-  }
-  
-  /* Cuando solo hay un elemento en la cuadrícula */
-  .card-grid:only-child {
-    grid-template-columns: minmax(250px, 400px); /* Ancho máximo para un solo elemento */
-    justify-content: center; /* Centrar el elemento */
-  }
-  
-  /* Tarjetas de producto */
-  .product-card {
-    background-color: var(--bg-white);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    transition: var(--transition);
-    border: 1px solid var(--border-color);
-    min-width: 280px; /* Ancho mínimo para las tarjetas */
-    max-width: 400px; /* Ancho máximo para las tarjetas */
-    margin: 0 auto; /* Centrar la tarjeta */
-  }
-  
-  .product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
-  }
-  
-  .product-image {
-    position: relative;
-    height: 180px;
-    overflow: hidden;
-  }
-  
-  .product-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-  }
-  
-  .product-card:hover .product-image img {
-    transform: scale(1.05);
-  }
-  
-  .product-actions {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  
-  .product-card:hover .product-actions {
-    opacity: 1;
-  }
-  
-  .action-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
-    color: var(--text-color);
-    transition: var(--transition);
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .action-btn.view:hover {
-    background-color: var(--primary-color);
-    color: white;
-  }
-  
-  .action-btn.remove:hover {
-    background-color: var(--danger-color);
-    color: white;
-  }
-  
-  .action-form {
-    margin: 0;
-    padding: 0;
-  }
-  
-  .product-info {
-    padding: 1rem;
-  }
-  
-  .product-title {
-    margin: 0 0 0.5rem;
-    font-size: 1rem;
-    font-weight: 600;
-    height: 2.4rem;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-  }
-  
-  .product-price {
-    font-weight: bold;
-    color: var(--primary-color);
-    margin: 0 0 1rem;
-    font-size: 1.1rem;
-  }
-  
-  /* Estado vacío */
-  .empty-state {
-    text-align: center;
-    padding: 3rem 2rem;
-  }
-  
-  .empty-icon {
-    font-size: 3rem;
-    color: var(--text-light);
-    margin-bottom: 1rem;
-    opacity: 0.7;
-  }
-  
-  .empty-state h3 {
-    margin-bottom: 0.5rem;
-    font-size: 1.25rem;
-  }
-  
-  .empty-state p {
-    color: var(--text-light);
-    margin-bottom: 1.5rem;
-  }
-  
-  .empty-message {
-    text-align: center;
-    color: var(--text-light);
-    padding: 2rem;
-  }
-  
-  /* Billetera */
-  .wallet-card {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: white;
-    border-radius: var(--radius);
-    padding: 2rem;
-    margin-bottom: 2rem;
-    text-align: center;
-    box-shadow: var(--shadow-md);
-    width: 100%;
-    max-width: 660px; /* Asegurar que ocupe todo el ancho disponible */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .wallet-icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  .wallet-label {
-    font-size: 0.9rem;
-    opacity: 0.9;
-    margin-bottom: 0.5rem;
-  }
-  
-  .wallet-balance {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-  }
-  
-  /* Formularios de transacción */
-  .transaction-forms {
-    display: flex; /* Cambio de grid a flex para mejor control */
-    flex-wrap: wrap; /* Permitir que se envuelvan en pantallas pequeñas */
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-    justify-content: space-between; /* Distribuir el espacio uniformemente */
-  }
-  
-  .form-container {
-    flex: 1; /* Hacer que ocupen el mismo espacio */
-    min-width: 300px; /* Ancho mínimo para evitar que sean demasiado estrechos */
-    background-color: var(--bg-white);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border-color);
-  }
-  
-  .form-container h3 {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 0;
-    color: var(--text-color);
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.75rem;
-    margin-bottom: 1.25rem;
-  }
-  
-  .deposit h3 {
-    color: var(--success-color);
-  }
-  
-  .withdraw h3 {
-    color: var(--danger-color);
-  }
-  
-  .btn-deposit {
-    background-color: var(--success-color);
-    color: white;
-    padding: 0.75rem 1rem;
-    border: none;
-    border-radius: var(--radius);
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    width: 100%;
-  }
-  
-  .btn-deposit:hover {
-    background-color: #0d9668;
-    transform: translateY(-2px);
-  }
-  
-  .btn-withdraw {
-    background-color: var(--danger-color);
-    color: white;
-    padding: 0.75rem 1rem;
-    border: none;
-    border-radius: var(--radius);
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    width: 100%;
-  }
-  
-  .btn-withdraw:hover {
-    background-color: var(--danger-hover);
-    transform: translateY(-2px);
-  }
-  
-  /* Lista de transacciones */
-  .transaction-list {
-    margin-top: 2rem;
-  }
-  
-  .transaction-list h2 {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1.25rem;
-  }
-  
-  .transaction-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    border-radius: var(--radius);
-    margin-bottom: 0.75rem;
-    background-color: var(--bg-white);
-    box-shadow: var(--shadow);
-    transition: var(--transition);
-  }
-  
-  .transaction-item:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-  }
-  
-  .transaction-item.deposit {
-    border-left: 4px solid var(--success-color);
-  }
-  
-  .transaction-item.withdrawal {
-    border-left: 4px solid var(--danger-color);
-  }
-  
-  .transaction-info {
-    flex-grow: 1;
-  }
-  
-  .transaction-title {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0 0 0.25rem;
-    font-weight: 500;
-  }
-  
-  .transaction-date {
-    color: var(--text-light);
-    font-size: 0.85rem;
-    margin: 0;
-  }
-  
-  .transaction-amount {
-    font-weight: 700;
-    font-size: 1.1rem;
-  }
-  
-  .transaction-amount.positive {
-    color: var(--success-color);
-  }
-  
-  .transaction-amount.negative {
-    color: var(--danger-color);
-  }
-  
-  /* Animación de carga */
-  .loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 300px;
-  }
-  
-  .loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    border-radius: 50%;
-    border-top-color: var(--primary-color);
-    animation: spin 1s ease-in-out infinite;
-    margin-bottom: 1rem;
-  }
-  
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
+<?php
+session_start();
+require_once 'config/database.php';
+
+// Verificar si el usuario está logueado
+if (!isset($_SESSION['usuario'])) {
+    header('Location: login.php');
+    exit;
+}
+
+// Verificar si el usuario es admin para añadir la clase 'admin' al body
+$isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN';
+$bodyClass = $isAdmin ? 'admin' : '';
+
+$error = '';
+$success = '';
+$usuario = $_SESSION['usuario'];
+
+// Obtener información adicional del usuario
+try {
+    $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE id = ?");
+    $stmt->execute([$usuario['id']]);
+    $datosUsuario = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($datosUsuario) {
+        // Actualizar solo si encontramos datos
+        foreach ($datosUsuario as $key => $value) {
+            $usuario[$key] = $value;
+        }
+        $_SESSION['usuario'] = $usuario;
     }
-  }
-  
-  /* Ajuste para los campos de formulario */
-  .form-group {
-    margin-bottom: 1.25rem;
-    width: 100%; /* Asegurar que ocupen todo el ancho disponible */
-  }
-  
-  .input-container {
-    position: relative;
-    width: 100%; /* Asegurar que ocupen todo el ancho disponible */
-  }
-  
-  .input-container input,
-  .input-container select,
-  .input-container textarea {
-    width: 100%;
-    padding: 0.75rem 1rem 0.75rem 2.5rem;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius);
-    font-size: 1rem;
-    transition: var(--transition);
-    box-sizing: border-box; /* Incluir padding y border en el ancho */
-  }
-  
-  /* Ajuste para la sección de ajustes de cuenta */
-  .profile-form {
-    width: 100%;
-  }
-  
-  .form-row {
-    display: flex;
-    flex-wrap: wrap; /* Permitir que se envuelvan en pantallas pequeñas */
-    gap: 1rem;
-    margin-bottom: 1rem;
-    width: 100%;
-  }
-  
-  .form-row .form-group {
-    flex: 1;
-    min-width: 250px; /* Ancho mínimo para evitar que sean demasiado estrechos */
-  }
-  
-  /* Estilos responsivos */
-  @media (max-width: 992px) {
-    .profile-container {
-      flex-direction: column;
-    }
-  
-    .sidebar {
-      width: 100%;
-    }
-  
-    .form-row {
-      flex-direction: column;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .transaction-forms {
-      grid-template-columns: 1fr;
-    }
-  
-    .card-grid {
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    }
-  
-    .transaction-forms {
-      flex-direction: column; /* Apilar en pantallas pequeñas */
-    }
-  
-    .form-row {
-      flex-direction: column; /* Apilar en pantallas pequeñas */
-    }
-  
-    .form-row .form-group {
-      width: 100%;
-    }
-  }
-  
-  @media (max-width: 576px) {
-    .profile-header {
-      flex-direction: column;
-      text-align: center;
-    }
-  
-    .button-group {
-      flex-direction: column;
-    }
-  
-    .card-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-  
+    
+    // Obtener pedidos del usuario
+    $stmt_pedidos = $pdo->prepare("SELECT * FROM pedidos WHERE usuario_id = ? ORDER BY fecha DESC");
+    $stmt_pedidos->execute([$usuario['id']]);
+    $pedidos = $stmt_pedidos->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Obtener lista de deseos
+    $stmt_wishlist = $pdo->prepare("
+        SELECT p.* FROM productos p
+        JOIN lista_deseos ld ON p.id = ld.producto_id
+        WHERE ld.usuario_id = ?
+    ");
+    $stmt_wishlist->execute([$usuario['id']]);
+    $wishlist = $stmt_wishlist->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Obtener transacciones del usuario
+    $stmt_transacciones = $pdo->prepare("SELECT * FROM transacciones WHERE usuario_id = ? ORDER BY fecha DESC");
+    $stmt_transacciones->execute([$usuario['id']]);
+    $transacciones = $stmt_transacciones->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Obtener productos de segunda mano del usuario desde la tabla segunda_mano
+    $stmt_mis_productos_segunda_mano = $pdo->prepare("SELECT * FROM segunda_mano WHERE usuario_id = ?");
+    $stmt_mis_productos_segunda_mano->execute([$usuario['id']]);
+    $mis_productos_segunda_mano = $stmt_mis_productos_segunda_mano->fetchAll(PDO::FETCH_ASSOC);
+    
+} catch(PDOException $e) {
+    $error = 'Error al obtener información del usuario';
+}
+
+// Mostrar mensaje de éxito si viene de actualizar perfil
+if (isset($_GET['updated']) && $_GET['updated'] == 'true') {
+    $success = 'Tu información ha sido actualizada correctamente';
+}
+
+$titulo = "Mi Perfil - MGames";
+?>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $titulo; ?></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/perfil.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Actualizando la tipografía para que coincida con index.php */
+        :root {
+            --primary-color: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary-color: #6366f1;
+            --accent-color: #818cf8;
+            --text-color: #1f2937;
+            --text-light: #6b7280;
+            --bg-light: #f9fafb;
+            --bg-white: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 0.5rem;
+            --admin-color: #ff0000;
+            --admin-dark: #cc0000;
+            --admin-bg-light: #fff0f0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 700;
+            color: var(--text-color);
+            line-height: 1.3;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            color: var(--text-color);
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            margin: 0.5rem auto 0;
+            border-radius: 2px;
+        }
+        
+        /* Estilos adicionales para botones consistentes */
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+        
+        /* Ajuste para los textos de las tarjetas */
+        .card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        
+        .card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .avatar-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Estilos para el avatar del perfil */
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Versión grande del avatar para la sección de perfil */
+        .profile-avatar.large {
+            width: 80px;
+            height: 80px;
+            font-size: 2rem;
+        }
+
+        /* Si el usuario es admin, cambiamos el color del avatar */
+        body.admin .profile-avatar {
+            background-color: var(--admin-color);
+        }
+
+        /* Estilos para el modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--text-color);
+        }
+
+        /* Estilos para el formulario de cambio de contraseña */
+        .password-form h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 15px;
+        }
+
+        .password-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .password-form label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .password-form .input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-form .input-container i {
+            position: absolute;
+            left: 10px;
+            color: var(--text-light);
+        }
+
+        .password-form input[type="password"],
+        .password-form input[type="text"] {
+            width: 100%;
+            padding: 10px 40px 10px 35px;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius);
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .password-form input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .toggle-password:hover {
+            color: var(--text-color);
+        }
+
+        /* Indicador de fuerza de contraseña */
+        .password-strength {
+            margin-top: 10px;
+        }
+
+        .strength-bar {
+            height: 5px;
+            background-color: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .strength-indicator {
+            height: 100%;
+            width: 0;
+            background-color: #ff4d4d;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        #strength-text {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        /* Botones del formulario */
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+
+        .btn-cancel {
+            background-color: #e5e7eb;
+            color: var(--text-color);
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .btn-cancel:hover {
+            background-color: #d1d5db;
+        }
+
+        /* Alertas */
+        .alert {
+            padding: 15px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert i {
+            font-size: 24px;
+            margin-top: 2px;
+        }
+
+        .alert strong {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .alert p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .alert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+        }
+
+        .alert-success {
+            background-color: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #d1fae5;
+        }
+
+        .alert-success::before {
+            background-color: #10b981;
+        }
+
+        .alert-success i {
+            color: #10b981;
+        }
+
+        .alert-error {
+            background-color: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fee2e2;
+        }
+
+        .alert-error::before {
+            background-color: #ef4444;
+        }
+
+        .alert-error i {
+            color: #ef4444;
+        }
+
+        /* Animación del mensaje de éxito */
+        @keyframes alertSuccess {
+            0% { transform: translateY(-10px); opacity: 0; }
+            10% { transform: translateY(0); opacity: 1; }
+            90% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-10px); opacity: 0; }
+        }
+
+        #notification-modal .alert-success {
+            animation: alertSuccess 5s ease-in-out;
+        }
+
+        /* Estilos específicos para el modal de notificación */
+        .notification-content {
+            max-width: 400px;
+            padding: 20px;
+            border-left: 5px solid #10b981;
+        }
+
+        /* Estilos para el botón de confirmar cambio de contraseña */
+        #password-change-form .btn-primary {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        #password-change-form .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        /* Estilos específicos para el modal de notificación */
+        #notification-modal {
+            z-index: 2000;
+        }
+        
+        #notification-modal .modal-content {
+            max-width: 450px;
+            text-align: left;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        #notification-modal .alert {
+            margin-bottom: 0;
+            padding: 20px;
+            border-radius: 8px;
+            border-width: 0;
+            border-left-width: 5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ESTILOS MEJORADOS PARA SEGUNDA MANO */
+        .segunda-mano-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+            padding: 0;
+        }
+
+        .segunda-mano-card {
+            background: var(--bg-white);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+            position: relative;
+        }
+
+        .segunda-mano-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .segunda-mano-image-container {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        }
+
+        .segunda-mano-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .segunda-mano-card:hover .segunda-mano-image {
+            transform: scale(1.05);
+        }
+
+        .segunda-mano-status {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--primary-color);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            backdrop-filter: blur(10px);
+        }
+
+        .segunda-mano-content {
+            padding: 20px;
+        }
+
+        .segunda-mano-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin: 0 0 8px 0;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 2.8rem;
+        }
+
+        .segunda-mano-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .segunda-mano-price::before {
+            content: '€';
+            font-size: 1.125rem;
+            opacity: 0.8;
+        }
+
+        .segunda-mano-description {
+            color: var(--text-light);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .segunda-mano-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: auto;
+        }
+
+        .segunda-mano-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .segunda-mano-btn-edit {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .segunda-mano-btn-edit:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .segunda-mano-btn-delete {
+            background-color: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .segunda-mano-btn-delete:hover {
+            background-color: #dc2626;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .segunda-mano-empty {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--bg-white);
+            border-radius: 12px;
+            border: 2px dashed #e5e7eb;
+            margin-top: 24px;
+        }
+
+        .segunda-mano-empty-icon {
+            font-size: 4rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            opacity: 0.6;
+        }
+
+        .segunda-mano-empty h3 {
+            font-size: 1.25rem;
+            color: var(--text-color);
+            margin-bottom: 8px;
+        }
+
+        .segunda-mano-empty p {
+            color: var(--text-light);
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+        }
+
+        /* Responsive para segunda mano */
+        @media (max-width: 768px) {
+            .segunda-mano-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 16px;
+            }
+            
+            .segunda-mano-image-container {
+                height: 180px;
+            }
+            
+            .segunda-mano-content {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .segunda-mano-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .segunda-mano-actions {
+                flex-direction: column;
+            }
+            
+            .segunda-mano-btn {
+                flex: none;
+            }
+        }
+    </style>
+</head>
+<body class="<?php echo $bodyClass; ?>">
+    <?php require_once 'includes/header.php'; ?>
+
+    <div class="content">
+        <div class="profile-container">
+            <!-- Sidebar con opciones de menú -->
+            <div class="sidebar">
+                <div class="user-info">
+                    <div class="profile-avatar">
+                        <?php echo strtoupper(substr($usuario['nombre'], 0, 1)); ?>
+                    </div>
+                    <div class="user-details">
+                        <h3><?php echo htmlspecialchars($usuario['nombre'] . ' ' . $usuario['apellido']); ?></h3>
+                        <span class="user-role <?php echo strtolower($usuario['rol']); ?>">
+                            <?php echo htmlspecialchars($usuario['rol']); ?>
+                        </span>
+                    </div>
+                </div>
+                
+                <nav class="profile-nav">
+                    <ul>
+                        <li>
+                            <a href="#" class="menu-option active" data-content="ajustes">
+                                <i class="fas fa-user-cog"></i> Ajustes de Cuenta
+                            </a>
+                        </li>
+                        <?php if ($usuario['rol'] !== 'ADMIN'): ?>
+                        <li>
+                            <a href="#" class="menu-option" data-content="wishlist">
+                                <i class="fas fa-heart"></i> Lista de Deseos
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="menu-option" data-content="segunda_mano">
+                                <i class="fas fa-handshake"></i> Segunda Mano
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="menu-option" data-content="billetera">
+                                <i class="fas fa-wallet"></i> Billetera
+                            </a>
+                        </li>
+                        <?php else: ?>
+                        <li>
+                            <a href="panel_admin.php" class="menu-option">
+                                <i class="fas fa-gamepad"></i> Añadir Juegos
+                            </a>
+                        </li>
+                        <?php endif; ?>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#" class="menu-option danger" id="logout">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                            </a>
+                        </li>
+                        <?php if ($usuario['rol'] !== 'ADMIN'): ?>
+                        <li>
+                            <a href="#" class="menu-option danger" id="delete-account">
+                                <i class="fas fa-user-times"></i> Eliminar Cuenta
+                            </a>
+                        </li>
+                        <?php endif; ?>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Contenido principal -->
+            <div class="profile-content" id="dynamic-content">
+                <!-- El contenido se cargará dinámicamente con JavaScript -->
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Cargando...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para mensajes de éxito o error -->
+    <div id="notification-modal" class="modal">
+        <div class="modal-content" style="max-width: 450px; padding: 25px; background-color: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); margin: 0 20px;">
+            <span class="close-modal">&times;</span>
+            <div id="modal-message"></div>
+        </div>
+    </div>
+
+    <!-- Modal para cambio de contraseña -->
+    <div id="password-modal" class="modal">
+        <div class="modal-content password-form">
+            <span class="close-modal">&times;</span>
+            <h3><i class="fas fa-key"></i> Cambiar Contraseña</h3>
+            <form id="password-change-form">
+                <div class="form-group">
+                    <label for="current-password">Contraseña Actual:</label>
+                    <div class="input-container">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="current-password" name="current_password" required>
+                        <button type="button" class="toggle-password" data-target="current-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="new-password">Nueva Contraseña:</label>
+                    <div class="input-container">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="new-password" name="new_password" required>
+                        <button type="button" class="toggle-password" data-target="new-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-bar">
+                            <div class="strength-indicator" id="strength-indicator"></div>
+                        </div>
+                        <span id="strength-text">Fuerza de la contraseña</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirmar Nueva Contraseña:</label>
+                    <div class="input-container">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="confirm-password" name="confirm_password" required>
+                        <button type="button" class="toggle-password" data-target="confirm-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Guardar Cambios
+                    </button>
+                    <button type="button" class="btn-cancel close-modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <?php require_once 'includes/footer.php'; ?>
+
+    <script>
+        $(document).ready(function() {
+            // Variable para almacenar la sección actual
+            let currentSection = 'ajustes';
+
+            // Cargar automáticamente el contenido de "Ajustes de Cuenta" al entrar
+            loadContent('ajustes');
+
+            // Manejar clics en las opciones del menú
+            $('.menu-option').on('click', function(e) {
+                e.preventDefault();
+                
+                // No hacer nada si es un enlace externo
+                if ($(this).attr('href') !== '#') return;
+                
+                // Actualizar clases activas
+                $('.menu-option').removeClass('active');
+                $(this).addClass('active');
+                
+                const content = $(this).data('content');
+                currentSection = content; // Actualizar la sección actual
+                loadContent(content);
+            });
+
+            // Verificar si hay un parámetro de error en la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('error')) {
+                const errorMsg = urlParams.get('error');
+                showModal('Error: ' + decodeURIComponent(errorMsg), 'error');
+                // Limpiar la URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+
+            // Función para mostrar el modal con mensajes
+            function showModal(message, type = 'success') {
+                // Crear el contenido HTML del mensaje
+                let iconClass = type === 'success' ? 'check-circle' : 'exclamation-circle';
+                let alertClass = 'alert-' + type;
+                let alertContent = '';
+                
+                if (typeof message === 'string') {
+                    // Si el mensaje es una cadena simple
+                    alertContent = `
+                        <div class="alert ${alertClass}">
+                            <i class="fas fa-${iconClass}"></i>
+                            <div>${message}</div>
+                        </div>
+                    `;
+                } else if (typeof message === 'object') {
+                    // Si el mensaje es un objeto con título y texto
+                    alertContent = `
+                        <div class="alert ${alertClass}">
+                            <i class="fas fa-${iconClass}"></i>
+                            <div>
+                                <strong>${message.title || ''}</strong>
+                                <p>${message.text || ''}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Actualizar el contenido del modal
+                $('#modal-message').html(alertContent);
+                
+                // Mostrar el modal
+                $('#notification-modal').css('display', 'flex');
+                
+                // Cerrar automáticamente después de un tiempo
+                const timeout = type === 'success' ? 5000 : 7000; // Más tiempo para errores
+                
+                clearTimeout(window.modalTimeout); // Limpiar timeout previo si existe
+                window.modalTimeout = setTimeout(function() {
+                    $('#notification-modal').css('display', 'none');
+                }, timeout);
+                
+                // Registrar en la consola para depuración
+                console.log('Mostrando modal:', type, message);
+            }
+
+            // Cerrar modal al hacer clic en la X o fuera de él
+            $('.close-modal').on('click', function() {
+                $('#notification-modal').css('display', 'none');
+                $('#password-modal').css('display', 'none');
+            });
+
+            $(window).on('click', function(e) {
+                if ($(e.target).is('.modal')) {
+                    $('.modal').css('display', 'none');
+                }
+            });
+
+            // Mostrar/ocultar contraseña
+            $('.toggle-password').on('click', function() {
+                const targetId = $(this).data('target');
+                const passwordInput = $('#' + targetId);
+                const icon = $(this).find('i');
+                
+                if (passwordInput.attr('type') === 'password') {
+                    passwordInput.attr('type', 'text');
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    passwordInput.attr('type', 'password');
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+
+            // Validación de fuerza de contraseña
+            $('#new-password').on('input', function() {
+                const password = $(this).val();
+                let strength = 0;
+                let strengthText = '';
+                let color = '';
+
+                // Verificar longitud
+                if (password.length >= 8) strength += 1;
+
+                // Verificar letras mayúsculas y minúsculas
+                if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength += 1;
+
+                // Verificar números
+                if (password.match(/\d/)) strength += 1;
+
+                // Verificar caracteres especiales
+                if (password.match(/[^a-zA-Z0-9]/)) strength += 1;
+
+                // Establecer mensaje y color según la fuerza
+                switch(strength) {
+                    case 0:
+                        strengthText = 'Muy débil';
+                        color = '#ff4d4d';
+                        break;
+                    case 1:
+                        strengthText = 'Débil';
+                        color = '#ffa64d';
+                        break;
+                    case 2:
+                        strengthText = 'Media';
+                        color = '#ffff4d';
+                        break;
+                    case 3:
+                        strengthText = 'Fuerte';
+                        color = '#4dff4d';
+                        break;
+                    case 4:
+                        strengthText = 'Muy fuerte';
+                        color = '#4d4dff';
+                        break;
+                }
+
+                // Actualizar indicador visual
+                $('#strength-indicator').css({
+                    'width': (strength * 25) + '%',
+                    'background-color': color
+                });
+                $('#strength-text').text(strengthText).css('color', color);
+            });
+
+            // Manejar envío del formulario de cambio de contraseña
+            $('#password-change-form').on('submit', function(e) {
+                e.preventDefault();
+                
+                const currentPassword = $('#current-password').val();
+                const newPassword = $('#new-password').val();
+                const confirmPassword = $('#confirm-password').val();
+                
+                // Validar que las contraseñas coincidan
+                if (newPassword !== confirmPassword) {
+                    showModal('Las contraseñas nuevas no coinciden', 'error');
+                    return;
+                }
+                
+                // Deshabilitar el botón durante el proceso
+                const submitBtn = $(this).find('button[type="submit"]');
+                const originalBtnText = submitBtn.html();
+                submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Procesando...').prop('disabled', true);
+                
+                // Enviar datos al servidor
+                $.ajax({
+                    url: 'cambiar_password.php',
+                    type: 'POST',
+                    data: {
+                        current_password: currentPassword,
+                        new_password: newPassword,
+                        confirm_password: confirmPassword
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log('Respuesta recibida:', response); // Depuración
+                        
+                        if (response.success) {
+                            // Cerrar el modal de contraseña
+                            $('#password-modal').css('display', 'none');
+                            
+                            // Mostrar notificación directamente
+                            const notificationModal = $('#notification-modal');
+                            
+                            // Preparar el mensaje de éxito con icono más grande
+                            const successMessage = `
+                                <div class="alert alert-success" style="display: flex; align-items: center; border-left: 5px solid #10b981;">
+                                    <i class="fas fa-check-circle" style="font-size: 2rem; margin-right: 15px; color: #10b981;"></i>
+                                    <div>
+                                        <strong style="font-size: 1.2rem; display: block; margin-bottom: 5px;">¡Contraseña actualizada correctamente!</strong>
+                                        <p>Tu nueva contraseña ha sido guardada de forma segura.</p>
+                                    </div>
+                                </div>
+                            `;
+                            
+                            // Actualizar el contenido y mostrar el modal
+                            $('#modal-message').html(successMessage);
+                            notificationModal.css({
+                                'display': 'flex',
+                                'align-items': 'center',
+                                'justify-content': 'center'
+                            });
+                            
+                            // Registrar en la consola para depuración
+                            console.log('Modal mostrado - Contraseña actualizada:', response);
+                            
+                            // Mantener el modal visible por 5 segundos
+                            setTimeout(function() {
+                                notificationModal.css('display', 'none');
+                            }, 5000);
+                            
+                            // Limpiar el formulario
+                            $('#password-change-form')[0].reset();
+                        } else {
+                            // Mostrar mensaje de error
+                            const errorMessage = `
+                                <div class="alert alert-error" style="display: flex; align-items: center; border-left: 5px solid #ef4444;">
+                                    <i class="fas fa-exclamation-circle" style="font-size: 2rem; margin-right: 15px; color: #ef4444;"></i>
+                                    <div>
+                                        <strong style="font-size: 1.2rem; display: block; margin-bottom: 5px;">Error</strong>
+                                        <p>${response.message || 'Error al cambiar la contraseña'}</p>
+                                    </div>
+                                </div>
+                            `;
+                            
+                            $('#modal-message').html(errorMessage);
+                            $('#notification-modal').css({
+                                'display': 'flex',
+                                'align-items': 'center',
+                                'justify-content': 'center'
+                            });
+                            
+                            // Mantener el modal visible por 7 segundos para mensajes de error
+                            setTimeout(function() {
+                                $('#notification-modal').css('display', 'none');
+                            }, 7000);
+                        }
+                        
+                        // Restaurar el botón
+                        submitBtn.html(originalBtnText).prop('disabled', false);
+                    },
+                    error: function() {
+                        showModal('Error al procesar la solicitud', 'error');
+                        submitBtn.html(originalBtnText).prop('disabled', false);
+                    }
+                });
+            });
+
+            // Función para cargar contenido dinámicamente
+            function loadContent(content) {
+                $('#dynamic-content').html(`
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <p>Cargando...</p>
+                    </div>
+                `);
+
+                // Para la billetera, obtenemos los datos actualizados
+                if (content === 'billetera') {
+                    // Obtener los datos más recientes del usuario
+                    $.ajax({
+                        url: 'get_wallet_data.php',
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.error) {
+                                $('#dynamic-content').html(`
+                                    <h1>Mi Billetera</h1>
+                                    <div class="alert alert-error">
+                                        <i class="fas fa-exclamation-circle"></i> ${data.error}
+                                    </div>
+                                `);
+                            } else {
+                                renderBilletera(data.saldo, data.transacciones);
+                            }
+                        },
+                        error: function() {
+                            $('#dynamic-content').html(`
+                                <h1>Mi Billetera</h1>
+                                <div class="alert alert-error">
+                                    <i class="fas fa-exclamation-circle"></i> Error al cargar los datos de la billetera.
+                                </div>
+                            `);
+                        }
+                    });
+                } else {
+                    // Para el resto de contenidos, los renderizamos directamente
+                    setTimeout(function() {
+                        renderContent(content);
+                    }, 300);
+                }
+            }
+
+            // Función para renderizar el contenido de la billetera
+            function renderBilletera(saldo, transacciones) {
+                $('#dynamic-content').html(`
+                    <h1>Mi Billetera</h1>
+                    
+                    <div class="wallet-card">
+                        <div class="wallet-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="wallet-label">Saldo disponible</div>
+                        <div class="wallet-balance">€${parseFloat(saldo).toFixed(2)}</div>
+                        <div class="wallet-label">Última actualización: ${new Date().toLocaleDateString()}</div>
+                    </div>
+
+                    <div class="transaction-forms">
+                        <!-- Formulario para agregar dinero -->
+                        <div class="form-container deposit">
+                            <h3><i class="fas fa-plus-circle"></i> Agregar Dinero</h3>
+                            <form id="deposit-form" class="transaction-form">
+                                <div class="form-group">
+                                    <label for="monto-deposito">Monto:</label>
+                                    <div class="input-container">
+                                        <input type="number" id="monto-deposito" name="monto" placeholder="Monto a agregar" min="1" step="0.01" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="descripcion-deposito">Descripción:</label>
+                                    <div class="input-container">
+                                        <input type="text" id="descripcion-deposito" name="descripcion" placeholder="Ej: Recarga de saldo" required>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="origen" value="perfil">
+                                <input type="hidden" name="tipo" value="deposito">
+                                <button type="submit" class="btn-deposit">
+                                    <i class="fas fa-plus"></i> Agregar Fondos
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Formulario para retirar dinero -->
+                        <div class="form-container withdraw">
+                            <h3><i class="fas fa-minus-circle"></i> Retirar Dinero</h3>
+                            <form id="withdraw-form" class="transaction-form">
+                                <div class="form-group">
+                                    <label for="monto-retiro">Monto:</label>
+                                    <div class="input-container">
+                                        <input type="number" id="monto-retiro" name="monto" placeholder="Monto a retirar" min="1" max="${saldo}" step="0.01" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="descripcion-retiro">Descripción:</label>
+                                    <div class="input-container">
+                                        <input type="text" id="descripcion-retiro" name="descripcion" placeholder="Ej: Retiro a cuenta bancaria" required>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="origen" value="perfil">
+                                <button type="submit" class="btn-withdraw">
+                                    <i class="fas fa-minus"></i> Retirar Fondos
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="transaction-list">
+                        <h2><i class="fas fa-history"></i> Historial de Transacciones</h2>
+                        ${transacciones.length === 0 ? 
+                            '<p class="empty-message">No hay transacciones registradas.</p>' : 
+                            transacciones.map(transaccion => `
+                                <div class="transaction-item ${parseFloat(transaccion.monto) < 0 ? 'withdrawal' : 'deposit'}">
+                                    <div class="transaction-info">
+                                        <p class="transaction-title">
+                                            <i class="fas ${parseFloat(transaccion.monto) < 0 ? 'fa-arrow-down' : 'fa-arrow-up'}"></i> 
+                                            ${transaccion.descripcion}
+                                        </p>
+                                        <p class="transaction-date">${transaccion.fecha || 'Fecha no disponible'}</p>
+                                    </div>
+                                    <p class="transaction-amount ${parseFloat(transaccion.monto) >= 0 ? 'positive' : 'negative'}">
+                                        €${parseFloat(transaccion.monto).toFixed(2)}
+                                    </p>
+                                </div>
+                            `).join('')
+                        }
+                    </div>
+                `);
+
+                // Manejar el envío del formulario de depósito con AJAX
+                $('#deposit-form').on('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const formData = $(this).serialize();
+                    
+                    // Mostrar indicador de carga
+                    $(this).find('button').html('<i class="fas fa-spinner fa-spin"></i> Procesando...');
+                    $(this).find('button').prop('disabled', true);
+                    
+                    $.ajax({
+                        url: 'procesar_transaccion.php',
+                        type: 'POST',
+                        data: formData,
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                showModal('Fondos agregados correctamente', 'success');
+                                // Recargar la sección de billetera para mostrar el saldo actualizado
+                                loadContent('billetera');
+                            } else {
+                                showModal(response.message || 'Error al procesar la transacción', 'error');
+                                // Restaurar el botón
+                                $('#deposit-form').find('button').html('<i class="fas fa-plus"></i> Agregar Fondos');
+                                $('#deposit-form').find('button').prop('disabled', false);
+                            }
+                        },
+                        error: function() {
+                            showModal('Error al procesar la transacción', 'error');
+                            // Restaurar el botón
+                            $('#deposit-form').find('button').html('<i class="fas fa-plus"></i> Agregar Fondos');
+                            $('#deposit-form').find('button').prop('disabled', false);
+                        }
+                    });
+                });
+
+                // Manejar el envío del formulario de retiro con AJAX
+                $('#withdraw-form').on('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const formData = $(this).serialize();
+                    
+                    // Mostrar indicador de carga
+                    $(this).find('button').html('<i class="fas fa-spinner fa-spin"></i> Procesando...');
+                    $(this).find('button').prop('disabled', true);
+                    
+                    $.ajax({
+                        url: 'procesar_retiro.php',
+                        type: 'POST',
+                        data: formData,
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                showModal('Fondos retirados correctamente', 'success');
+                                // Recargar la sección de billetera para mostrar el saldo actualizado
+                                loadContent('billetera');
+                            } else {
+                                showModal(response.message || 'Error al procesar el retiro', 'error');
+                                // Restaurar el botón
+                                $('#withdraw-form').find('button').html('<i class="fas fa-minus"></i> Retirar Fondos');
+                                $('#withdraw-form').find('button').prop('disabled', false);
+                            }
+                        },
+                        error: function() {
+                            showModal('Error al procesar el retiro', 'error');
+                            // Restaurar el botón
+                            $('#withdraw-form').find('button').html('<i class="fas fa-minus"></i> Retirar Fondos');
+                            $('#withdraw-form').find('button').prop('disabled', false);
+                        }
+                    });
+                });
+            }
+
+            // Función para renderizar el resto de contenidos
+            function renderContent(content) {
+                if (content === 'ajustes') {
+                    // Contenido de Ajustes de Cuenta
+                    $('#dynamic-content').html(`
+                        <h1>Ajustes de Cuenta</h1>
+                        
+                        <?php if ($success): ?>
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i> <?php echo htmlspecialchars($success); ?>
+                        </div>
+                        <?php endif; ?>
+                        
+                        <?php if ($error): ?>
+                        <div class="alert alert-error">
+                            <i class="fas fa-exclamation-circle"></i> <?php echo htmlspecialchars($error); ?>
+                        </div>
+                        <?php endif; ?>
+                        
+                        <div class="profile-header">
+                            <div class="profile-avatar large">
+                                <?php echo strtoupper(substr($usuario['nombre'], 0, 1)); ?>
+                            </div>
+                            <div class="profile-details">
+                                <h2><?php echo htmlspecialchars($usuario['nombre'] . ' ' . $usuario['apellido']); ?></h2>
+                                <p class="user-email"><?php echo htmlspecialchars($usuario['email']); ?></p>
+                                <div class="profile-badge <?php echo strtolower($usuario['rol']); ?>">
+                                    <?php echo htmlspecialchars($usuario['rol']); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>Información Personal</h3>
+                            <form action="update_profile.php" method="POST" class="profile-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="nombre">Nombre:</label>
+                                        <div class="input-container">
+                                            <i class="fas fa-user"></i>
+                                            <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($usuario['nombre']); ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="apellido">Apellido:</label>
+                                        <div class="input-container">
+                                            <i class="fas fa-user"></i>
+                                            <input type="text" id="apellido" name="apellido" value="<?php echo htmlspecialchars($usuario['apellido']); ?>" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    <div class="input-container">
+                                        <i class="fas fa-envelope"></i>
+                                        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="rol">Rol:</label>
+                                    <div class="input-container">
+                                        <i class="fas fa-user-tag"></i>
+                                        <input type="text" id="rol" name="rol" value="<?php echo htmlspecialchars($usuario['rol']); ?>" readonly>
+                                    </div>
+                                </div>
+                                
+                                <div class="button-group">
+                                    <button type="submit" class="btn-primary">
+                                        <i class="fas fa-save"></i> Actualizar Información
+                                    </button>
+                                    <button type="button" class="btn-secondary" id="change-password">
+                                        <i class="fas fa-key"></i> Cambiar Contraseña
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    `);
+                    
+                    // Manejar clic en "Cambiar Contraseña"
+                    $('#change-password').on('click', function() {
+                        // Mostrar el modal de cambio de contraseña
+                        $('#password-modal').css('display', 'flex');
+                    });
+                    
+                } else if (content === 'wishlist') {
+                    // Contenido de Lista de Deseos - Ajustado para que sea más amplio
+                    let wishlistHTML = `
+                        <h1>Mi Lista de Deseos</h1>
+                    `;
+                    
+                    <?php if (!empty($wishlist)): ?>
+                        wishlistHTML += `<div class="card-grid">`;
+                        
+                        <?php foreach ($wishlist as $producto): ?>
+                            wishlistHTML += `
+                                <div class="product-card">
+                                    <div class="product-image">
+                                        <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
+                                        <div class="product-actions">
+                                            <a href="producto.php?id=<?php echo $producto['id']; ?>" class="action-btn view">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <form method="POST" action="eliminar_deseo.php" class="action-form">
+                                                <input type="hidden" name="producto_id" value="<?php echo $producto['id']; ?>">
+                                                <button type="submit" class="action-btn remove">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-title"><?php echo htmlspecialchars($producto['nombre']); ?></h3>
+                                        <p class="product-price">€<?php echo number_format($producto['precio'], 2); ?></p>
+                                        <a href="producto.php?id=<?php echo $producto['id']; ?>" class="btn-primary btn-sm">
+                                            Ver Detalles
+                                        </a>
+                                    </div>
+                                </div>
+                            `;
+                        <?php endforeach; ?>
+                        
+                        wishlistHTML += `</div>`;
+                    <?php else: ?>
+                        wishlistHTML += `
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <h3>Tu lista de deseos está vacía</h3>
+                                <p>Explora nuestra tienda y añade tus juegos favoritos a la lista de deseos.</p>
+                                <a href="index.php" class="btn-primary">
+                                    <i class="fas fa-shopping-cart"></i> Ir a la tienda
+                                </a>
+                            </div>
+                        `;
+                    <?php endif; ?>
+                    
+                    $('#dynamic-content').html(wishlistHTML);
+                } else if (content === 'segunda_mano') {
+                    // Contenido de Segunda Mano con diseño mejorado
+                    let segundaManoHTML = `
+                        <h1>Mis Productos de Segunda Mano</h1>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-handshake"></i> Gestión de Productos</h3>
+                                <button id="add-second-hand" class="btn-primary">
+                                    <i class="fas fa-plus"></i> Publicar Nuevo Producto
+                                </button>
+                            </div>
+                    `;
+                    
+                    // Insertar productos si existen
+                    <?php if (!empty($mis_productos_segunda_mano)): ?>
+                        segundaManoHTML += `<div class="segunda-mano-grid">`;
+                        <?php foreach ($mis_productos_segunda_mano as $producto): ?>
+                            segundaManoHTML += `
+                                <div class="segunda-mano-card">
+                                    <div class="segunda-mano-image-container">
+                                        <img src="${<?php echo json_encode(htmlspecialchars($producto['imagen'] ?? 'images/default.jpg')); ?>}" 
+                                             alt="${<?php echo json_encode(htmlspecialchars($producto['nombre'] ?? 'Producto de segunda mano')); ?>}" 
+                                             class="segunda-mano-image">
+                                        <div class="segunda-mano-status">${<?php echo json_encode(htmlspecialchars($producto['estado'] ?? 'Nuevo')); ?>}</div>
+                                    </div>
+                                    <div class="segunda-mano-content">
+                                        <h3 class="segunda-mano-title">${<?php echo json_encode(htmlspecialchars($producto['nombre'] ?? 'Producto de segunda mano')); ?>}</h3>
+                                        <div class="segunda-mano-price">${parseFloat(<?php echo $producto['precio'] ?? 0; ?>).toFixed(2)}</div>
+                                        <p class="segunda-mano-description">${<?php echo json_encode(htmlspecialchars($producto['descripcion'] ?? 'Sin descripción disponible')); ?>}</p>
+                                        <div class="segunda-mano-actions">
+                                            <a href="editar_segunda_mano.php?id=${<?php echo $producto['id'] ?? 0; ?>}" class="segunda-mano-btn segunda-mano-btn-edit">
+                                                <i class="fas fa-edit"></i> Editar
+                                            </a>
+                                            <button class="segunda-mano-btn segunda-mano-btn-delete eliminar-segunda-mano" data-id="${<?php echo $producto['id'] ?? 0; ?>}">
+                                                <i class="fas fa-trash"></i> Eliminar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        <?php endforeach; ?>
+                        segundaManoHTML += `</div>`;
+                    <?php else: ?>
+                        segundaManoHTML += `
+                            <div class="segunda-mano-empty">
+                                <div class="segunda-mano-empty-icon">
+                                    <i class="fas fa-handshake"></i>
+                                </div>
+                                <h3>No tienes productos de segunda mano publicados</h3>
+                                <p>Publica tus juegos usados para venderlos a otros usuarios y ganar dinero extra.</p>
+                                <button id="add-second-hand-empty" class="btn-primary">
+                                    <i class="fas fa-plus"></i> Publicar Mi Primer Producto
+                                </button>
+                            </div>
+                        `;
+                    <?php endif; ?>
+
+                    segundaManoHTML += `</div>`; // Cierra el div card
+
+                    $('#dynamic-content').html(segundaManoHTML);
+                    
+                    // Manejar clic en "Publicar Nuevo Producto"
+                    $('#add-second-hand, #add-second-hand-empty').on('click', function() {
+                        window.location.href = 'agregar_segunda_mano.php';
+                    });
+
+                    // Manejar clic en el botón de eliminar (usando delegación de eventos)
+                    $('#dynamic-content').on('click', '.eliminar-segunda-mano', function() {
+                        const productoId = $(this).data('id');
+                        const productCard = $(this).closest('.segunda-mano-card');
+
+                        if (confirm('¿Estás seguro de que quieres eliminar este producto de segunda mano?')) {
+                            // Llamada AJAX para eliminar el producto
+                            $.ajax({
+                                url: 'eliminar_segunda_mano.php',
+                                type: 'POST',
+                                data: { id: productoId },
+                                dataType: 'json',
+                                success: function(response) {
+                                    if (response.success) {
+                                        
+                                    if (response.success) {
+                                        // Eliminar la tarjeta del DOM si la eliminación en la base de datos fue exitosa
+                                        productCard.remove();
+                                        showModal('Producto eliminado correctamente.', 'success');
+                                        
+                                        // Verificar si no quedan más productos y mostrar el estado vacío
+                                        if ($('.segunda-mano-card').length === 0) {
+                                            $('.segunda-mano-grid').replaceWith(`
+                                                <div class="segunda-mano-empty">
+                                                    <div class="segunda-mano-empty-icon">
+                                                        <i class="fas fa-handshake"></i>
+                                                    </div>
+                                                    <h3>No tienes productos de segunda mano publicados</h3>
+                                                    <p>Publica tus juegos usados para venderlos a otros usuarios y ganar dinero extra.</p>
+                                                    <button id="add-second-hand-empty" class="btn-primary">
+                                                        <i class="fas fa-plus"></i> Publicar Mi Primer Producto
+                                                    </button>
+                                                </div>
+                                            `);
+                                        }
+                                    } else {
+                                        // Mostrar mensaje de error del servidor
+                                        showModal(response.message || 'Error al eliminar el producto.', 'error');
+                                    }
+                                },
+                                error: function() {
+                                    // Mostrar mensaje de error general de AJAX
+                                    showModal('Error al comunicarse con el servidor para eliminar el producto.', 'error');
+                                }
+                            });
+                        }
+                    });
+                } else if (content === 'billetera') {
+                    // Contenido de Billetera
+                    $('#dynamic-content').html(`
+                        <h1>Mi Billetera</h1>
+                        
+                        <div class="wallet-card">
+                            <div class="wallet-icon">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="wallet-label">Saldo disponible</div>
+                            <div class="wallet-balance">€${parseFloat(saldo).toFixed(2)}</div>
+                            <div class="wallet-label">Última actualización: ${new Date().toLocaleDateString()}</div>
+                        </div>
+
+                        <div class="transaction-forms">
+                            <!-- Formulario para agregar dinero -->
+                            <div class="form-container deposit">
+                                <h3><i class="fas fa-plus-circle"></i> Agregar Dinero</h3>
+                                <form id="deposit-form" class="transaction-form">
+                                    <div class="form-group">
+                                        <label for="monto-deposito">Monto:</label>
+                                        <div class="input-container">
+                                            <input type="number" id="monto-deposito" name="monto" placeholder="Monto a agregar" min="1" step="0.01" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="descripcion-deposito">Descripción:</label>
+                                        <div class="input-container">
+                                            <input type="text" id="descripcion-deposito" name="descripcion" placeholder="Ej: Recarga de saldo" required>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="origen" value="perfil">
+                                    <input type="hidden" name="tipo" value="deposito">
+                                    <button type="submit" class="btn-deposit">
+                                        <i class="fas fa-plus"></i> Agregar Fondos
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Formulario para retirar dinero -->
+                            <div class="form-container withdraw">
+                                <h3><i class="fas fa-minus-circle"></i> Retirar Dinero</h3>

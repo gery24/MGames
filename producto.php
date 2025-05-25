@@ -499,6 +499,36 @@ if (isset($_GET['review_error'])) {
         font-size: 1.2rem;
     }
 
+    /* Botón scroll arriba */
+    #scrollToTopBtn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background-color: var(--primary-color); /* Usa la variable CSS primaria para que se ajuste al modo admin */
+        color: white;
+        border: none;
+        border-radius: 50%;
+        display: none; /* Oculto por defecto */
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+        z-index: 1000;
+    }
+
+    #scrollToTopBtn:hover {
+        background-color: var(--primary-dark); /* Usa la variable CSS primaria oscura para el hover */
+        transform: scale(1.1);
+    }
+
+    #scrollToTopBtn svg {
+        width: 24px;
+        height: 24px;
+    }
+
 </style>
 
 <div class="product-container">
@@ -784,6 +814,35 @@ if (isset($_GET['review_error'])) {
 <?php require_once 'includes/footer.php'; ?>
 
 <script src="wishlist.js" defer></script>
+
+<!-- Botón scroll arriba -->
+<button id="scrollToTopBtn" aria-label="Volver arriba">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-up">
+    <polyline points="18 15 12 9 6 15"></polyline>
+  </svg>
+</button>
+
+<!-- Script JS para la funcionalidad del botón -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const scrollBtn = document.getElementById('scrollToTopBtn');
+
+  // Verifica si el botón existe antes de añadir listeners
+  if (scrollBtn) {
+    window.addEventListener('scroll', () => {
+      scrollBtn.style.display = window.scrollY > 300 ? 'flex' : 'none';
+    });
+
+    scrollBtn.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  }
+});
+</script>
 
 </body>
 </html>
