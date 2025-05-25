@@ -502,6 +502,340 @@ $titulo = "Mi Perfil - MGames";
             border-left-color: var(--error-color);
         }
 
+        /* ESTILOS ESPECÍFICOS PARA BILLETERA */
+        
+        /* Tarjeta de saldo principal */
+        .wallet-summary {
+            margin-bottom: 2rem;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .balance-label {
+            font-size: 1.125rem;
+            font-weight: 500;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .balance-amount {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Formularios de acciones de billetera */
+        .wallet-actions-forms {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .deposit-card::before {
+            background: linear-gradient(90deg, var(--success-color), #34d399);
+        }
+
+        .withdraw-card::before {
+            background: linear-gradient(90deg, var(--warning-color), #fbbf24);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .card-header i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .deposit-card .card-header i {
+            color: var(--success-color);
+        }
+
+        .withdraw-card .card-header i {
+            color: var(--warning-color);
+        }
+
+        .card-header h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .transaction-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .transaction-form .form-group {
+            margin-bottom: 0;
+        }
+
+        .transaction-form label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .transaction-form input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--bg-secondary);
+        }
+
+        .transaction-form input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            background: var(--bg-primary);
+        }
+
+        .btn-action {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-deposit {
+            background: linear-gradient(135deg, var(--success-color), #34d399);
+            color: white;
+        }
+
+        .btn-deposit:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-withdraw {
+            background: linear-gradient(135deg, var(--warning-color), #fbbf24);
+            color: white;
+        }
+
+        .btn-withdraw:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Lista de transacciones */
+        .transactions-list {
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .transactions-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .transactions-list::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: 3px;
+        }
+
+        .transactions-list::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        .transactions-list::-webkit-scrollbar-thumb:hover {
+            background: var(--text-light);
+        }
+
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .transaction-item:hover {
+            background: var(--bg-primary);
+            box-shadow: var(--shadow-md);
+            transform: translateX(4px);
+        }
+
+        .transaction-item.deposit {
+            border-left-color: var(--success-color);
+        }
+
+        .transaction-item.withdrawal {
+            border-left-color: var(--warning-color);
+        }
+
+        .transaction-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .transaction-item.deposit .transaction-icon {
+            background: linear-gradient(135deg, var(--success-color), #34d399);
+            color: white;
+        }
+
+        .transaction-item.withdrawal .transaction-icon {
+            background: linear-gradient(135deg, var(--warning-color), #fbbf24);
+            color: white;
+        }
+
+        .transaction-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .transaction-description {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            font-size: 1rem;
+        }
+
+        .transaction-date {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .transaction-item .amount {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        .transaction-item.deposit .amount {
+            color: var(--success-color);
+        }
+
+        .transaction-item.withdrawal .amount {
+            color: var(--warning-color);
+        }
+
+        .empty-transactions {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-light);
+        }
+
+        .empty-transactions i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-transactions p {
+            font-size: 1.125rem;
+            margin: 0;
+        }
+
+        /* Responsive para billetera */
+        @media (max-width: 768px) {
+            .wallet-actions-forms {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .balance-amount {
+                font-size: 2.5rem;
+            }
+
+            .transaction-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .transaction-details {
+                text-align: center;
+            }
+        }
+
         /* Estilos para Segunda Mano */
         .segunda-mano-header {
             display: flex;
@@ -1399,17 +1733,166 @@ $titulo = "Mi Perfil - MGames";
                     });
                     
                 } else if (content === 'billetera') {
-                    $('#dynamic-content').html(`
+                    // Contenido de Billetera
+                    let billeteraHTML = `
                         <h1><i class="fas fa-wallet"></i> Mi Billetera</h1>
                         
-                        <div class="empty-state">
-                            <div class="empty-icon">
-                                <i class="fas fa-tools"></i>
+                        <div class="card">
+                            <h3><i class="fas fa-info-circle"></i> Información de Saldo</h3>
+                            <div class="wallet-summary">
+                                <div class="balance-card">
+                                    <div class="balance-label">Saldo actual</div>
+                                    <div class="balance-amount">€<?php echo number_format($usuario['cartera'], 2); ?></div>
+                                </div>
                             </div>
-                            <h3>Sección en desarrollo</h3>
-                            <p>Esta funcionalidad estará disponible próximamente</p>
                         </div>
-                    `);
+
+                        <div class="card">
+                            <h3><i class="fas fa-exchange-alt"></i> Acciones de Cartera</h3>
+                            <div class="wallet-actions-forms">
+                                <!-- Formulario para agregar dinero -->
+                                <div class="action-card deposit-card">
+                                    <div class="card-header">
+                                        <i class="fas fa-plus-circle"></i>
+                                        <h3>Agregar Dinero</h3>
+                                    </div>
+                                    <form id="deposit-form-perfil" class="transaction-form">
+                                        <div class="form-group">
+                                            <label for="deposit-amount-perfil"><i class="fas fa-euro-sign"></i> Monto</label>
+                                            <input type="number" id="deposit-amount-perfil" name="monto" placeholder="Cantidad a agregar" min="1" step="0.01" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="deposit-description-perfil"><i class="fas fa-comment-alt"></i> Descripción</label>
+                                            <input type="text" id="deposit-description-perfil" name="descripcion" placeholder="Motivo del ingreso" required>
+                                        </div>
+                                        <input type="hidden" name="origen" value="perfil">
+                                        <input type="hidden" name="tipo" value="deposito">
+                                        <button type="submit" class="btn-action btn-deposit">
+                                            <i class="fas fa-arrow-circle-up"></i> Agregar Fondos
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <!-- Formulario para retirar dinero -->
+                                <div class="action-card withdraw-card">
+                                    <div class="card-header">
+                                        <i class="fas fa-minus-circle"></i>
+                                        <h3>Retirar Dinero</h3>
+                                    </div>
+                                    <form id="withdraw-form-perfil" class="transaction-form">
+                                        <div class="form-group">
+                                            <label for="withdraw-amount-perfil"><i class="fas fa-euro-sign"></i> Monto</label>
+                                            <input type="number" id="withdraw-amount-perfil" name="monto" placeholder="Cantidad a retirar" min="1" max="<?php echo $usuario['cartera']; ?>" step="0.01" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="withdraw-description-perfil"><i class="fas fa-comment-alt"></i> Descripción</label>
+                                            <input type="text" id="withdraw-description-perfil" name="descripcion" placeholder="Motivo del retiro" required>
+                                        </div>
+                                        <input type="hidden" name="origen" value="perfil">
+                                        <button type="submit" class="btn-action btn-withdraw">
+                                            <i class="fas fa-arrow-circle-down"></i> Retirar Fondos
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3><i class="fas fa-history"></i> Historial de Transacciones</h3>
+                            <div class="transactions-list">
+                                <?php if (empty($transacciones)): ?>
+                                    <div class="empty-transactions">
+                                        <i class="fas fa-receipt"></i>
+                                        <p>No hay transacciones registradas.</p>
+                                    </div>
+                                <?php else: ?>
+                                    <?php foreach ($transacciones as $transaccion): ?>
+                                        <div class="transaction-item <?php echo $transaccion['monto'] < 0 ? 'withdrawal' : 'deposit'; ?>">
+                                            <div class="transaction-icon">
+                                                <i class="fas <?php echo $transaccion['monto'] < 0 ? 'fa-arrow-down' : 'fa-arrow-up'; ?>"></i>
+                                            </div>
+                                            <div class="transaction-details">
+                                                <p class="transaction-description"><?php echo htmlspecialchars($transaccion['descripcion']); ?></p>
+                                                <p class="transaction-date"><?php echo date('d/m/Y H:i', strtotime($transaccion['fecha'])); ?></p>
+                                            </div>
+                                            <p class="amount">€<?php echo number_format($transaccion['monto'], 2); ?></p>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    `;
+                    
+                    $('#dynamic-content').html(billeteraHTML);
+
+                    // --- JavaScript para manejar los formularios de la billetera (AJAX) ---
+
+                    // Manejar el envío del formulario de depósito con AJAX
+                    $('#deposit-form-perfil').on('submit', function(e) {
+                        e.preventDefault();
+                        
+                        const formData = $(this).serialize();
+                        const submitBtn = $(this).find('button[type="submit"]');
+                        const originalBtnText = submitBtn.html();
+
+                        submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Procesando...').prop('disabled', true);
+                        
+                        $.ajax({
+                            url: 'procesar_transaccion.php',
+                            type: 'POST',
+                            data: formData,
+                            dataType: 'json',
+                            success: function(response) {
+                                if (response.success) {
+                                    showModal('Fondos agregados correctamente', 'success');
+                                    // Recargar la sección de billetera para mostrar el saldo actualizado
+                                    loadContent('billetera');
+                                } else {
+                                    showModal(response.message || 'Error al procesar la transacción', 'error');
+                                    submitBtn.html(originalBtnText).prop('disabled', false);
+                                }
+                            },
+                            error: function() {
+                                showModal('Error al comunicarse con el servidor', 'error');
+                                submitBtn.html(originalBtnText).prop('disabled', false);
+                            }
+                        });
+                    });
+
+                    // Manejar el envío del formulario de retiro con AJAX
+                    $('#withdraw-form-perfil').on('submit', function(e) {
+                        e.preventDefault();
+                        
+                        const formData = $(this).serialize();
+                        const submitBtn = $(this).find('button[type="submit"]');
+                        const originalBtnText = submitBtn.html();
+
+                        submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Procesando...').prop('disabled', true);
+                        
+                        $.ajax({
+                            url: 'procesar_retiro.php',
+                            type: 'POST',
+                            data: formData,
+                            dataType: 'json',
+                            success: function(response) {
+                                if (response.success) {
+                                    showModal('Fondos retirados correctamente', 'success');
+                                    // Recargar la sección de billetera para mostrar el saldo actualizado
+                                    loadContent('billetera');
+                                } else {
+                                    showModal(response.message || 'Error al procesar el retiro', 'error');
+                                    submitBtn.html(originalBtnText).prop('disabled', false);
+                                }
+                            },
+                            error: function() {
+                                showModal('Error al comunicarse con el servidor', 'error');
+                                submitBtn.html(originalBtnText).prop('disabled', false);
+                            }
+                        });
+                    });
+
+                    // --- Fin JavaScript formularios billetera ---
+
                 } else {
                     $('#dynamic-content').html(`
                         <h1>${content.charAt(0).toUpperCase() + content.slice(1).replace(/_/g, ' ')}</h1>
@@ -1488,3 +1971,33 @@ $titulo = "Mi Perfil - MGames";
     <?php require_once 'includes/footer.php'; ?>
 </body>
 </html>
+
+¡Perfecto! He añadido estilos hermosos y modernos específicamente para la sección de billetera que incluyen:
+
+## 🎨 **Diseño Elegante de Billetera:**
+
+### 💳 **Tarjeta de Saldo Principal:**
+- **Gradiente llamativo** con efectos de luz
+- **Tipografía grande** para el saldo
+- **Efectos visuales** con pseudo-elementos
+
+### 📊 **Formularios de Transacciones:**
+- **Tarjetas separadas** para depósito y retiro
+- **Colores diferenciados** (verde para depósito, naranja para retiro)
+- **Iconos descriptivos** y headers elegantes
+- **Botones con gradientes** específicos para cada acción
+
+### 📋 **Historial de Transacciones:**
+- **Lista scrolleable** con scrollbar personalizado
+- **Items con iconos** circulares diferenciados
+- **Colores semánticos** (verde para ingresos, naranja para retiros)
+- **Efectos hover** suaves y transiciones
+
+### ✨ **Características Especiales:**
+- **Completamente responsive** para móviles
+- **Animaciones fluidas** en todos los elementos
+- **Estados vacíos** elegantes
+- **Integración perfecta** con el diseño existente
+- **Funcionalidad AJAX** mantenida
+
+El diseño mantiene la coherencia visual con el resto del perfil mientras hace que la gestión de la billetera sea visualmente atractiva y fácil de usar. 💰✨
