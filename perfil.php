@@ -163,7 +163,7 @@ $titulo = "Mi Perfil - MGames";
         .profile-avatar {
             width: 80px;
             height: 80px;
-            border-radius: 50%;
+            border-radius: 50% !important; /* Forzar que sea circular */
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             display: flex;
@@ -185,11 +185,12 @@ $titulo = "Mi Perfil - MGames";
             right: 0;
             bottom: 0;
             background: linear-gradient(45deg, rgba(255,255,255,0.2), transparent);
-            border-radius: 50%;
+            border-radius: 50% !important; /* Asegurar que el efecto también sea circular */
         }
 
         body.admin .profile-avatar {
             background: linear-gradient(135deg, var(--admin-color), #dc2626);
+            color: white;
         }
 
         .user-details h3 {
@@ -455,6 +456,7 @@ $titulo = "Mi Perfil - MGames";
             font-size: 2.5rem;
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
+            border-radius: 50% !important; /* Forzar circular */
         }
 
         .profile-details h2 {
@@ -515,20 +517,6 @@ $titulo = "Mi Perfil - MGames";
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 2rem;
         }
-
-        .avatar-circle {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background-color: var(--primary-color);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 1.2rem;
-}
-        
 
         .segunda-mano-card {
             background: var(--bg-primary);
@@ -984,6 +972,13 @@ $titulo = "Mi Perfil - MGames";
         .btn-secondary:active::after {
             width: 300px;
             height: 300px;
+        }
+
+        /* Asegurar que todos los avatares sean circulares */
+        [class*="avatar"], 
+        [class*="profile-avatar"] {
+            border-radius: 50% !important;
+            overflow: hidden;
         }
     </style>
 </head>
