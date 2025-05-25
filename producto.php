@@ -499,6 +499,36 @@ if (isset($_GET['review_error'])) {
         font-size: 1.2rem;
     }
 
+    /* Botón scroll arriba */
+    #scrollToTopBtn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background-color: var(--primary-color); /* Usa la variable CSS primaria para que se ajuste al modo admin */
+        color: white;
+        border: none;
+        border-radius: 50%;
+        display: none; /* Oculto por defecto */
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+        z-index: 1000;
+    }
+
+    #scrollToTopBtn:hover {
+        background-color: var(--primary-dark); /* Usa la variable CSS primaria oscura para el hover */
+        transform: scale(1.1);
+    }
+
+    #scrollToTopBtn svg {
+        width: 24px;
+        height: 24px;
+    }
+
 </style>
 
 <div class="product-container">
@@ -581,24 +611,32 @@ if (isset($_GET['review_error'])) {
 
     <!-- Acerca del juego -->
     <div class="card">
-        <h2 class="section-title">Acerca del juego</h2>
-        <p><?php echo !empty($producto['acerca_de']) ? htmlspecialchars($producto['acerca_de']) : 'No hay descripción disponible para este juego.'; ?></p>
+        <h2 class="section-title">Acerca del Juego</h2>
+        <div class="product-description">
+             <?php echo nl2br(htmlspecialchars($producto['descripcion'] ?? '')); ?>
+        </div>
     </div>
 
     <!-- Requisitos del sistema -->
+    <?php if (!empty($producto['reqmin']) || !empty($producto['reqmax'])): ?>
     <div class="card">
         <h2 class="section-title">Requisitos del Sistema</h2>
         <div class="requirements-grid">
+            <?php if (!empty($producto['reqmin'])): ?>
             <div>
-                <h3 class="requirements-title">Requisitos Mínimos</h3>
-                <p><?php echo !empty($producto['reqmin']) ? htmlspecialchars($producto['reqmin']) : 'No se han especificado los requisitos mínimos para este juego.'; ?></p>
+                <h3 class="requirements-title">Mínimos</h3>
+                <p><?php echo nl2br(htmlspecialchars($producto['reqmin'])); ?></p>
             </div>
+            <?php endif; ?>
+            <?php if (!empty($producto['reqmax'])): ?>
             <div>
-                <h3 class="requirements-title">Requisitos Recomendados</h3>
-                <p><?php echo !empty($producto['reqmax']) ? htmlspecialchars($producto['reqmax']) : 'No se han especificado los requisitos recomendados para este juego.'; ?></p>
+                <h3 class="requirements-title">Requisitos Máximos</h3>
+                <p><?php echo nl2br(htmlspecialchars($producto['reqmax'])); ?></p>
             </div>
+            <?php endif; ?>
         </div>
     </div>
+    <?php endif; ?>
 
     <!-- Valoración -->
     <?php if ($reseñas['total'] > 0): ?>
@@ -774,3 +812,37 @@ if (isset($_GET['review_error'])) {
 </div>
 
 <?php require_once 'includes/footer.php'; ?>
+
+<script src="wishlist.js" defer></script>
+
+<!-- Botón scroll arriba -->
+<button id="scrollToTopBtn" aria-label="Volver arriba">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-up">
+    <polyline points="18 15 12 9 6 15"></polyline>
+  </svg>
+</button>
+
+<!-- Script JS para la funcionalidad del botón -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const scrollBtn = document.getElementById('scrollToTopBtn');
+
+  // Verifica si el botón existe antes de añadir listeners
+  if (scrollBtn) {
+    window.addEventListener('scroll', () => {
+      scrollBtn.style.display = window.scrollY > 300 ? 'flex' : 'none';
+    });
+
+    scrollBtn.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  }
+});
+</script>
+
+</body>
+</html>

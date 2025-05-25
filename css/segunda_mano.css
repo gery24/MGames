@@ -1,270 +1,451 @@
 /* Estilos específicos para la página de segunda mano */
 :root {
-    --primary-color: #2563eb;
-    --secondary-color: #1e2caf;
-    --accent-color: #6d28d9; /* Color morado para botones como en la referencia */
-    --background-color: #f3f4f6;
-    --card-background: #ffffff;
-    --text-color: #1f2937;
-    --text-secondary: #6b7280;
-    --navbar-color: #1e3a8a;
-    --footer-color: #fdfdfd;
-    --border-radius: 12px;
-    --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  }
-  
-  /* Estilos de la sección principal */
-  .segunda-mano-section {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
-  }
-  
-  .section-header {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-  
-  .section-header h1 {
-    font-size: 2.5rem;
-    color: var(--primary-color);
-    margin-bottom: 0.5rem;
-  }
-  
-  .section-header p {
-    font-size: 1.1rem;
-    color: var(--text-color);
-    opacity: 0.8;
-  }
-  
-  /* Estilos de los filtros */
-  .filters-container {
-    background-color: var(--card-background);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-  }
-  
+  --primary-color: #2563eb;
+  --secondary-color: #1e2caf;
+  --accent-color: #6d28d9;
+  --background-color: #f8f9fa;
+  --card-background: #ffffff;
+  --text-color: #1f2937;
+  --text-secondary: #6b7280;
+  --navbar-color: #1e3a8a;
+  --footer-color: #fdfdfd;
+  --border-radius: 12px;
+  --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  --red-primary: #dc2626;
+  --red-secondary: #b91c1c;
+  --red-accent: #ef4444;
+}
+
+/* ===== ESTILOS ESPECÍFICOS PARA ADMINISTRADORES ===== */
+body.admin {
+  --primary-color: #dc2626;
+  --secondary-color: #b91c1c;
+  --accent-color: #ef4444;
+  --background-color: #fef2f2;
+  --box-shadow: 0 2px 10px rgba(220, 38, 38, 0.1);
+}
+
+body.admin .section-header h1 {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+body.admin .filters-container {
+  border-left: 4px solid var(--primary-color);
+  background: linear-gradient(135deg, #fef2f2, #ffffff);
+}
+
+/* ===== ESTILOS GENERALES ===== */
+body {
+  background-color: var(--background-color);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.content {
+  min-height: 100vh;
+  padding-top: 2rem;
+}
+
+/* Estilos de la sección principal */
+.segunda-mano-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-header h1 {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.section-header p {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ===== ESTILOS DE LOS FILTROS ===== */
+.filters-container {
+  background-color: var(--card-background);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+  margin-bottom: 3rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.filters-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  align-items: end;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.filter-select,
+.filter-input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.filter-select:focus,
+.filter-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+body.admin .filter-select:focus,
+body.admin .filter-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.search-input-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.search-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 0.875rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.search-button:hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+body.admin .search-button {
+  background-color: var(--primary-color);
+}
+
+body.admin .search-button:hover {
+  background-color: var(--secondary-color);
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+}
+
+.clear-filters {
+  display: inline-block;
+  margin-top: 1.5rem;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.clear-filters:hover {
+  text-decoration: underline;
+  color: var(--secondary-color);
+}
+
+/* ===== ESTILOS DE TARJETAS COMO EN LA IMAGEN F1 23 ===== */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.product-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  height: 420px;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.product-image {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.05);
+}
+
+/* Icono de corazón como en la imagen */
+.wishlist-icon {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.wishlist-icon:hover {
+  background-color: #2563eb;
+  transform: scale(1.1);
+}
+
+.wishlist-icon i {
+  color: #2563eb;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.wishlist-icon:hover i {
+  color: white;
+}
+
+/* Estilos rojos solo para administradores */
+body.admin .wishlist-icon:hover {
+  background-color: #dc2626;
+}
+
+body.admin .wishlist-icon i {
+  color: #dc2626;
+}
+
+.product-card-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  background-color: #ffffff;
+}
+
+.product-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #2c3e50;
+  line-height: 1.4;
+  text-align: left;
+  min-height: 50px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product-price {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+/* Botón azul por defecto (clientes) */
+.btn-details {
+  display: block;
+  background-color: #2563eb;
+  color: white;
+  text-align: center;
+  padding: 12px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  margin-top: auto;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-details:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+}
+
+/* Estilos rojos solo para administradores */
+body.admin .btn-details {
+  background-color: #dc2626;
+}
+
+body.admin .btn-details:hover {
+  background-color: #b91c1c;
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3);
+}
+
+/* ===== BOTÓN DE AÑADIR JUEGO ===== */
+.add-game-container {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.btn-add-game {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 1rem 2.5rem;
+  border-radius: 16px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+.add-icon {
+  font-size: 1.5rem;
+  margin-right: 0.75rem;
+  font-weight: bold;
+}
+
+.btn-add-game:hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+}
+
+body.admin .btn-add-game {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+}
+
+body.admin .btn-add-game:hover {
+  background: linear-gradient(135deg, #b91c1c, #dc2626);
+  box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+}
+
+/* ===== MENSAJE DE NO RESULTADOS ===== */
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: var(--card-background);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.no-results p {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ===== ESTILOS RESPONSIVOS ===== */
+@media (max-width: 768px) {
   .filters-form {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-  
-  .filter-group h3 {
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    color: var(--text-color);
-  }
-  
-  .filter-select,
-  .filter-input {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #e2e8f0;
-    border-radius: var(--border-radius);
-    font-size: 0.95rem;
-    background-color: #fff;
-  }
-  
-  .search-input-group {
-    display: flex;
-    gap: 0.5rem;
-  }
-  
-  .search-button {
-    background-color: var(--accent-color);
-    color: white;
-    border: none;
-    border-radius: var(--border-radius);
-    padding: 0.75rem 1.25rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .search-button:hover {
-    background-color: #5b21b6;
-  }
-  
-  .clear-filters {
-    display: inline-block;
-    margin-top: 1rem;
-    color: var(--accent-color);
-    text-decoration: none;
-    font-size: 0.9rem;
-  }
-  
-  .clear-filters:hover {
-    text-decoration: underline;
-  }
-  
-  /* Estilos de la cuadrícula de productos */
+
   .products-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.5rem;
-    margin-bottom: 2rem;
   }
-  
-  /* Estilos de las tarjetas de producto - Siguiendo el diseño de referencia */
+
+  .section-header h1 {
+    font-size: 2rem;
+  }
+
   .product-card {
-    background-color: var(--card-background);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    overflow: hidden;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    height: 360px; /* Altura fija para todas las tarjetas */
+    height: 400px;
   }
-  
+
   .product-image {
-    width: 100%;
-    height: 180px; /* Altura fija para todas las imágenes */
-    overflow: hidden;
+    height: 220px;
   }
-  
-  .product-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .product-card-content {
-    padding: 1rem;
-    display: flex;
+}
+
+@media (max-width: 480px) {
+  .search-input-group {
     flex-direction: column;
-    flex-grow: 1;
-    text-align: center;
   }
-  
+
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .product-card {
+    height: 380px;
+  }
+
+  .product-image {
+    height: 200px;
+  }
+
   .product-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    color: var(--text-color);
-    line-height: 1.3;
+    font-size: 1rem;
+    min-height: 45px;
   }
-  
-  .product-price {
-    font-size: 1.25rem;
-    font-weight: bold;
-    color: var(--accent-color);
-    margin-bottom: 0.5rem;
-  }
-  
-  .product-category {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-  }
-  
-  .btn-details {
-    display: block;
-    background-color: var(--accent-color);
-    color: white;
-    text-align: center;
-    padding: 0.75rem;
-    border-radius: var(--border-radius);
-    text-decoration: none;
-    font-weight: 500;
-    transition: background-color 0.3s;
-    margin-top: auto; /* Empuja el botón hacia abajo */
-  }
-  
-  .btn-details:hover {
-    background-color: #5b21b6;
-  }
-  
-  /* Estilos para el botón de añadir juego */
-  .add-game-container {
-    text-align: center;
-    margin-top: 2rem;
-  }
-  
+
   .btn-add-game {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--accent-color);
-    color: white;
-    padding: 0.9rem 2rem;
-    border-radius: var(--border-radius);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(109, 40, 217, 0.3);
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
   }
-  
-  .add-icon {
-    font-size: 1.5rem;
-    margin-right: 0.5rem;
-    font-weight: bold;
+
+  .segunda-mano-section {
+    padding: 1rem 0.5rem;
   }
-  
-  .btn-add-game:hover {
-    background-color: #5b21b6;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(109, 40, 217, 0.4);
+
+  .filters-container {
+    padding: 1.5rem;
   }
-  
-  /* Estilos para mensaje de no resultados */
-  .no-results {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 3rem;
-    background-color: var(--card-background);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-  }
-  
-  .no-results p {
-    font-size: 1.1rem;
-    color: var(--text-secondary);
-  }
-  
-  /* Estilos responsivos */
-  @media (max-width: 768px) {
-    .filters-form {
-      grid-template-columns: 1fr;
-    }
-  
-    .products-grid {
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1rem;
-    }
-  
-    .section-header h1 {
-      font-size: 2rem;
-    }
-  
-    .product-card {
-      height: 340px;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .search-input-group {
-      flex-direction: column;
-    }
-  
-    .product-image {
-      height: 160px;
-    }
-  
-    .product-title {
-      font-size: 1rem;
-    }
-  
-    .product-card {
-      height: 320px;
-    }
-  
-    .btn-add-game {
-      padding: 0.8rem 1.5rem;
-      font-size: 1rem;
-    }
-  }
-  
+}

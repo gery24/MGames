@@ -114,8 +114,8 @@ $titulo = "MGames - Tu tienda de videojuegos";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $titulo; ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="admin-styles.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
 <body class="<?php echo $bodyClass; ?>">
     <?php require_once 'includes/header.php'; ?>
@@ -929,6 +929,10 @@ body.admin .clear-filters:hover {
 body.admin .featured-products h2:after, 
 body.admin .categories-section h2:after {
     background: linear-gradient(to right, var(--admin-color), var(--admin-dark));
+}
+
+body.admin .featured-products h2 {
+    color: #000;
 }
 
 .products-grid {

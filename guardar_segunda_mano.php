@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $descripcion = $_POST['descripcion'];
     $precio = $_POST['precio'];
     $categoria = $_POST['categoria'];
-    $condicion = $_POST['condicion'];
+    $estado_form = $_POST['condicion'];
     $comentario = $_POST['comentario'];
     $usuario_id = $_SESSION['usuario']['id']; // Obtener el ID del usuario
 
@@ -42,12 +42,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Mover la imagen a la carpeta
     if (move_uploaded_file($_FILES['imagen']['tmp_name'], $target_file)) {
-        // Guardar en la base de datos en la tabla 'segunda_mano'
-        // Asegurarse de que las columnas y el orden coincidan con la tabla segunda_mano
-        // Se incluye usuario_id y comentario, y se usa condicion para la columna estado
-        $stmt = $pdo->prepare("INSERT INTO segunda_mano (usuario_id, nombre, descripcion, precio, categoria_id, estado, imagen, plataforma1, plataforma2, plataforma3, plataforma4, comentario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        // Pasar los valores en el orden correcto
-        $stmt->execute([$usuario_id, $nombre, $descripcion, $precio, $categoria, $condicion, $target_file, $rutas_plataformas[0], $rutas_plataformas[1], $rutas_plataformas[2], $rutas_plataformas[3], $comentario]);
+        // Guardar en la base de datos
+        $stmt = $pdo->prepare("INSERT INTO segunda_mano (nombre, descripcion, precio, categoria_id, comentario, estado, imagen, usuario_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$nombre, $descripcion, $precio, $categoria, $comentario, $estado_form, $target_file, $usuario_id]);
 
         // Redirigir a la página de segunda mano (si existe) o a donde corresponda
         header("Location: segunda_mano.php?success=1");

@@ -2,10 +2,13 @@
 session_start();
 require_once 'config/database.php';
 
-// Verificar si el usuario tiene el rol "CLIENTE"
+// Verificar si el usuario tiene el rol "CLIENTE" o "ADMIN"
 if (!isset($_SESSION['usuario']) || !in_array($_SESSION['usuario']['rol'], ['CLIENTE', 'ADMIN'])) {
-    die("Acceso denegado. Solo los usuarios con una cuenta creada pueden agregar juegos de segunda mano.");
+    // Redirigir a la página de login si el usuario no está logueado o no tiene el rol adecuado
+    header('Location: login.php');
+    exit;
 }
+
 // Obtener categorías de la base de datos
 $stmt = $pdo->query("SELECT * FROM categorias");
 $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -356,6 +359,52 @@ $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </svg>
 </button>
 
+<!-- Estilos CSS -->
+<style>
+ #scrollToTopBtn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background-color: #0d6efd; /* Azul Bootstrap */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  z-index: 1000;
+}
+
+.avatar-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+#scrollToTopBtn:hover {
+  background-color: #0b5ed7;
+  transform: scale(1.1);
+}
+
+#scrollToTopBtn svg {
+  width: 24px;
+  height: 24px;
+}
+</style>
+
+<!-- Script JS -->
 <script>
     // Script para el botón de scroll
     const scrollBtn = document.getElementById('scrollToTopBtn');

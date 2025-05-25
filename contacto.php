@@ -26,10 +26,6 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.site-header {
-  border-bottom: 3px solid #ff0000; /* Añadir línea roja */
-}
-
 .content {
   max-width: 1200px;
   margin: 0 auto;
@@ -85,8 +81,8 @@ body {
 }
 
 .contact-details {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  color: white;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* Fondo degradado */
+  color: white; /* Color de texto blanco */
   position: relative;
   overflow: hidden;
 }
@@ -137,7 +133,7 @@ body {
   font-size: 1.2rem;
   margin-right: 15px;
   margin-top: 5px;
-  color: var(--light-color);
+  color: white; /* Cambiar color de icono a blanco para el fondo degradado */
 }
 
 .info-item p {
@@ -184,7 +180,7 @@ body {
   resize: vertical;
 }
 
-.btn {
+.contact-form .btn { /* Estilo específico para el botón del formulario de contacto */
   background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
   color: white;
   border: none;
@@ -200,12 +196,12 @@ body {
   box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3);
 }
 
-.btn:hover {
+.contact-form .btn:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 15px rgba(108, 92, 231, 0.4);
 }
 
-.btn:active {
+.contact-form .btn:active {
   transform: translateY(1px);
 }
 
@@ -258,6 +254,42 @@ body {
     width: 100%;
   }
 }
+
+#scrollToTopBtn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background-color: #0d6efd; /* Azul Bootstrap para clientes */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  z-index: 1000;
+}
+
+body.admin #scrollToTopBtn { /* Rojo para administradores */
+  background-color: var(--admin-color); 
+}
+
+#scrollToTopBtn:hover {
+  background-color: #0b5ed7; /* Azul oscuro al pasar el ratón */
+}
+
+body.admin #scrollToTopBtn:hover { /* Rojo oscuro al pasar el ratón para administradores */
+  background-color: var(--admin-dark); 
+}
+
+#scrollToTopBtn svg {
+  width: 24px;
+  height: 24px;
+}
 </style>
 
 <div class="content">
@@ -277,7 +309,7 @@ body {
                 </div>
                 <div class="info-item">
                     <i class="fas fa-phone"></i>
-                    <p>+34 123 456 789</p>
+                    <p>+34 618491819</p>
                 </div>
                 <div class="info-item">
                     <i class="fas fa-envelope"></i>
@@ -318,38 +350,6 @@ body {
     <polyline points="18 15 12 9 6 15"></polyline>
   </svg>
 </button>
-
-<!-- Estilos CSS -->
-<style>
- #scrollToTopBtn {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 50px;
-  height: 50px;
-  background-color: #0d6efd; /* Azul Bootstrap */
-  color: white;
-  border: none;
-  border-radius: 50%;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
-  z-index: 1000;
-}
-
-#scrollToTopBtn:hover {
-  background-color: #0b5ed7;
-  transform: scale(1.1);
-}
-
-#scrollToTopBtn svg {
-  width: 24px;
-  height: 24px;
-}
-</style>
 
 <!-- Script JS -->
 <script>

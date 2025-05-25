@@ -66,6 +66,42 @@ $mostrarModal = isset($_GET['compra_exitosa']) && $_GET['compra_exitosa'] === 't
     font-weight: bold;
     font-size: 1.2rem;
 }
+
+#scrollToTopBtn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background-color: #0d6efd; /* Azul Bootstrap para clientes */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: none; /* Oculto por defecto */
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  z-index: 1000;
+}
+
+body.admin #scrollToTopBtn { /* Rojo para administradores */
+  background-color: var(--admin-color); 
+}
+
+#scrollToTopBtn:hover {
+  background-color: #0b5ed7; /* Azul oscuro al pasar el ratón */
+}
+
+body.admin #scrollToTopBtn:hover { /* Rojo oscuro al pasar el ratón para administradores */
+  background-color: var(--admin-dark); 
+}
+
+#scrollToTopBtn svg {
+  width: 24px;
+  height: 24px;
+}
 </style>
 
 <body class="<?php echo $bodyClass; ?>">
@@ -227,6 +263,26 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Limpiar la URL
         window.history.replaceState({}, document.title, window.location.pathname);
+    }
+});
+
+// Script para el botón scroll arriba
+// Envuelve este script en un listener DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollBtn = document.getElementById('scrollToTopBtn');
+
+    // Verifica si el botón existe antes de añadir listeners
+    if (scrollBtn) {
+        window.addEventListener('scroll', () => {
+            scrollBtn.style.display = window.scrollY > 300 ? 'flex' : 'none';
+        });
+
+        scrollBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
     }
 });
 </script>
