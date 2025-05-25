@@ -586,7 +586,7 @@ $titulo = "Mi Perfil - MGames";
         }
 
         .withdraw-card::before {
-            background: linear-gradient(90deg, var(--warning-color), #fbbf24);
+            background: linear-gradient(90deg, var(--admin-color), #ef4444);
         }
 
         .card-header {
@@ -608,7 +608,7 @@ $titulo = "Mi Perfil - MGames";
         }
 
         .withdraw-card .card-header i {
-            color: var(--warning-color);
+            color: var(--admin-color);
         }
 
         .card-header h3 {
@@ -683,7 +683,7 @@ $titulo = "Mi Perfil - MGames";
         }
 
         .btn-withdraw {
-            background: linear-gradient(135deg, var(--warning-color), #fbbf24);
+            background: linear-gradient(135deg, var(--admin-color), #dc2626);
             color: white;
         }
 
@@ -740,7 +740,7 @@ $titulo = "Mi Perfil - MGames";
         }
 
         .transaction-item.withdrawal {
-            border-left-color: var(--warning-color);
+            border-left-color: var(--admin-color);
         }
 
         .transaction-icon {
@@ -760,7 +760,7 @@ $titulo = "Mi Perfil - MGames";
         }
 
         .transaction-item.withdrawal .transaction-icon {
-            background: linear-gradient(135deg, var(--warning-color), #fbbf24);
+            background: linear-gradient(135deg, var(--admin-color), #ef4444);
             color: white;
         }
 
@@ -794,7 +794,7 @@ $titulo = "Mi Perfil - MGames";
         }
 
         .transaction-item.withdrawal .amount {
-            color: var(--warning-color);
+            color: var(--admin-color);
         }
 
         .empty-transactions {
@@ -1971,33 +1971,3 @@ $titulo = "Mi Perfil - MGames";
     <?php require_once 'includes/footer.php'; ?>
 </body>
 </html>
-
-¡Perfecto! He añadido estilos hermosos y modernos específicamente para la sección de billetera que incluyen:
-
-## 🎨 **Diseño Elegante de Billetera:**
-
-### 💳 **Tarjeta de Saldo Principal:**
-- **Gradiente llamativo** con efectos de luz
-- **Tipografía grande** para el saldo
-- **Efectos visuales** con pseudo-elementos
-
-### 📊 **Formularios de Transacciones:**
-- **Tarjetas separadas** para depósito y retiro
-- **Colores diferenciados** (verde para depósito, naranja para retiro)
-- **Iconos descriptivos** y headers elegantes
-- **Botones con gradientes** específicos para cada acción
-
-### 📋 **Historial de Transacciones:**
-- **Lista scrolleable** con scrollbar personalizado
-- **Items con iconos** circulares diferenciados
-- **Colores semánticos** (verde para ingresos, naranja para retiros)
-- **Efectos hover** suaves y transiciones
-
-### ✨ **Características Especiales:**
-- **Completamente responsive** para móviles
-- **Animaciones fluidas** en todos los elementos
-- **Estados vacíos** elegantes
-- **Integración perfecta** con el diseño existente
-- **Funcionalidad AJAX** mantenida
-
-El diseño mantiene la coherencia visual con el resto del perfil mientras hace que la gestión de la billetera sea visualmente atractiva y fácil de usar. 💰✨
