@@ -254,6 +254,42 @@ body {
     width: 100%;
   }
 }
+
+#scrollToTopBtn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background-color: #0d6efd; /* Azul Bootstrap para clientes */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  z-index: 1000;
+}
+
+body.admin #scrollToTopBtn { /* Rojo para administradores */
+  background-color: var(--admin-color); 
+}
+
+#scrollToTopBtn:hover {
+  background-color: #0b5ed7; /* Azul oscuro al pasar el ratón */
+}
+
+body.admin #scrollToTopBtn:hover { /* Rojo oscuro al pasar el ratón para administradores */
+  background-color: var(--admin-dark); 
+}
+
+#scrollToTopBtn svg {
+  width: 24px;
+  height: 24px;
+}
 </style>
 
 <div class="content">
@@ -314,38 +350,6 @@ body {
     <polyline points="18 15 12 9 6 15"></polyline>
   </svg>
 </button>
-
-<!-- Estilos CSS -->
-<style>
- #scrollToTopBtn {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 50px;
-  height: 50px;
-  background-color: #0d6efd; /* Azul Bootstrap */
-  color: white;
-  border: none;
-  border-radius: 50%;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
-  z-index: 1000;
-}
-
-#scrollToTopBtn:hover {
-  background-color: #0b5ed7;
-  transform: scale(1.1);
-}
-
-#scrollToTopBtn svg {
-  width: 24px;
-  height: 24px;
-}
-</style>
 
 <!-- Script JS -->
 <script>
