@@ -630,7 +630,7 @@ if (isset($_GET['review_error'])) {
             <?php endif; ?>
             <?php if (!empty($producto['reqmax'])): ?>
             <div>
-                <h3 class="requirements-title">Requisitos Máximos</h3>
+                <h3 class="requirements-title">Requisitos Recomendados</h3>
                 <p><?php echo nl2br(htmlspecialchars($producto['reqmax'])); ?></p>
             </div>
             <?php endif; ?>
