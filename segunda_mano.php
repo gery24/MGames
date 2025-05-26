@@ -2,6 +2,9 @@
 require_once 'config/database.php';
 session_start();
 
+// Verificar si el usuario es admin para añadir la clase 'admin' al body
+$isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'ADMIN';
+
 // Obtener categorías para el selector
 try {
     $stmt = $pdo->query("SELECT * FROM categorias ORDER BY nombre");
@@ -79,7 +82,7 @@ require_once 'includes/header.php';
     <link rel="stylesheet" href="css/style.css"> <!-- Estilos generales -->
     <link rel="stylesheet" href="css/segunda_mano.css"> <!-- Estilos específicos -->
 </head>
-<body>
+<body class="<?php echo $isAdmin ? 'admin' : ''; ?>">
     <div class="content">
         <section class="segunda-mano-section">
             <div class="section-header">
@@ -141,13 +144,17 @@ require_once 'includes/header.php';
                     <?php foreach($productos as $producto): ?>
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" 
-                                     alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
+                                <a href="detalle_segunda_mano.php?id=<?php echo $producto['id']; ?>">
+                                    <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" 
+                                         alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
+                                </a>
+                                <div class="wishlist-icon">
+                                    <i class="fas fa-heart"></i>
+                                </div>
                             </div>
                             <div class="product-card-content">
                                 <h3 class="product-title"><?php echo htmlspecialchars($producto['nombre']); ?></h3>
-                                <p class="product-price"><?php echo number_format($producto['precio'], 2); ?>€</p>
-                                <p class="product-category"><?php echo htmlspecialchars($producto['categoria_nombre']); ?></p>
+                                <p class="product-price">€<?php echo number_format($producto['precio'], 2); ?></p>
                                 <a href="detalle_segunda_mano.php?id=<?php echo $producto['id']; ?>" class="btn-details">
                                     Ver Detalles
                                 </a>
@@ -165,8 +172,7 @@ require_once 'includes/header.php';
             </div>
         </section>
     </div>
-    </style>
-<!-- Botón -->
+
 <!-- Botón scroll arriba -->
 <button id="scrollToTopBtn" aria-label="Volver arriba">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -194,6 +200,15 @@ require_once 'includes/header.php';
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
   z-index: 1000;
+}
+
+/* Estilo rojo para admin */
+body.admin #scrollToTopBtn {
+  background-color: #dc2626 !important;
+}
+
+body.admin #scrollToTopBtn:hover {
+  background-color: #b91c1c !important;
 }
 
 #scrollToTopBtn:hover {

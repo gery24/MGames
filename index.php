@@ -11,7 +11,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
     // Obtener categorías
-    $stmt = $pdo->query("SELECT id, nombre FROM categorias");
+    $stmt = $pdo->query("SELECT id, nombre, foto FROM categorias");
     $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Obtener filtros
@@ -114,8 +114,8 @@ $titulo = "MGames - Tu tienda de videojuegos";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $titulo; ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="admin-styles.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
 </head>
 <body class="<?php echo $bodyClass; ?>">
     <?php require_once 'includes/header.php'; ?>
@@ -244,15 +244,36 @@ $titulo = "MGames - Tu tienda de videojuegos";
                 ];
                 $i = 0;
 
-                // Mostrar solo las primeras 4 categorías inicialmente
-                foreach(array_slice($categorias_count, 0, 4) as $cat): 
+                // Mostrar solo las primeras 4 categorías inicialmente usando el array $categorias
+                // y obteniendo el conteo de $categorias_count
+                $first_four_categories = array_slice($categorias, 0, 4);
+                foreach($first_four_categories as $cat): 
+                    // Encontrar el conteo para esta categoría desde $categorias_count
+                    $current_cat_count = 0;
+                    // Asegurarse de que el ID existe antes de buscar el conteo
+                    if (isset($cat['id'])) {
+                         foreach($categorias_count as $cat_count_data) {
+                            if (isset($cat_count_data['id']) && $cat_count_data['id'] == $cat['id']) {
+                                $current_cat_count = $cat_count_data['count'];
+                                break;
+                            }
+                        }
+                    }
+
                     $color = $colors[$i % count($colors)];
                     $i++;
                 ?>
-                    <a href="index.php?categoria=<?php echo $cat['id']; ?>" class="category-card <?php echo $color; ?> <?php echo $isAdmin ? 'admin-category' : ''; ?>">
+                    <a href="index.php?categoria=<?php echo htmlspecialchars($cat['id'] ?? ''); ?>"
+                       class="category-card <?php echo htmlspecialchars($color); ?> <?php echo $isAdmin ? 'admin-category' : ''; ?>"
+                       style="background-image: url('<?php echo htmlspecialchars($cat['foto'] ?? ''); ?>'); background-size: cover; background-position: center;">
                         <div class="category-content">
-                            <h3><?php echo htmlspecialchars($cat['nombre']); ?></h3>
-                            <p><?php echo $cat['count']; ?> juegos</p>
+                            <?php 
+                                // Mostrar el nombre de la categoría solo si no es una de las tarjetas
+                                if (!in_array($cat['nombre'] ?? '', ['Tarjeta Play', 'Tarjeta XBOX', 'Tarjeta Nintendo'])) {
+                                    echo '<h3>' . htmlspecialchars($cat['nombre'] ?? '') . '</h3>';
+                                }
+                            ?>
+                            <p><?php echo $current_cat_count; ?> juegos</p>
                         </div>
                     </a>
                 <?php endforeach; ?>
@@ -910,6 +931,10 @@ body.admin .categories-section h2:after {
     background: linear-gradient(to right, var(--admin-color), var(--admin-dark));
 }
 
+body.admin .featured-products h2 {
+    color: #000;
+}
+
 .products-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -1071,6 +1096,9 @@ body.admin .category-badge {
     flex-wrap: wrap;
     justify-content: center;
     gap: 1.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1200px;
 }
 
 .category-card {
@@ -1082,8 +1110,10 @@ body.admin .category-badge {
     align-items: flex-end;
     text-decoration: none;
     color: white;
-    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    background-size: cover;
+    background-position: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-height: 150px;
 }
 
 .category-card:hover {
@@ -1294,35 +1324,6 @@ body.admin .newsletter {
 }
 
 /* Mobile Menu */
-.video-controls {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    display: flex;
-    gap: 10px;
-    z-index: 10;
-}
-
-.video-controls button {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(5px);
-    border: none;
-    color: white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s;
-}
-
-.video-controls button:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-/* Mobile Menu */
 .mobile-menu {
     position: fixed;
     top: 0;
@@ -1378,6 +1379,13 @@ body.admin .newsletter {
 .overlay.active {
     opacity: 1;
     visibility: visible;
+}
+
+/* Añadir estilos para la clase 'initial-four' */
+.categories-grid.initial-four {
+    max-width: 900px; /* Limitar el ancho del contenedor flex */
+    margin: 0 auto; /* Centrar el contenedor flex dentro de su padre */
+    justify-content: center; /* Asegurar que los elementos se centren dentro del flex container */
 }
 </style>
 
@@ -1572,20 +1580,26 @@ body.admin .newsletter {
     var todasLasCategorias = [
         <?php 
         $i = 0;
-        foreach($categorias_count as $cat): 
+        foreach($categorias as $cat): 
+            // Encontrar el conteo para esta categoría desde $categorias_count
+            $current_cat_count = 0;
+            foreach($categorias_count as $cat_count_data) {
+                if (isset($cat_count_data['id']) && $cat_count_data['id'] == $cat['id']) {
+                    $current_cat_count = $cat_count_data['count'];
+                    break;
+                }
+            }
         ?>
         {
             id: <?php echo $cat['id']; ?>,
             nombre: "<?php echo addslashes(htmlspecialchars($cat['nombre'])); ?>",
-            count: <?php echo $cat['count']; ?>,
+            count: <?php echo $current_cat_count; ?>,
+            foto: "<?php echo htmlspecialchars($cat['foto']); ?>",
             color: "<?php echo $colors[$i % count($colors)]; ?>"
         },
         <?php $i++; endforeach; ?>
     ];
 
-    // Guardar las 4 primeras categorías
-    var primerasCategorias = todasLasCategorias.slice(0, 4);
-    
     // Variable para controlar el estado
     var mostrandoTodas = false;
 
@@ -1600,22 +1614,43 @@ body.admin .newsletter {
         categoriesGrid.innerHTML = '';
         
         // Determinar qué categorías mostrar
-        var categoriasAMostrar = mostrandoTodas ? todasLasCategorias : primerasCategorias;
+        var categoriasAMostrar = mostrandoTodas ? todasLasCategorias : todasLasCategorias.slice(0, 4);
         
         // Actualizar el texto del botón
         button.innerText = mostrandoTodas ? "Ocultar Categorías" : "Mostrar Todas las Categorías";
         
+        // Añadir/Quitar clase para estilos condicionales
+        if (mostrandoTodas) {
+            categoriesGrid.classList.remove('initial-four');
+        } else {
+            categoriesGrid.classList.add('initial-four');
+        }
+
         // Crear y añadir las tarjetas de categoría
         categoriasAMostrar.forEach(function(cat) {
             const categoryCard = document.createElement('a');
             categoryCard.href = "index.php?categoria=" + cat.id;
             categoryCard.className = "category-card " + cat.color;
-            categoryCard.innerHTML = `
+            // Añadir estilo de fondo para la imagen
+            categoryCard.style.backgroundImage = "url('" + cat.foto + "')";
+            categoryCard.style.backgroundSize = "cover";
+            categoryCard.style.backgroundPosition = "center";
+
+            let cardContentHTML = `
                 <div class="category-content">
-                    <h3>${cat.nombre}</h3>
+            `;
+
+            // Mostrar el nombre de la categoría solo si no es una de las tarjetas
+            if (cat.nombre !== 'Tarjeta Play' && cat.nombre !== 'Tarjeta XBOX' && cat.nombre !== 'Tarjeta Nintendo') {
+                 cardContentHTML += `<h3>${cat.nombre}</h3>`;
+            }
+
+            cardContentHTML += `
                     <p>${cat.count} juegos</p>
                 </div>
             `;
+
+            categoryCard.innerHTML = cardContentHTML;
             categoriesGrid.appendChild(categoryCard);
         });
         
@@ -1625,7 +1660,6 @@ body.admin .newsletter {
 </script>
 
 <?php require_once 'includes/footer.php'; ?>
-
 
 <style>
 /* Estilos para el footer */
@@ -1764,7 +1798,7 @@ body.admin .social-icons a:hover {
     }
 }
 </style>
-</style>
+
 <!-- Botón -->
 <!-- Botón scroll arriba -->
 <button id="scrollToTopBtn" aria-label="Volver arriba">

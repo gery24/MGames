@@ -1,0 +1,706 @@
+/* Estilos para la página de eventos.php */
+
+/* Asegurarse de tener las variables de color si no se incluyen globalmente */
+:root {
+    --primary: #7e22ce;
+    --primary-dark: #6b21a8;
+    --primary-light: #a855f7;
+    --secondary: #2563eb;
+    --secondary-dark: #1d4ed8;
+    --accent: #f97316;
+    --dark: #0f172a;
+    --dark-light: #1e293b;
+    --light: #f8fafc;
+    --gray: #64748b;
+    --gray-light: #cbd5e1;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+        "Helvetica Neue", sans-serif;
+    background-color: #f1f5f9; /* Fondo suave */
+    color: var(--dark);
+    line-height: 1.6;
+    padding-top: 80px; /* Espacio arriba para el header fijo */
+    padding-bottom: 0 !important; /* Eliminar espacio al final de la página y forzar */
+    /* Anular posibles estilos raros de layout global */
+    position: static !important;
+    margin: 0 !important;
+    float: none !important;
+    width: auto !important;
+    overflow-x: hidden !important; /* Eliminar desplazamiento horizontal y espacio a la derecha */
+}
+
+.eventos-page {
+    padding: 2rem 0;
+    /* Asegurarse de que el contenedor de la página principal se comporte normalmente */
+    position: static !important;
+    float: none !important;
+    width: auto !important;
+    margin: 0 auto !important; /* Centrar el contenido principal */
+    display: block !important;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+     /* Asegurarse de que el contenedor no tenga estilos de layout que lo pongan al lado */
+    position: static !important;
+    float: none !important;
+    width: auto !important;
+}
+
+.page-title {
+    font-size: 2.5em;
+    font-weight: 800;
+    color: var(--dark);
+    text-align: center;
+    margin-bottom: 10px;
+    position: relative;
+    /* Anular posibles estilos de rotación o escritura vertical */
+    writing-mode: horizontal-tb !important;
+    transform: none !important;
+    text-orientation: mixed !important;
+    float: none !important;
+    width: auto !important;
+}
+
+/* Estilos para la decoración del título */
+.title-decoration {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+     /* Asegurarse de que la decoración no se vea afectada por estilos globales */
+    position: static !important;
+    float: none !important;
+    width: auto !important;
+}
+
+.title-line {
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(to right, var(--primary-light), var(--secondary));
+    border-radius: 2px;
+}
+
+.title-dot {
+    width: 10px;
+    height: 10px;
+    background-color: var(--primary);
+    border-radius: 50%;
+    margin: 0 10px;
+}
+
+/* Contenedor principal de eventos */
+.eventos-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Grid de eventos */
+.eventos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+    margin: 0 auto 4rem auto;
+    max-width: 1100px;
+    width: 100%;
+    justify-content: center;
+}
+
+.evento-card {
+    background-color: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+@media (max-width: 900px) {
+    .eventos-grid {
+        grid-template-columns: 1fr;
+        max-width: 98vw;
+    }
+    .evento-card {
+        max-width: 98vw;
+    }
+}
+
+/* El resto de estilos de evento, cambia .evento-item por .evento-card y .eventos-list por .eventos-grid en todos los selectores relacionados */
+.evento-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.evento-image-container {
+    height: 250px;
+    position: relative;
+    overflow: hidden;
+}
+
+.evento-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.evento-card:hover .evento-image-container img {
+    transform: scale(1.05);
+}
+
+.evento-fecha {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    background-color: var(--primary);
+    color: white;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    min-width: 70px;
+    z-index: 2;
+}
+
+.evento-dia {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.evento-mes {
+    display: block;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    margin-top: 0.25rem;
+}
+
+.evento-content {
+    padding: 1.5rem;
+    display: flex; /* Convertir en contenedor flex */
+    flex-direction: column; /* Apilar elementos verticalmente */
+}
+
+.evento-content h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 1rem;
+}
+
+.evento-info {
+    margin-bottom: 1rem;
+}
+
+.evento-info p {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gray);
+    margin-bottom: 0.5rem;
+}
+
+.evento-info i {
+    color: var(--primary);
+}
+
+.evento-descripcion {
+    color: var(--dark);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.evento-stats {
+    display: flex;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--gray-light);
+}
+
+.evento-stats span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gray);
+    font-size: 0.875rem;
+}
+
+.evento-stats i {
+    color: var(--primary);
+}
+
+/* Estilos para el mensaje cuando no hay eventos (si aplicara) */
+.eventos-grid > p {
+    text-align: center;
+    grid-column: 1 / -1;
+    font-size: 1.1em;
+    color: var(--gray);
+    margin-top: 20px;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 2em;
+    }
+
+    .title-decoration {
+        margin-bottom: 30px;
+    }
+
+    .title-line {
+        width: 40px;
+    }
+
+    .title-dot {
+        width: 8px;
+        height: 8px;
+        margin: 0 8px;
+    }
+
+    .eventos-grid {
+        gap: 20px;
+    }
+
+    .evento-content {
+         padding: 15px;
+    }
+
+    .evento-content h3 {
+        font-size: 1.2em;
+    }
+
+    .evento-info,
+    .evento-descripcion,
+    .evento-actions .btn { /* Ajustar selector para el botón */
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 600px) {
+    .eventos-grid {
+        grid-template-columns: 1fr;
+    }
+
+     .page-title {
+        font-size: 1.8em;
+     }
+}
+
+/* Hero Section */
+.eventos-hero {
+    width: 100vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)),
+                url('../FotosWeb/hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 6rem 2rem 4rem 2rem;
+    text-align: center;
+    color: white;
+    margin-top: 0;
+    margin-bottom: 0;
+    box-sizing: border-box;
+}
+
+.eventos-hero .hero-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.eventos-hero h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+}
+
+.eventos-hero p {
+    font-size: 1.25rem;
+    opacity: 0.9;
+}
+
+/* Filtros - horizontal en desktop */
+.eventos-filters {
+    width: 100%;
+    display: flex;
+    flex-direction: row; /* Asegurar que por defecto sea horizontal */
+    align-items: flex-start; /* Alinear al inicio */
+    background: white;
+    border-radius: 1rem;
+    box-shadow: var(--shadow);
+    padding: 1.5rem 2rem; /* Padding interno del contenedor de filtros */
+    box-sizing: border-box;
+    margin: 0 auto 2.5rem auto;
+    gap: 1rem; /* Ajustar el espacio general */
+    max-width: 1100px;
+}
+
+.search-box {
+    flex-grow: 1; /* Permitir que crezca y ocupe el espacio disponible */
+    max-width: 960px; /* Aumentar el ancho máximo del campo de búsqueda */
+}
+
+.filter-options {
+    display: flex;
+    gap: 1rem; /* Espacio entre los selectores */
+    flex-shrink: 0; /* Asegurar que no se encoja */
+    justify-content: flex-start;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.9rem 1.2rem;
+    padding-right: 3rem;
+    border: 2px solid var(--gray-light);
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    transition: var(--transition);
+    background: #f8fafc;
+}
+
+.filter-options select {
+    padding: 0.9rem 1.2rem;
+    border: 2px solid var(--gray-light);
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    background-color: #f8fafc;
+    cursor: pointer;
+    transition: var(--transition);
+    min-width: 170px;
+}
+
+.search-box i {
+    position: absolute;
+    right: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray);
+    font-size: 1.2rem;
+}
+
+@media (max-width: 900px) {
+    .eventos-filters {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.2rem;
+        padding: 1.2rem 0.5rem 1rem 0.5rem;
+        max-width: 98vw;
+    }
+    .search-box, .filter-options {
+        max-width: 100%;
+        width: 100%;
+        justify-content: center;
+    }
+    .filter-options {
+        flex-direction: column;
+        gap: 0.7rem; /* Espacio entre los selectores en pantallas pequeñas */
+    }
+}
+
+/* Newsletter Section */
+.eventos-newsletter {
+    width: 100% !important; /* Usar 100% y forzar */
+    /* margin-left: 50%; */
+    /* transform: translateX(-50%); */
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    padding: 4rem 1.5rem; /* Añadir padding horizontal */
+    margin: 1.5rem auto 2rem auto !important; /* Reducir margen superior y mantener margen inferior */
+    border-radius: 0;
+    color: white;
+    display: block; /* Cambiar a block para que los hijos se apilen verticalmente */
+    text-align: center; /* Centrar el contenido dentro de la sección */
+    box-sizing: border-box;
+    padding-bottom: 0 !important; /* Eliminar padding inferior que pueda causar espacio */
+}
+
+.newsletter-content {
+    max-width: 500px; /* Mantener el ancho máximo del contenido */
+    margin: 0 auto; /* Centrar el contenedor de contenido */
+    text-align: center; /* Asegurar que el texto esté centrado dentro de este contenedor */
+    padding: 0; /* Eliminar padding horizontal y depender del padding de .eventos-newsletter */
+    width: 100%; /* Asegurar que el contenedor ocupe el ancho disponible */
+}
+
+.newsletter-content h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.newsletter-content p {
+    margin-bottom: 2rem;
+    opacity: 0.9;
+}
+
+.newsletter-form {
+    display: flex;
+    gap: 1rem; /* Reducir el espacio entre inputs y botón */
+    margin: 0 auto; /* Centrar el formulario dentro de .newsletter-content */
+    width: 100%; /* Asegurar que el formulario ocupe el ancho disponible */
+    flex-direction: column; /* Apilar los inputs y el botón verticalmente */
+    max-width: 400px; /* Limitar el ancho del formulario para que no sea demasiado ancho en pantallas grandes */
+}
+
+.newsletter-form input {
+    flex: none; /* Anular flex-grow: 1 para que no intente ocupar todo el espacio horizontal */
+    padding: 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    width: 100%; /* Asegurar que el input ocupe el ancho del formulario */
+}
+
+.newsletter-form button {
+    padding: 1rem 2rem;
+    background-color: var(--dark);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    width: 100%; /* Asegurar que el botón ocupe el ancho del formulario */
+    margin-bottom: 1.5rem; /* Añadir espacio debajo del botón */
+}
+
+.newsletter-form button:hover {
+    background-color: var(--dark-light);
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .eventos-hero {
+        font-size: 2.5rem;
+    }
+    .eventos-filters {
+        padding: 1.2rem 0.5rem 1rem 0.5rem;
+        max-width: 98vw;
+    }
+    .eventos-grid, .eventos-newsletter {
+        max-width: 98vw;
+    }
+    .evento-card {
+        max-width: 98vw;
+    }
+    .eventos-newsletter {
+        padding: 2.5rem 0.5rem;
+    }
+    .newsletter-form {
+        flex-direction: column; /* Asegurar apilamiento vertical en pantallas pequeñas */
+    }
+    .newsletter-form input,
+    .newsletter-form button {
+        width: 100%; /* Inputs y botón al 100% en pantallas pequeñas */
+    }
+}
+
+@media (max-width: 480px) {
+    .eventos-hero h1 {
+        font-size: 2rem;
+    }
+    .evento-content h3 {
+        font-size: 1.25rem;
+    }
+    .evento-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .newsletter-form {
+        flex-direction: column;
+    }
+    .newsletter-form input,
+    .newsletter-form button {
+        width: 100%; /* Inputs y botón al 100% en pantallas pequeñas */
+    }
+}
+
+@media (max-width: 900px) {
+    .eventos-hero {
+        padding: 4rem 0.5rem 2rem 0.5rem;
+        margin-top: 0;
+    }
+    .eventos-filters {
+        padding: 1.2rem 0.5rem 1rem 0.5rem;
+    }
+    .newsletter-content {
+        max-width: 98vw;
+    }
+}
+
+/* Nuevos estilos para el botón 'Más Info' dentro del contenido */
+.evento-content .evento-actions {
+    margin-top: auto; /* Empujar este elemento hacia abajo */
+    /* Espacio superior para separarlo del texto */
+    display: flex;
+    justify-content: center; /* Centrar el botón */
+}
+
+.evento-content .evento-actions .btn-primary {
+    width: 100%; /* Botón al 100% del ancho del contenedor */
+    text-align: center;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+
+    /* Estilos para un botón 'tope de guapo' */
+    background: linear-gradient(45deg, var(--primary), var(--secondary)); /* Gradiente llamativo */
+    color: white; /* Texto blanco */
+    border: none; /* Sin borde */
+    border-radius: 0.5rem; /* Bordes redondeados */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Sombra */
+    text-transform: uppercase; /* Texto en mayúsculas */
+    letter-spacing: 1px; /* Espaciado entre letras */
+    font-weight: bold; /* Negrita */
+    transition: all 0.3s ease; /* Transición suave */
+}
+
+.evento-content .evento-actions .btn-primary:hover {
+    background: linear-gradient(45deg, var(--secondary), var(--primary)); /* Cambiar gradiente al pasar el ratón */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Aumentar sombra */
+    transform: translateY(-3px); /* Mover ligeramente hacia arriba */
+}
+
+/* --- Estilos de la página de detalle del artículo --- */
+.article-page {
+    /* padding se define arriba */
+}
+
+.article-content {
+    background-color: var(--bg-white, white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 2rem;
+    max-width: 900px; /* Ancho máximo del contenido del artículo */
+    margin: 0 auto; /* Centrar el contenido */
+}
+
+.article-title {
+    /* Estilos vienen de .section-title */
+    margin-bottom: 1.5rem; /* Espacio inferior después del título */
+}
+
+.article-meta {
+    font-size: 1rem; /* Tamaño de fuente */
+    color: var(--text-light, var(--gray));
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap; /* Permitir que los elementos se envuelvan */
+    gap: 1.5rem; /* Espacio entre elementos meta */
+    align-items: center;
+}
+
+.article-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.article-meta i {
+    color: var(--primary); /* Color de iconos */
+}
+
+.article-image {
+    margin-bottom: 2rem; /* Espacio debajo de la imagen */
+    border-radius: var(--radius); /* Bordes redondeados */
+    overflow: hidden;
+    max-height: 400px; /* Altura máxima para la imagen del artículo */
+    display: flex; /* Para centrar la imagen si no ocupa todo el ancho */
+    justify-content: center;
+}
+
+.article-image img {
+    display: block;
+    max-width: 100%;
+    height: auto; /* Mantener la proporción */
+    object-fit: cover; /* Ajustar la imagen */
+}
+
+.article-body p {
+    font-size: 1.125rem; /* Tamaño de fuente para el cuerpo del artículo */
+    color: var(--text-color, #333);
+    margin-bottom: 1.5rem; /* Espacio entre párrafos */
+    line-height: 1.8; /* Altura de línea para legibilidad */
+}
+
+.back-link {
+    margin-top: 2rem; /* Espacio arriba del botón de volver */
+    text-align: center; /* Centrar el botón */
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .article-content {
+        padding: 1.5rem; /* Reducir padding en pantallas pequeñas */
+    }
+
+    .article-title {
+        font-size: 1.75rem; /* Reducir tamaño del título en móvil */
+    }
+
+    .article-meta {
+        flex-direction: column; /* Apilar metadatos en móvil */
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .article-body p {
+        font-size: 1rem; /* Reducir tamaño del cuerpo en móvil */
+    }
+}
+
+@media (max-width: 600px) {
+    .blog-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .blog-content {
+        padding: 1rem;
+    }
+
+    .blog-content h3 {
+        font-size: 1em;
+    }
+
+    .blog-meta {
+        font-size: 0.8rem;
+    }
+}
+
+/* Estilos para el badge de categoría en las tarjetas de blog */
+.blog-category-badge {
+    position: absolute;
+    top: 1rem; /* Ajustar la posición vertical */
+    left: 1rem; /* Ajustar la posición horizontal */
+    background-color: var(--secondary); /* Usar un color secundario o primary */
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    z-index: 5;
+    font-weight: 700;
+    text-transform: uppercase; /* Opcional: texto en mayúsculas */
+} 

@@ -596,7 +596,7 @@ body.admin .dropdown-content a:hover {
     border: none;
     cursor: pointer;
     text-decoration: none;
-    width: 100%;
+    width: auto;
     text-align: center;
 }
 
@@ -703,6 +703,20 @@ body.admin .admin-link:hover {
     background-color: var(--admin-dark);
     color: white;
 }
+
+/* Estilo específico para los botones en las acciones del producto */
+.product-actions .btn {
+    width: auto; /* Permitir que el ancho se ajuste al contenido o flexbox */
+}
+
+/* Asegurar que los botones btn-primary dentro de product-actions usen los colores primarios */
+.product-actions .btn-primary {
+    background-color: var(--primary-color);
+}
+
+.product-actions .btn-primary:hover {
+    background-color: var(--primary-hover);
+}
 </style>
 
 <script>
@@ -779,11 +793,11 @@ document.addEventListener('DOMContentLoaded', function() {
   right: 30px;
   width: 50px;
   height: 50px;
-  background-color: #0d6efd; /* Azul Bootstrap */
+  background-color: var(--primary-color); /* Usa la variable CSS que cambia para admin */
   color: white;
   border: none;
   border-radius: 50%;
-  display: none;
+  display: none; /* Oculto por defecto */
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -793,7 +807,7 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 #scrollToTopBtn:hover {
-  background-color: #0b5ed7;
+  background-color: var(--primary-hover); /* Usa la variable CSS que cambia para admin */
   transform: scale(1.1);
 }
 
@@ -805,17 +819,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Script JS -->
 <script>
- const scrollBtn = document.getElementById('scrollToTopBtn');
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollBtn = document.getElementById('scrollToTopBtn');
 
-window.addEventListener('scroll', () => {
-  scrollBtn.style.display = window.scrollY > 300 ? 'flex' : 'none';
-});
+    // Verifica si el botón existe antes de añadir listeners
+    if (scrollBtn) {
+        window.addEventListener('scroll', () => {
+            scrollBtn.style.display = window.scrollY > 300 ? 'flex' : 'none';
+        });
 
-scrollBtn.addEventListener('click', () => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  });
+        scrollBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
 });
 </script>
 <?php require_once 'includes/footer.php'; ?>
+
+</body>
+</html>
